@@ -65,7 +65,7 @@ If data transformation with Lambda is enabled, the `AWS/Firehose` namespace incl
 
 | Metric | Description | 
 | --- | --- | 
-| ExecuteProcessing\.Duration |  The time it takes for each Lambda function invocation performed by Kinesis Firehose\. Units: Seconds  | 
+| ExecuteProcessing\.Duration |  The time it takes for each Lambda function invocation performed by Kinesis Firehose\. Units: Milliseconds  | 
 | ExecuteProcessing\.Success |  The sum of the successful Lambda function invocations over the sum of the total Lambda function invocations\.  | 
 | SucceedProcessing\.Records |  The number of successfully processed records over the specified time period\. Units: Count  | 
 | SucceedProcessing\.Bytes |  The number of successfully processed bytes over the specified time period\. Units: Bytes  | 

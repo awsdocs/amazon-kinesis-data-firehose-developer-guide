@@ -70,7 +70,7 @@ To use the default prefix for source record backup, leave this option blank\. Ki
 This section describes options for using Amazon ES for your destination\.
 
 **Important**  
-Kinesis Firehose doesn't currently support Elasticsearch 6\.0\. Data delivery from Kinesis Firehose to Elasticsearch 6\.0 fails\.
+Kinesis Firehose doesn't currently support Elasticsearch 6\.x\. Data delivery from Kinesis Firehose to Elasticsearch 6\.x fails\.
 
 **To choose Amazon ES for your destination**
 

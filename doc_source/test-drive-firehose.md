@@ -10,7 +10,7 @@ The following is an example from the simulated data:
 
 Note that standard Amazon Kinesis Firehose charges apply when your delivery stream transmits the data, but there is no charge when the data is generated\. To stop incurring these charges, you can stop the sample stream from the console at any time\.
 
-
+**Topics**
 + [Prerequisites](#test-drive-requirements)
 + [Test Using Amazon S3 as the Destination](#test-drive-destination-s3)
 + [Test Using Amazon Redshift as the Destination](#test-drive-destination-redshift)
@@ -19,7 +19,7 @@ Note that standard Amazon Kinesis Firehose charges apply when your delivery stre
 
 ## Prerequisites<a name="test-drive-requirements"></a>
 
-Before you begin, create a delivery stream\. For more information, see [Creating an Amazon Kinesis Firehose Delivery Stream](basic-create.md)\.
+Before you begin, create a delivery stream\. For more information, see [Creating an Amazon Kinesis Data Firehose Delivery Stream](basic-create.md)\.
 
 ## Test Using Amazon S3 as the Destination<a name="test-drive-destination-s3"></a>
 

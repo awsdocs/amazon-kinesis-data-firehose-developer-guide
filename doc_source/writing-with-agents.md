@@ -119,6 +119,7 @@ The following are the general configuration settings\.
 | cloudwatch\.emitMetrics |  Enables the agent to emit metrics to CloudWatch if set \(true\)\. Default: true  | 
 | cloudwatch\.endpoint |  The regional endpoint for CloudWatch\. Default: `monitoring.us-east-1.amazonaws.com`  | 
 | firehose\.endpoint |  The regional endpoint for Kinesis Data Firehose\. Default: `firehose.us-east-1.amazonaws.com`  | 
+| kinesis\.endpoint |  The regional endpoint for Kinesis Data Stream\. Default: `kinesis.us-east-1.amazonaws.com`  | 
 
 The following are the flow configuration settings\.
 
@@ -144,20 +145,42 @@ By specifying multiple flow configuration settings, you can configure the agent 
 ```
 {
     "cloudwatch.emitMetrics": true,
-    "kinesis.endpoint": "https://your/kinesis/endpoint", 
-    "firehose.endpoint": "https://your/firehose/endpoint", 
+    "kinesis.endpoint": "kinesis.your-region.amazonaws.com", 
+    "firehose.endpoint": "firehose.your-region.amazonaws.com", 
     "flows": [
         {
             "filePattern": "/tmp/app1.log*", 
-            "kinesisStream": "yourkinesisstream"
+            "kinesisStream": "yourkinesisstreamname"
         }, 
         {
             "filePattern": "/tmp/app2.log*",
-            "deliveryStream": "yourfirehosedeliverystream" 
+            "deliveryStream": "yourfirehosedeliverystreamname" 
         }
     ] 
 }
 ```
+
+Sample
+
+```
+{
+  "cloudwatch.emitMetrics": true,
+  "kinesis.endpoint": "kinesis.eu-west-1.amazonaws.com",
+  "firehose.endpoint": "firehose.eu-west-1.amazonaws.com",
+
+  "flows": [
+    {
+      "filePattern": "/tmp/sings.log*",
+      "kinesisStream": "singers",
+    },
+    {
+      "filePattern": "/tmp/sings.log*",
+      "deliveryStream": "singers",
+    }
+  ]
+}
+```
+
 
 For more detailed information about using the agent with Amazon Kinesis Data Streams, see [Writing to Amazon Kinesis Data Streams with Kinesis Agent](http://docs.aws.amazon.com/kinesis/latest/dev/writing-with-agents.html)\.
 

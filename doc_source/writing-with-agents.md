@@ -1,12 +1,12 @@
-# Writing to Amazon Kinesis Firehose Using Kinesis Agent<a name="writing-with-agents"></a>
+# Writing to Amazon Kinesis Data Firehose Using Kinesis Agent<a name="writing-with-agents"></a>
 
-Kinesis Agent is a stand\-alone Java software application that offers an easy way to collect and send data to Kinesis Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis Firehose delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
+Kinesis Agent is a stand\-alone Java software application that offers an easy way to collect and send data to Kinesis Data Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis data delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
 
 By default, records are parsed from each file based on the newline \(`'\n'`\) character\. However, the agent can also be configured to parse multi\-line records \(see [Agent Configuration Settings](#agent-config-settings)\)\. 
 
 You can install the agent on Linux\-based server environments such as web servers, log servers, and database servers\. After installing the agent, configure it by specifying the files to monitor and the delivery stream for the data\. After the agent is configured, it durably collects data from the files and reliably sends it to the delivery stream\.
 
-
+**Topics**
 + [Prerequisites](#prereqs)
 + [Download and Install the Agent](#download-install)
 + [Configure and Start the Agent](#config-start)
@@ -16,22 +16,14 @@ You can install the agent on Linux\-based server environments such as web server
 + [Agent CLI Commands](#cli-commands)
 
 ## Prerequisites<a name="prereqs"></a>
-
 + Your operating system must be either Amazon Linux AMI with version 2015\.09 or later, or Red Hat Enterprise Linux version 7 or later\.
-
 + If you are using Amazon EC2 to run your agent, launch your EC2 instance\.
-
 + Manage your AWS credentials using one of the following methods:
-
   + Specify an IAM role when you launch your EC2 instance\.
-
-  + Specify AWS credentials when you configure the agent \(see awsAccessKeyId and awsSecretAccessKey\)\.
-
+  + Specify AWS credentials when you configure the agent \(see [awsAccessKeyId](#awsAccessKeyId) and [awsSecretAccessKey](#awsSecretAccessKey)\)\.
   + Edit `/etc/sysconfig/aws-kinesis-agent` to specify your region and AWS access keys\.
-
-  + If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Firehose service, and specify that role when you configure the agent \(see assumeRoleARN and assumeRoleExternalId\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
-
-+ The IAM role or AWS credentials that you specify must have permission to perform the Kinesis Firehose [PutRecordBatch](http://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html) operation for the agent to send data to your delivery stream\. If you enable CloudWatch monitoring for the agent, permission to perform the CloudWatch [PutMetricData](http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation is also needed\. For more information, see [Controlling Access with Amazon Kinesis Firehose ](controlling-access.md), [Monitoring Kinesis Agent Health](agent-health.md), and [Authentication and Access Control for Amazon CloudWatch](http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/auth-and-access-control-cw.html)\.
+  + If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Data Firehose service, and specify that role when you configure the agent \(see [assumeRoleARN](#assumeRoleARN) and [assumeRoleExternalId](#assumeRoleExternalId)\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
++ The IAM role or AWS credentials that you specify must have permission to perform the Kinesis Data Firehose [PutRecordBatch](http://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html) operation for the agent to send data to your delivery stream\. If you enable CloudWatch monitoring for the agent, permission to perform the CloudWatch [PutMetricData](http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation is also needed\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md), [Monitoring Kinesis Agent Health](agent-health.md), and [Authentication and Access Control for Amazon CloudWatch](http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/auth-and-access-control-cw.html)\.
 
 ## Download and Install the Agent<a name="download-install"></a>
 
@@ -120,13 +112,13 @@ The following are the general configuration settings\.
 
 | Configuration Setting | Description | 
 | --- | --- | 
-| assumeRoleARN |  The ARN of the role to be assumed by the user\. For more information, see [Delegate Access Across AWS Accounts Using IAM Roles](http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) in the *IAM User Guide*\.  | 
-| assumeRoleExternalId |  An optional identifier that determines who can assume the role\. For more information, see [How to Use an External ID](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user_externalid.html) in the *IAM User Guide*\.  | 
-| awsAccessKeyId |  AWS access key ID that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
-| awsSecretAccessKey |  AWS secret key that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
+| <a name="assumeRoleARN"></a>assumeRoleARN |  The ARN of the role to be assumed by the user\. For more information, see [Delegate Access Across AWS Accounts Using IAM Roles](http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) in the *IAM User Guide*\.  | 
+| <a name="assumeRoleExternalId"></a>assumeRoleExternalId |  An optional identifier that determines who can assume the role\. For more information, see [How to Use an External ID](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user_externalid.html) in the *IAM User Guide*\.  | 
+| <a name="awsAccessKeyId"></a>awsAccessKeyId |  AWS access key ID that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
+| <a name="awsSecretAccessKey"></a>awsSecretAccessKey |  AWS secret key that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
 | cloudwatch\.emitMetrics |  Enables the agent to emit metrics to CloudWatch if set \(true\)\. Default: true  | 
 | cloudwatch\.endpoint |  The regional endpoint for CloudWatch\. Default: `monitoring.us-east-1.amazonaws.com`  | 
-| firehose\.endpoint |  The regional endpoint for Kinesis Firehose\. Default: `firehose.us-east-1.amazonaws.com`  | 
+| firehose\.endpoint |  The regional endpoint for Kinesis Data Firehose\. Default: `firehose.us-east-1.amazonaws.com`  | 
 
 The following are the flow configuration settings\.
 
@@ -147,7 +139,7 @@ The following are the flow configuration settings\.
 
 ## Monitor Multiple File Directories and Write to Multiple Streams<a name="sim-writes"></a>
 
-By specifying multiple flow configuration settings, you can configure the agent to monitor multiple file directories and send data to multiple streams\. In the following configuration example, the agent monitors two file directories and sends data to an Kinesis stream and a Kinesis Firehose delivery stream respectively\. Note that you can specify different endpoints for Kinesis Streams and Kinesis Firehose so that your Kinesis stream and Kinesis Firehose delivery stream don’t need to be in the same region\.
+By specifying multiple flow configuration settings, you can configure the agent to monitor multiple file directories and send data to multiple streams\. In the following configuration example, the agent monitors two file directories and sends data to an Kinesis stream and a Kinesis Firehose delivery stream respectively\. Note that you can specify different endpoints for Kinesis Data Streams and Kinesis Firehose so that your Kinesis stream and Kinesis Firehose delivery stream don’t need to be in the same region\.
 
 ```
 {
@@ -167,7 +159,7 @@ By specifying multiple flow configuration settings, you can configure the agent 
 }
 ```
 
-For more detailed information about using the agent with Amazon Kinesis Streams, see [Writing to Amazon Kinesis Streams with Kinesis Agent](http://docs.aws.amazon.com/kinesis/latest/dev/writing-with-agents.html)\.
+For more detailed information about using the agent with Amazon Kinesis Data Streams, see [Writing to Amazon Kinesis Data Streams with Kinesis Agent](http://docs.aws.amazon.com/kinesis/latest/dev/writing-with-agents.html)\.
 
 ## Use the Agent to Pre\-process Data<a name="pre-processing"></a>
 
@@ -212,20 +204,16 @@ Converts a record from a log format to JSON format\. The supported log formats a
 ```  
 `logFormat`  
 \[Required\] The log entry format\. The following are possible values:  
-
 + `COMMONAPACHELOG` — The Apache Common Log format\. Each log entry has the following pattern by default: "`%{host} %{ident} %{authuser} [%{datetime}] \"%{request}\" %{response} %{bytes}`"\.
-
 + `COMBINEDAPACHELOG` — The Apache Combined Log format\. Each log entry has the following pattern by default: "`%{host} %{ident} %{authuser} [%{datetime}] \"%{request}\" %{response} %{bytes} %{referrer} %{agent}`"\.
-
 + `APACHEERRORLOG` — The Apache Error Log format\. Each log entry has the following pattern by default: "`[%{timestamp}] [%{module}:%{severity}] [pid %{processid}:tid %{threadid}] [client: %{client}] %{message}`"\.
-
 + `SYSLOG` — The RFC3164 Syslog format\. Each log entry has the following pattern by default: "`%{timestamp} %{hostname} %{program}[%{processid}]: %{message}`"\.  
 `matchPattern`  
 Overrides the default pattern for the specified log format\. Use this setting to extract values from log entries if they use a custom format\. If you specify `matchPattern`, you must also specify `customFieldNames`\.  
 `customFieldNames`  
 The custom field names used as keys in each JSON key value pair\. You can use this setting to define field names for values extracted from `matchPattern`, or override the default field names of predefined log formats\.
 
-**Example : LOGTOJSON Configuration**  
+**Example : LOGTOJSON Configuration**  <a name="example-logtojson"></a>
 Here is one example of a `LOGTOJSON` configuration for an Apache Common Log entry converted to JSON format:  
 
 ```
@@ -245,7 +233,7 @@ After conversion:
 {"host":"64.242.88.10","ident":null,"authuser":null,"datetime":"07/Mar/2004:16:10:02 -0800","request":"GET /mailman/listinfo/hsdivision HTTP/1.1","response":"200","bytes":"6291"}
 ```
 
-**Example : LOGTOJSON Configuration With Custom Fields**  
+**Example : LOGTOJSON Configuration With Custom Fields**  <a name="example-logtojson-custom-fields"></a>
 Here is another example `LOGTOJSON` configuration:  
 
 ```
@@ -261,7 +249,7 @@ With this configuration setting, the same Apache Common Log entry from the previ
 {"f1":"64.242.88.10","f2":null,"f3":null,"f4":"07/Mar/2004:16:10:02 -0800","f5":"GET /mailman/listinfo/hsdivision HTTP/1.1","f6":"200","f7":"6291"}
 ```
 
-**Example : Convert Apache Common Log Entry**  
+**Example : Convert Apache Common Log Entry**  <a name="example-apache-common-log-entry"></a>
 The following flow configuration converts an Apache Common Log entry to a single line record in JSON format:  
 
 ```
@@ -281,7 +269,7 @@ The following flow configuration converts an Apache Common Log entry to a single
 }
 ```
 
-**Example : Convert Multi\-Line Records**  
+**Example : Convert Multi\-Line Records**  <a name="example-convert-multi-line"></a>
 The following flow configuration parses multi\-line records whose first line starts with "`[SEQUENCE=`"\. Each record is first converted to a single line record\. Then, values are extracted from the record based on a tab delimiter\. Extracted values are mapped to specified `customFieldNames` values to form a single\-line record in JSON format\.  
 
 ```
@@ -306,7 +294,7 @@ The following flow configuration parses multi\-line records whose first line sta
 }
 ```
 
-**Example : LOGTOJSON Configuration with Match Pattern**  
+**Example : LOGTOJSON Configuration with Match Pattern**  <a name="example-logtojson-match-pattern"></a>
 Here is one example of a `LOGTOJSON` configuration for an Apache Common Log entry converted to JSON format, with the last field \(bytes\) omitted:  
 
 ```

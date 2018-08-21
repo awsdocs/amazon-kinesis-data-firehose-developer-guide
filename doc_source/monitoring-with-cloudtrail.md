@@ -1,52 +1,41 @@
-# Monitoring Kinesis Data Firehose API Calls Using AWS CloudTrail<a name="monitoring-with-cloudtrail"></a>
+# Logging Kinesis Data Firehose API Calls with AWS CloudTrail<a name="monitoring-with-cloudtrail"></a>
 
-Amazon Kinesis Data Firehose is integrated with AWS CloudTrail, which captures API calls, delivers the log files to an Amazon S3 bucket that you specify, and maintains API call history\. CloudTrail captures API calls made from the Kinesis Data Firehose console or from your code to the Kinesis Data Firehose API\. Use the information collected by CloudTrail to determine the request that was made to Kinesis Data Firehose, the IP address that it came from, who made the request, when it was made, and so on\.
+Amazon Kinesis Data Firehose is integrated with AWS CloudTrail, a service that provides a record of actions taken by a user, role, or an AWS service in Kinesis Data Firehose\. CloudTrail captures all API calls for Kinesis Data Firehose as events\. The calls captured include calls from the Kinesis Data Firehose console and code calls to the Kinesis Data Firehose API operations\. If you create a trail, you can enable continuous delivery of CloudTrail events to an Amazon S3 bucket, including events for Kinesis Data Firehose\. If you don't configure a trail, you can still view the most recent events in the CloudTrail console in **Event history**\. Using the information collected by CloudTrail, you can determine the request that was made to Kinesis Data Firehose, the IP address from which the request was made, who made the request, when it was made, and additional details\. 
 
-To learn more about CloudTrail, including how to configure and enable it, see the *[AWS CloudTrail User Guide](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/)*\. 
+To learn more about CloudTrail, including how to configure and enable it, see the [AWS CloudTrail User Guide](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/)\.
 
-**Topics**
-+ [Kinesis Data Firehose and CloudTrail History](#cloudtrail-history)
-+ [Kinesis Data Firehose and CloudTrail Logging](#cloudtrail-logging)
-+ [CloudTrail Log File Entries for Kinesis Data Firehose](#cloudtrail-log-entries)
+## Kinesis Data Firehose Information in CloudTrail<a name="kinesis-data-firehose-name-info-in-cloudtrail"></a>
 
-## Kinesis Data Firehose and CloudTrail History<a name="cloudtrail-history"></a>
+CloudTrail is enabled on your AWS account when you create the account\. When supported event activity occurs in Kinesis Data Firehose, that activity is recorded in a CloudTrail event along with other AWS service events in **Event history**\. You can view, search, and download recent events in your AWS account\. For more information, see [Viewing Events with CloudTrail Event History](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/view-cloudtrail-events.html)\. 
 
-The CloudTrail API activity history feature lets you look up and filter events captured by CloudTrail\. You can look up events related to the creation, modification, or deletion of resources in your AWS account on a per\-region basis\. Events can be looked up by using the CloudTrail console, or programmatically by using the AWS SDKs or AWS CLI\. 
+For an ongoing record of events in your AWS account, including events for Kinesis Data Firehose, create a trail\. A *trail* enables CloudTrail to deliver log files to an Amazon S3 bucket\. By default, when you create a trail in the console, the trail applies to all AWS Regions\. The trail logs events from all Regions in the AWS partition and delivers the log files to the Amazon S3 bucket that you specify\. Additionally, you can configure other AWS services to further analyze and act upon the event data collected in CloudTrail logs\. For more information, see the following: 
++ [Overview for Creating a Trail](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-and-update-a-trail.html)
++ [CloudTrail Supported Services and Integrations](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-aws-service-specific-topics.html#cloudtrail-aws-service-specific-topics-integrations)
++ [Configuring Amazon SNS Notifications for CloudTrail](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/getting_notifications_top_level.html)
++ [Receiving CloudTrail Log Files from Multiple Regions](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/receive-cloudtrail-log-files-from-multiple-regions.html) and [Receiving CloudTrail Log Files from Multiple Accounts](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-receive-logs-from-multiple-accounts.html)
 
-The following actions are supported:
+Kinesis Data Firehose supports logging the following actions as events in CloudTrail log files:
 + [CreateDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html)
 + [DeleteDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_DeleteDeliveryStream.html)
-+ [UpdateDestination](http://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html)
-
-## Kinesis Data Firehose and CloudTrail Logging<a name="cloudtrail-logging"></a>
-
-When CloudTrail logging is enabled in your AWS account, API calls made to specific Kinesis Data Firehose actions are tracked in CloudTrail log files\. Kinesis Data Firehose actions are written with other AWS service records\. CloudTrail determines when to create and write to a new file based on the specified time period and file size\.
-
-The following actions are supported:
-+ [CreateDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html)
 + [DescribeDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_DescribeDeliveryStream.html)
 + [ListDeliveryStreams](http://docs.aws.amazon.com/firehose/latest/APIReference/API_ListDeliveryStreams.html)
++ [ListTagsForDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_ListTagsForDeliveryStream.html)
++ [TagDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_TagDeliveryStream.html)
++ [UntagDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_UntagDeliveryStream.html)
 + [UpdateDestination](http://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html)
-+ [DeleteDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_DeleteDeliveryStream.html)
 
-Every log entry contains information about who generated the request\. For example, if a request is made to create a delivery stream \(CreateDeliveryStream\), the identity of the person or service that made the request is logged\. The identity information in the log entry helps you determine the following: 
-+ Whether the request was made with root or IAM user credentials
-+ Whether the request was made with temporary security credentials for a role or federated user
-+ Whether the request was made by another AWS service
+Every event or log entry contains information about who generated the request\. The identity information helps you determine the following: 
++ Whether the request was made with root or AWS Identity and Access Management \(IAM\) user credentials\.
++ Whether the request was made with temporary security credentials for a role or federated user\.
++ Whether the request was made by another AWS service\.
 
- For more information, see the [CloudTrail userIdentity Element](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html)\.
+For more information, see the [CloudTrail userIdentity Element](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html)\.
 
-You can store your log files in your bucket for as long as needed but you can also define Amazon S3 lifecycle rules to archive or delete log files automatically\. By default, your log files are encrypted by using Amazon S3 server\-side encryption \(SSE\)\.
+## Example: Kinesis Data Firehose Log File Entries<a name="understanding-service-name-entries"></a>
 
-You can have CloudTrail publish SNS notifications when new log files are delivered if you want to take quick action upon log file delivery\. For information, see [Configuring Amazon SNS Notifications](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/getting_notifications_top_level.html) in the *AWS CloudTrail User Guide*\.
+ A trail is a configuration that enables delivery of events as log files to an Amazon S3 bucket that you specify\. CloudTrail log files contain one or more log entries\. An event represents a single request from any source and includes information about the requested action, the date and time of the action, request parameters, and so on\. CloudTrail log files aren't an ordered stack trace of the public API calls, so they don't appear in any specific order\.
 
-You can also aggregate Kinesis Data Firehose log files from multiple AWS regions and multiple AWS accounts into a single S3 bucket\. For more information, see [Receiving CloudTrail Log Files from Multiple Regions](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-receive-logs-from-multiple-accounts.html) and [Receiving CloudTrail Log Files from Multiple Accounts](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-receive-logs-from-multiple-accounts.html) in the *AWS CloudTrail User Guide*\.
-
-## CloudTrail Log File Entries for Kinesis Data Firehose<a name="cloudtrail-log-entries"></a>
-
-CloudTrail log files contain one or more log entries\. Each entry lists multiple JSON\-formatted events\. A log entry represents a single request from any source and includes information about the requested action, the date and time of the action, request parameters, and so on\. The log entries are not an ordered stack trace of the public API calls, so they do not appear in any specific order\.
-
-The following is an example CloudTrail log entry\. Note that for security reasons the user name and password for RedshiftDestinationConfiguration will be omitted and returned as an empty string\.
+The following example shows a CloudTrail log entry that demonstrates the `CreateDeliveryStream`, `DescribeDeliveryStream`, `ListDeliveryStreams`, `UpdateDestination`, and `DeleteDeliveryStream` actions\.
 
 ```
 {

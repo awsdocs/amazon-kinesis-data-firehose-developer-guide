@@ -37,7 +37,7 @@ Amazon's trademarks and trade dress may not be used in
    + [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)
    + [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)
    + [Monitoring Kinesis Agent Health](agent-health.md)
-   + [Monitoring Kinesis Data Firehose API Calls Using AWS CloudTrail](monitoring-with-cloudtrail.md)
+   + [Logging Kinesis Data Firehose API Calls with AWS CloudTrail](monitoring-with-cloudtrail.md)
 + [Controlling Access with Amazon Kinesis Data Firehose](controlling-access.md)
 + [Troubleshooting Amazon Kinesis Data Firehose](troubleshooting.md)
 + [Amazon Kinesis Data Firehose Limits](limits.md)

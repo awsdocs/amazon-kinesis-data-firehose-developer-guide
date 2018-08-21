@@ -20,3 +20,4 @@ When Kinesis Data Streams is configured as the data source, this limit doesn't a
 + For Kinesis Data Firehose to Amazon Redshift delivery, only publicly accessible Amazon Redshift clusters are supported\.
 + The retry duration range is from 0 seconds to 7,200 seconds for Amazon Redshift and Amazon ES delivery\.
 + Kinesis Data Firehose supports Elasticsearch versions 1\.5, 2\.3, 5\.1, 5\.3, 5\.5, 6\.0, and 6\.2\.
++ Kinesis Data Firehose doesn't support delivery to Elasticsearch domains in a VPC\.

@@ -75,7 +75,7 @@ If data transformation with Lambda is enabled, the `AWS/Firehose` namespace incl
 
 
 | Metric | Description | 
-| --- | --- |
+| --- | --- | 
 | ExecuteProcessing\.Duration |  The time it takes for each Lambda function invocation performed by Kinesis Data Firehose\. Units: Milliseconds  | 
 | ExecuteProcessing\.Success |  The sum of the successful Lambda function invocations over the sum of the total Lambda function invocations\.  | 
 | SucceedProcessing\.Records |  The number of successfully processed records over the specified time period\. Units: Count  | 
@@ -126,3 +126,4 @@ aws cloudwatch list-metrics --namespace "AWS/Firehose"
 aws cloudwatch get-metric-statistics --namespace "AWS/Firehose" \
 --metric-name DescribeDeliveryStream.Latency --statistics Average --period 3600 \
 --start-time 2017-06-01T00:00:00Z --end-time 2017-06-30T00:00:00Z
+```

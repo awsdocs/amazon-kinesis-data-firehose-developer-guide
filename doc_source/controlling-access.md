@@ -246,15 +246,21 @@ For more information about allowing other AWS services to access your AWS resour
 ### VPC Access to an Amazon Redshift Cluster<a name="using-iam-rs-vpc"></a>
 
 If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must be publicly accessible with a public IP address\. Also, grant Kinesis Data Firehose access to your Amazon Redshift cluster by unblocking the Kinesis Data Firehose IP addresses\. Kinesis Data Firehose currently uses one CIDR block for each available Region: 
-+ `13.58.135.96/27` for US East \(Ohio\)
-+ `52.70.63.192/27` for US East \(N\. Virginia\)
-+ `13.57.135.192/27` for US West \(N\. California\)
 + `52.89.255.224/27` for US West \(Oregon\)
++ `35.180.1.96/27` for EU \(Paris\)
++ `52.70.63.192/27` for US East \(N\. Virginia\)
++ `52.19.239.192/27` for EU \(Ireland\)
++ `13.232.67.32/27` for Asia Pacific \(Mumbai\)
++ `13.58.135.96/27` for US East \(Ohio\)
++ `35.158.127.160/27` for EU \(Frankfurt\)
++ `18.228.1.128/27` for South America \(São Paulo\)
++ `13.209.1.64/27` for Asia Pacific \(Seoul\)
++ `18.130.1.96/27` for EU \(London\)
++ `13.113.196.224/27` for Asia Pacific \(Tokyo\)
++ `13.57.135.192/27` for US West \(N\. California\)
 + `13.228.64.192/27` for Asia Pacific \(Singapore\)
 + `13.210.67.224/27` for Asia Pacific \(Sydney\)
-+ `13.113.196.224/27` for Asia Pacific \(Tokyo\)
-+ `35.158.127.160/27` for EU \(Frankfurt\)
-+ `52.19.239.192/27` for EU \(Ireland\)
++ `35.183.92.128/27` for Canada \(Central\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](http://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
 
@@ -492,15 +498,21 @@ For more information about allowing other AWS services to access your AWS resour
 ## VPC Access to Splunk<a name="using-iam-splunk-vpc"></a>
 
 If your Splunk platform is in a VPC, it must be publicly accessible with a public IP address\. Also, grant Kinesis Data Firehose access to your Splunk platform by unblocking the Kinesis Data Firehose IP addresses\. Kinesis Data Firehose currently uses the following CIDR blocks\.
-+ `18.216.68.160/27`, `18.216.170.64/27`, `18.216.170.96/27` for US East \(Ohio\)
-+ `34.238.188.128/26`, `34.238.188.192/26`, `34.238.195.0/26` for US East \(N\. Virginia\)
++ `34.216.24.32/27, 34.216.24.192/27, 34.216.24.224/27` for US West \(Oregon\)
++ `35.180.112.0/26` for EU \(Paris\)
++ `34.238.188.128/26, 34.238.188.192/26, 34.238.195.0/26` for US East \(N\. Virginia\)
++ `34.241.197.32/27, 34.241.197.64/27, 34.241.197.96/27` for EU \(Ireland\)
++ `13.232.67.64/26` for Asia Pacific \(Mumbai\)
++ `18.216.68.160/27, 18.216.170.64/27, 18.216.170.96/27` for US East \(Ohio\)
++ `18.194.95.192/27, 18.194.95.224/27, 18.195.48.0/27` for EU \(Frankfurt\)
++ `18.228.1.192/26` for South America \(São Paulo\)
++ `13.209.71.0/26` for Asia Pacific \(Seoul\)
++ `18.130.91.0/26` for EU \(London\)
++ `13.230.21.0/27, 13.230.21.32/27` for Asia Pacific \(Tokyo\)
 + `13.57.180.0/26` for US West \(N\. California\)
-+ `34.216.24.32/27`, `34.216.24.192/27`, `34.216.24.224/27` for US West \(Oregon\)
 + `13.229.187.128/26` for Asia Pacific \(Singapore\)
 + `13.211.12.0/26` for Asia Pacific \(Sydney\)
-+ `13.230.21.0/27`, `13.230.21.32/27` for Asia Pacific \(Tokyo\)
-+ `18.194.95.192/27`, `18.194.95.224/27`, `18.195.48.0/27` for EU \(Frankfurt\)
-+ `34.241.197.32/27`, `34.241.197.64/27`, `34.241.197.96/27` for EU \(Ireland\)
++ `35.183.92.64/26` for Canada \(Central\)
 
 ## Cross\-Account Delivery<a name="cross-account-delivery"></a>
 

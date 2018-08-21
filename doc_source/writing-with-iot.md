@@ -1,14 +1,16 @@
-# Writing to Amazon Kinesis Data Firehose Using AWS IoT<a name="writing-with-iot"></a>
+# Writing to Kinesis Data Firehose Using AWS IoT<a name="writing-with-iot"></a>
 
-You can configure AWS IoT to send information to a Kinesis Data Firehose delivery stream by adding an action\.
+You can configure AWS IoT to send information to a Amazon Kinesis Data Firehose delivery stream by adding an action\.
 
 **To create an action that sends events to an existing Kinesis Data Firehose delivery stream**
 
-1. When creating your rule, in the **Set one or more actions** page, choose Add action, and then choose **Send messages to an Amazon Kinesis Data Firehose stream**\.
+1. When creating a rule in the AWS IoT console, on the **Create a rule** page, under **Set one or more actions**, choose **Add action**\.
+
+1. Choose **Send messages to an Amazon Kinesis Firehose stream**\.
 
 1. Choose **Configure action**\.
 
-1. For **Stream name**, select an existing Kinesis Data Firehose delivery stream\. 
+1. For **Stream name**, choose an existing Kinesis Data Firehose delivery stream\. 
 
 1. For **Separator**, choose a separator character to be inserted between records\.
 
@@ -16,4 +18,4 @@ You can configure AWS IoT to send information to a Kinesis Data Firehose deliver
 
 1. Choose **Add action**\.
 
-For more information on creating AWS IoT rules, see [AWS IoT Rule Tutorials](http://docs.aws.amazon.com/iot/latest/developerguide/iot-rules-tutorial.html)\.
+For more information about creating AWS IoT rules, see [AWS IoT Rule Tutorials](http://docs.aws.amazon.com/iot/latest/developerguide/iot-rules-tutorial.html)\.

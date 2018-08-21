@@ -415,7 +415,7 @@ Use the following trust policy to enable Kinesis Data Firehose to assume the rol
 }
 ```
 
-Use the following access policy to enable Kinesis Data Firehose to access your S3 bucket\. If you don't own the S3 bucket, add `s3:PutObjectAcl` to the list of Amazon S3 actions, which grants the bucket owner full access to the objects delivered by Kinesis Data Firehose\. This policy also grants Kinesis Data Firehose access to CloudWatch for error logging and to AWS Lambda for data transformation\. The policy also has a statement that allows access to Amazon Kinesis Data Streams\. If you don't use Kinesis Data Streams as your data source, you can remove that statement\. Kinesis Firehose doesn't use IAM to access Splunk\. For accessing Splunk, it uses your HEC token\.
+Use the following access policy to enable Kinesis Data Firehose to access your S3 bucket\. If you don't own the S3 bucket, add `s3:PutObjectAcl` to the list of Amazon S3 actions, which grants the bucket owner full access to the objects delivered by Kinesis Data Firehose\. This policy also grants Kinesis Data Firehose access to CloudWatch for error logging and to AWS Lambda for data transformation\. The policy also has a statement that allows access to Amazon Kinesis Data Streams\. If you don't use Kinesis Data Streams as your data source, you can remove that statement\. Kinesis Data Firehose doesn't use IAM to access Splunk\. For accessing Splunk, it uses your HEC token\.
 
 ```
 {

@@ -1,16 +1,20 @@
 # Name and source<a name="create-name"></a>
 
-This topic describes the **Name and source** page of the **Create Delivery Stream** wizard\.
+This topic describes the **Name and source** page of the **Create Delivery Stream** wizard in Amazon Kinesis Data Firehose\.
 
 **Name and source**
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Sign in to the AWS Management Console and open the Kinesis console at [https://console\.aws\.amazon\.com/kinesis](https://console.aws.amazon.com/kinesis)\.
 
-1. Choose **Create Delivery Stream**\. On the **Name and source** page, enter values for the following fields:  
+1. Choose **Data Firehose** in the navigation pane\.
+
+1. Choose **Create Delivery Stream**\.
+
+1.  On the **Name and source** page, enter values for the following fields:  
 ****Delivery stream name****  
-The name of your Kinesis data delivery stream\.  
+The name of your Kinesis Data Firehose delivery stream\.  
 ****Source****  
-   + **Direct PUT or other sources:** Choose this option to create a Kinesis data delivery stream that producer applications write directly to\.
-   + **Kinesis stream:** Choose this option to configure a Kinesis data delivery stream that uses a Kinesis stream as a data source\. You can then use Amazon Kinesis Data Firehose to read data easily from an existing Kinesis stream and load it into destinations\. For more information about using Kinesis Data Streams as your data source, see [Writing to Amazon Kinesis Data Firehose Using Kinesis Data Streams](http://docs.aws.amazon.com/firehose/latest/dev/writing-with-kinesis-streams.html)\.
+   + **Direct PUT or other sources:** Choose this option to create a Kinesis Data Firehose delivery stream that producer applications write directly to\.
+   + **Kinesis stream:** Choose this option to configure a Kinesis Data Firehose delivery stream that uses a Kinesis data stream as a data source\. You can then use Kinesis Data Firehose to read data easily from an existing Kinesis data stream and load it into destinations\. For more information about using Kinesis Data Streams as your data source, see [Writing to Amazon Kinesis Data Firehose Using Kinesis Data Streams](http://docs.aws.amazon.com/firehose/latest/dev/writing-with-kinesis-streams.html)\.
 
-1. Choose **Next** to advance to the [Transform records](create-transform.md) page\.
+1. Choose **Next** to go to the [Transform records](create-transform.md) page\.

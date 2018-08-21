@@ -1,6 +1,6 @@
-# Writing to Amazon Kinesis Data Firehose Using Kinesis Agent<a name="writing-with-agents"></a>
+# Writing to Kinesis Data Firehose Using Kinesis Agent<a name="writing-with-agents"></a>
 
-Kinesis Agent is a stand\-alone Java software application that offers an easy way to collect and send data to Kinesis Data Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis data delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
+Amazon Kinesis Agent is a standalone Java software application that offers an easy way to collect and send data to Kinesis Data Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis Data Firehose delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
 
 By default, records are parsed from each file based on the newline \(`'\n'`\) character\. However, the agent can also be configured to parse multi\-line records \(see [Agent Configuration Settings](#agent-config-settings)\)\. 
 
@@ -12,7 +12,7 @@ You can install the agent on Linux\-based server environments such as web server
 + [Configure and Start the Agent](#config-start)
 + [Agent Configuration Settings](#agent-config-settings)
 + [Monitor Multiple File Directories and Write to Multiple Streams](#sim-writes)
-+ [Use the Agent to Pre\-process Data](#pre-processing)
++ [Use the Agent to Preprocess Data](#pre-processing)
 + [Agent CLI Commands](#cli-commands)
 
 ## Prerequisites<a name="prereqs"></a>
@@ -20,9 +20,9 @@ You can install the agent on Linux\-based server environments such as web server
 + If you are using Amazon EC2 to run your agent, launch your EC2 instance\.
 + Manage your AWS credentials using one of the following methods:
   + Specify an IAM role when you launch your EC2 instance\.
-  + Specify AWS credentials when you configure the agent \(see [awsAccessKeyId](#awsAccessKeyId) and [awsSecretAccessKey](#awsSecretAccessKey)\)\.
-  + Edit `/etc/sysconfig/aws-kinesis-agent` to specify your region and AWS access keys\.
-  + If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Data Firehose service, and specify that role when you configure the agent \(see [assumeRoleARN](#assumeRoleARN) and [assumeRoleExternalId](#assumeRoleExternalId)\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
+  + Specify AWS credentials when you configure the agent \(see the entries for `awsAccessKeyId` and `awsSecretAccessKey` in the configuration table under [Agent Configuration Settings](#agent-config-settings)\)\.
+  + Edit `/etc/sysconfig/aws-kinesis-agent` to specify your AWS Region and AWS access keys\.
+  + If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Data Firehose service\. Specify that role when you configure the agent \(see [assumeRoleARN](#assumeRoleARN) and [assumeRoleExternalId](#assumeRoleExternalId)\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
 + The IAM role or AWS credentials that you specify must have permission to perform the Kinesis Data Firehose [PutRecordBatch](http://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html) operation for the agent to send data to your delivery stream\. If you enable CloudWatch monitoring for the agent, permission to perform the CloudWatch [PutMetricData](http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation is also needed\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md), [Monitoring Kinesis Agent Health](agent-health.md), and [Authentication and Access Control for Amazon CloudWatch](http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/auth-and-access-control-cw.html)\.
 
 ## Download and Install the Agent<a name="download-install"></a>
@@ -61,7 +61,7 @@ sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-
 
 1. Open and edit the configuration file \(as superuser if using default file access permissions\): `/etc/aws-kinesis/agent.json` 
 
-   In this configuration file, specify the files \( `"filePattern"` \) from which the agent collects data, and the name of the delivery stream \( `"deliveryStream"` \) to which the agent sends data\. Note that the file name is a pattern, and the agent recognizes file rotations\. You can rotate files or create new files no more than once per second\. The agent uses the file creation timestamp to determine which files to track and tail into your delivery stream; creating new files or rotating files more frequently than once per second does not allow the agent to differentiate properly between them\.
+   In this configuration file, specify the files \( `"filePattern"` \) from which the agent collects data, and the name of the delivery stream \( `"deliveryStream"` \) to which the agent sends data\. The file name is a pattern, and the agent recognizes file rotations\. You can rotate files or create new files no more than once per second\. The agent uses the file creation time stamp to determine which files to track and tail into your delivery stream\. Creating new files or rotating files more frequently than once per second does not allow the agent to differentiate properly between them\.
 
    ```
    { 
@@ -74,7 +74,7 @@ sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-
    }
    ```
 
-   Note that the default region is `us-east-1`\. If you are using a different region, add the `firehose.endpoint` setting to the configuration file, specifying the endpoint for your region\. For more information, see [Agent Configuration Settings](#agent-config-settings)\.
+   The default AWS Region is `us-east-1`\. If you are using a different Region, add the `firehose.endpoint` setting to the configuration file, specifying the endpoint for your Region\. For more information, see [Agent Configuration Settings](#agent-config-settings)\.
 
 1. Start the agent manually:
 
@@ -112,7 +112,7 @@ The following are the general configuration settings\.
 
 | Configuration Setting | Description | 
 | --- | --- | 
-| <a name="assumeRoleARN"></a>assumeRoleARN |  The ARN of the role to be assumed by the user\. For more information, see [Delegate Access Across AWS Accounts Using IAM Roles](http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) in the *IAM User Guide*\.  | 
+| <a name="assumeRoleARN"></a>assumeRoleARN |  The Amazon Resource Name \(ARN\) of the role to be assumed by the user\. For more information, see [Delegate Access Across AWS Accounts Using IAM Roles](http://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) in the *IAM User Guide*\.  | 
 | <a name="assumeRoleExternalId"></a>assumeRoleExternalId |  An optional identifier that determines who can assume the role\. For more information, see [How to Use an External ID](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user_externalid.html) in the *IAM User Guide*\.  | 
 | <a name="awsAccessKeyId"></a>awsAccessKeyId |  AWS access key ID that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
 | <a name="awsSecretAccessKey"></a>awsSecretAccessKey |  AWS secret key that overrides the default credentials\. This setting takes precedence over all other credential providers\.  | 
@@ -125,21 +125,21 @@ The following are the flow configuration settings\.
 
 | Configuration Setting | Description | 
 | --- | --- | 
-| dataProcessingOptions |  The list of processing options applied to each parsed record before it is sent to the delivery stream\. The processing options are performed in the specified order\. For more information, see [Use the Agent to Pre\-process Data](#pre-processing)\.  | 
+| dataProcessingOptions |  The list of processing options applied to each parsed record before it is sent to the delivery stream\. The processing options are performed in the specified order\. For more information, see [Use the Agent to Preprocess Data](#pre-processing)\.  | 
 | deliveryStream |  \[Required\] The name of the delivery stream\.  | 
 | filePattern |  \[Required\] A glob for the files that need to be monitored by the agent\. Any file that matches this pattern is picked up by the agent automatically and monitored\. For all files matching this pattern, read permission must be granted to `aws-kinesis-agent-user`\. For the directory containing the files, read and execute permissions must be granted to `aws-kinesis-agent-user`\.  | 
 | initialPosition |  The initial position from which the file started to be parsed\. Valid values are `START_OF_FILE` and `END_OF_FILE`\. Default: `END_OF_FILE`  | 
-| maxBufferAgeMillis |  The maximum time, in milliseconds, for which the agent buffers data before sending it to the delivery stream\. Value range: 1,000 to 900,000 \(1 second to 15 minutes\) Default: 60,000 \(1 minute\)  | 
-| maxBufferSizeBytes |  The maximum size, in bytes, for which the agent buffers data before sending it to the delivery stream\. Value range: 1 to 4,194,304 \(4 MB\) Default: 4,194,304 \(4 MB\)  | 
-| maxBufferSizeRecords |  The maximum number of records for which the agent buffers data before sending it to the delivery stream\. Value range: 1 to 500 Default: 500  | 
+| maxBufferAgeMillis |  The maximum time, in milliseconds, for which the agent buffers data before sending it to the delivery stream\. Value range: 1,000–900,000 \(1 second to 15 minutes\) Default: 60,000 \(1 minute\)  | 
+| maxBufferSizeBytes |  The maximum size, in bytes, for which the agent buffers data before sending it to the delivery stream\. Value range: 1–4,194,304 \(4 MB\) Default: 4,194,304 \(4 MB\)  | 
+| maxBufferSizeRecords |  The maximum number of records for which the agent buffers data before sending it to the delivery stream\. Value range: 1–500 Default: 500  | 
 | minTimeBetweenFilePollsMillis |  The time interval, in milliseconds, at which the agent polls and parses the monitored files for new data\. Value range: 1 or more Default: 100  | 
 | multiLineStartPattern |  The pattern for identifying the start of a record\. A record is made of a line that matches the pattern and any following lines that don't match the pattern\. The valid values are regular expressions\. By default, each new line in the log files is parsed as one record\.  | 
 | skipHeaderLines |  The number of lines for the agent to skip parsing at the beginning of monitored files\. Value range: 0 or more Default: 0 \(zero\)  | 
-| truncatedRecordTerminator |  The string that the agent uses to truncate a parsed record when the record size exceeds the Kinesis Firehose record size limit\. \(1,000 KB\) Default: `'\n'` \(newline\)  | 
+| truncatedRecordTerminator |  The string that the agent uses to truncate a parsed record when the record size exceeds the Kinesis Data Firehose record size limit\. \(1,000 KB\) Default: `'\n'` \(newline\)  | 
 
 ## Monitor Multiple File Directories and Write to Multiple Streams<a name="sim-writes"></a>
 
-By specifying multiple flow configuration settings, you can configure the agent to monitor multiple file directories and send data to multiple streams\. In the following configuration example, the agent monitors two file directories and sends data to an Kinesis stream and a Kinesis Firehose delivery stream respectively\. Note that you can specify different endpoints for Kinesis Data Streams and Kinesis Firehose so that your Kinesis stream and Kinesis Firehose delivery stream don’t need to be in the same region\.
+By specifying multiple flow configuration settings, you can configure the agent to monitor multiple file directories and send data to multiple streams\. In the following configuration example, the agent monitors two file directories and sends data to a Kinesis data stream and a Kinesis Data Firehose delivery stream respectively\. You can specify different endpoints for Kinesis Data Streams and Kinesis Data Firehose so that your data stream and Kinesis Data Firehose delivery stream don’t need to be in the same Region\.
 
 ```
 {
@@ -161,14 +161,14 @@ By specifying multiple flow configuration settings, you can configure the agent 
 
 For more detailed information about using the agent with Amazon Kinesis Data Streams, see [Writing to Amazon Kinesis Data Streams with Kinesis Agent](http://docs.aws.amazon.com/kinesis/latest/dev/writing-with-agents.html)\.
 
-## Use the Agent to Pre\-process Data<a name="pre-processing"></a>
+## Use the Agent to Preprocess Data<a name="pre-processing"></a>
 
-The agent can pre\-process the records parsed from monitored files before sending them to your delivery stream\. You can enable this feature by adding the `dataProcessingOptions` configuration setting to your file flow\. One or more processing options can be added and they will be performed in the specified order\.
+The agent can pre\-process the records parsed from monitored files before sending them to your delivery stream\. You can enable this feature by adding the `dataProcessingOptions` configuration setting to your file flow\. One or more processing options can be added, and they are performed in the specified order\.
 
-The agent supports the following processing options\. Because the agent is open\-source, you can further develop and extend its processing options\. You can download the agent from [Kinesis Agent](https://github.com/awslabs/amazon-kinesis-agent)\.Processing Options
+The agent supports the following processing options\. Because the agent is open source, you can further develop and extend its processing options\. You can download the agent from [Kinesis Agent](https://github.com/awslabs/amazon-kinesis-agent)\.Processing Options
 
 `SINGLELINE`  
-Converts a multi\-line record to a single line record by removing newline characters, leading spaces, and trailing spaces\.  
+Converts a multi\-line record to a single\-line record by removing newline characters, leading spaces, and trailing spaces\.  
 
 ```
 {
@@ -177,7 +177,7 @@ Converts a multi\-line record to a single line record by removing newline charac
 ```
 
 `CSVTOJSON`  
-Converts a record from delimiter separated format to JSON format\.  
+Converts a record from delimiter\-separated format to JSON format\.  
 
 ```
 {
@@ -250,7 +250,7 @@ With this configuration setting, the same Apache Common Log entry from the previ
 ```
 
 **Example : Convert Apache Common Log Entry**  <a name="example-apache-common-log-entry"></a>
-The following flow configuration converts an Apache Common Log entry to a single line record in JSON format:  
+The following flow configuration converts an Apache Common Log entry to a single\-line record in JSON format:  
 
 ```
 { 
@@ -270,7 +270,7 @@ The following flow configuration converts an Apache Common Log entry to a single
 ```
 
 **Example : Convert Multi\-Line Records**  <a name="example-convert-multi-line"></a>
-The following flow configuration parses multi\-line records whose first line starts with "`[SEQUENCE=`"\. Each record is first converted to a single line record\. Then, values are extracted from the record based on a tab delimiter\. Extracted values are mapped to specified `customFieldNames` values to form a single\-line record in JSON format\.  
+The following flow configuration parses multi\-line records whose first line starts with "`[SEQUENCE=`"\. Each record is first converted to a single\-line record\. Then, values are extracted from the record based on a tab delimiter\. Extracted values are mapped to specified `customFieldNames` values to form a single\-line record in JSON format\.  
 
 ```
 { 

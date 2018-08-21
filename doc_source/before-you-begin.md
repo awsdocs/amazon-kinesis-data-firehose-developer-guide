@@ -25,7 +25,7 @@ This might be unavailable in your browser if you previously signed into the AWS 
 ## Optional: Download Libraries and Tools<a name="setting-up-downloads"></a>
 
 The following libraries and tools will help you work with Kinesis Data Firehose programmatically and from the command line: 
-+ The [Amazon Kinesis Firehose API Reference](http://docs.aws.amazon.com/firehose/latest/APIReference/) is the basic set of operations that Kinesis Data Firehose supports\.
++ The [Amazon Kinesis Data Firehose API Reference](http://docs.aws.amazon.com/firehose/latest/APIReference/) is the basic set of operations that Kinesis Data Firehose supports\.
 + The AWS SDKs for [Java](https://aws.amazon.com/developers/getting-started/java/), [\.NET](https://aws.amazon.com/developers/getting-started/net/), [Node\.js](https://aws.amazon.com/developers/getting-started/nodejs/), [Python](https://aws.amazon.com/developers/getting-started/python/), and [Ruby](https://aws.amazon.com/developers/getting-started/ruby/) include Kinesis Data Firehose support and samples\.
 
   If your version of the AWS SDK for Java does not include samples for Kinesis Data Firehose, you can also download the latest AWS SDK from [GitHub](https://github.com/aws/aws-sdk-java/tree/master/src/samples)\.

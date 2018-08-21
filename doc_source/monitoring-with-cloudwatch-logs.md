@@ -1,10 +1,10 @@
-# Monitoring with Amazon CloudWatch Logs<a name="monitoring-with-cloudwatch-logs"></a>
+# Monitoring Kinesis Data Firehose Using CloudWatch Logs<a name="monitoring-with-cloudwatch-logs"></a>
 
-Kinesis Data Firehose integrates with CloudWatch Logs so that you can view the specific error logs when the Lambda invocation for data transformation or data delivery fails\. You can enable Kinesis Data Firehose error logging when you create your delivery stream\.
+Kinesis Data Firehose integrates with Amazon CloudWatch Logs so that you can view the specific error logs when the Lambda invocation for data transformation or data delivery fails\. You can enable Kinesis Data Firehose error logging when you create your delivery stream\.
 
 If you enable Kinesis Data Firehose error logging in the Kinesis Data Firehose console, a log group and corresponding log streams are created for the delivery stream on your behalf\. The format of the log group name is `/aws/kinesisfirehose/delivery-stream-name`, where `delivery-stream-name` is the name of the corresponding delivery stream\. The log stream name is **S3Delivery**, **RedshiftDelivery**, or **ElasticsearchDelivery**, depending on the delivery destination\. Lambda invocation errors for data transformation are also logged to the log stream used for data delivery errors\.
 
-For example, if you create a delivery stream "MyStream" with Amazon Redshift as the destination and enable Kinesis Data Firehose error logging, the following are created on your behalf: a log group named `aws/kinesisfirehose/MyStream` and two log streams named **S3Delivery** and **RedshiftDelivery**\. In this example, the **S3Delivery** log stream is used for logging errors related to delivery failure to the intermediate S3 bucket, and the **RedshiftDelivery** log stream is used for logging errors related to Lambda invocation failure and delivery failure to your Amazon Redshift cluster\.
+For example, if you create a delivery stream "MyStream" with Amazon Redshift as the destination and enable Kinesis Data Firehose error logging, the following are created on your behalf: a log group named `aws/kinesisfirehose/MyStream` and two log streams named **S3Delivery** and **RedshiftDelivery**\. In this example, the **S3Delivery** log stream is used for logging errors related to delivery failure to the intermediate S3 bucket\. The **RedshiftDelivery** log stream is used for logging errors related to Lambda invocation failure and delivery failure to your Amazon Redshift cluster\.
 
 If you enable Kinesis Data Firehose error logging through the AWS CLI or an AWS SDK using the `CloudWatchLoggingOptions` configuration, you must create a log group and a log stream in advance\. We recommend reserving that log group and log stream for Kinesis Data Firehose error logging exclusively\. Also ensure that the associated IAM policy has `"logs:putLogEvents"` permission\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md)\.
 
@@ -96,7 +96,7 @@ Kinesis Data Firehose can send the following Splunk\-related errors to CloudWatc
 
 ### Amazon Elasticsearch Service Data Delivery Errors<a name="monitoring-es-errors"></a>
 
-For the Amazon ES destination, Kinesis Firehose sends errors to CloudWatch Logs as they are returned by Elasticsearch\.
+For the Amazon ES destination, Kinesis Data Firehose sends errors to CloudWatch Logs as they are returned by Elasticsearch\.
 
 ## Lambda Invocation Errors<a name="lambda-invocation-errors"></a>
 
@@ -119,15 +119,17 @@ Kinesis Data Firehose can send the following Lambda invocation errors to CloudWa
 
 ## Accessing CloudWatch Logs for Kinesis Data Firehose<a name="accessing-firehose-data-delivery-logs"></a>
 
-You can view the error logs related to Kinesis Firehose data delivery failure using the Kinesis Firehose console or CloudWatch console\. The following procedures show you how to access error logs using these two methods\.
+You can view the error logs related to Kinesis Data Firehose data delivery failure using the Kinesis Data Firehose console or the CloudWatch console\. The following procedures show you how to access error logs using these two methods\.
 
 **To access error logs using the Kinesis Data Firehose console**
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Sign in to the AWS Management Console and open the Kinesis console at [https://console\.aws\.amazon\.com/kinesis](https://console.aws.amazon.com/kinesis)\.
 
-1. On the navigation bar, choose a region\.
+1. Choose **Data Firehose** in the navigation pane\.
 
-1. Select a delivery stream name to go to the delivery stream details page\.
+1. On the navigation bar, choose an AWS Region\.
+
+1. Choose a delivery stream name to go to the delivery stream details page\.
 
 1. Choose **Error Log** to view a list of error logs related to data delivery failure\.
 
@@ -135,8 +137,8 @@ You can view the error logs related to Kinesis Firehose data delivery failure us
 
 1. Open the CloudWatch console at [https://console\.aws\.amazon\.com/cloudwatch/](https://console.aws.amazon.com/cloudwatch/)\.
 
-1. On the navigation bar, choose a region\.
+1. On the navigation bar, choose a Region\.
 
 1. In the navigation pane, choose **Logs**\.
 
-1. Select a log group and log stream to view a list of error logs related to data delivery failure\.
+1. Choose a log group and log stream to view a list of error logs related to data delivery failure\.

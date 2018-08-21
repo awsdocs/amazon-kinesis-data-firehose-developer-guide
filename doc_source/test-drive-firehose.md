@@ -1,6 +1,6 @@
 # Testing Your Delivery Stream Using Sample Data<a name="test-drive-firehose"></a>
 
-You can use the AWS Management Console to ingest simulated stock ticker data\. The console runs a script in your browser to put sample records in your Kinesis Firehose delivery stream\. This enables you to test the configuration of your delivery stream without having to generate your own test data\.
+You can use the AWS Management Console to ingest simulated stock ticker data\. The console runs a script in your browser to put sample records in your Kinesis Data Firehose delivery stream\. This enables you to test the configuration of your delivery stream without having to generate your own test data\.
 
 The following is an example from the simulated data:
 
@@ -8,7 +8,7 @@ The following is an example from the simulated data:
 {"TICKER_SYMBOL":"QXZ","SECTOR":"HEALTHCARE","CHANGE":-0.05,"PRICE":84.51}
 ```
 
-Note that standard Amazon Kinesis Firehose charges apply when your delivery stream transmits the data, but there is no charge when the data is generated\. To stop incurring these charges, you can stop the sample stream from the console at any time\.
+Note that standard Amazon Kinesis Data Firehose charges apply when your delivery stream transmits the data, but there is no charge when the data is generated\. To stop incurring these charges, you can stop the sample stream from the console at any time\.
 
 **Topics**
 + [Prerequisites](#test-drive-requirements)
@@ -27,7 +27,7 @@ Use the following procedure to test your delivery stream using Amazon Simple Sto
 
 **To test a delivery stream using Amazon S3**
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Open the Kinesis Data Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
 
 1. Choose the delivery stream\.
 
@@ -55,7 +55,7 @@ Use the following procedure to test your delivery stream using Amazon Redshift a
    );
    ```
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Open the Kinesis Data Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
 
 1. Choose the delivery stream\.
 
@@ -67,7 +67,7 @@ Use the following procedure to test your delivery stream using Amazon Redshift a
 
 1. When the test is complete, choose **Stop sending demo data** to stop incurring usage charges\.
 
-1. Edit the destination details for your Kinesis Firehose delivery stream to point to another table\.
+1. Edit the destination details for your Kinesis Data Firehose delivery stream to point to another table\.
 
 1. \(Optional\) Delete the `firehose_test_table` table\.
 
@@ -77,7 +77,7 @@ Use the following procedure to test your delivery stream using Amazon Elasticsea
 
 **To test a delivery stream using Amazon ES**
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Open the Kinesis Data Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
 
 1. Choose the delivery stream\.
 
@@ -93,7 +93,7 @@ Use the following procedure to test your delivery stream using Splunk as the des
 
 **To test a delivery stream using Splunk**
 
-1. Open the Kinesis Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
+1. Open the Kinesis Data Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
 
 1. Choose the delivery stream\.
 

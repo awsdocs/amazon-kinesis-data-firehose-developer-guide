@@ -1,6 +1,6 @@
-# Monitoring Amazon Kinesis Data Firehose API Calls with AWS CloudTrail<a name="monitoring-with-cloudtrail"></a>
+# Monitoring Kinesis Data Firehose API Calls Using AWS CloudTrail<a name="monitoring-with-cloudtrail"></a>
 
-Amazon Kinesis Data Firehose is integrated with AWS CloudTrail, which captures API calls, delivers the log files to an Amazon S3 bucket that you specify, and maintains API call history\. CloudTrail captures API calls made from the Kinesis Data Firehose console or from your code to the Kinesis Data Firehose API\. With the information collected by CloudTrail, you can determine the request that was made to Kinesis Data Firehose, the IP address from which the request was made, who made the request, when it was made, and so on\.
+Amazon Kinesis Data Firehose is integrated with AWS CloudTrail, which captures API calls, delivers the log files to an Amazon S3 bucket that you specify, and maintains API call history\. CloudTrail captures API calls made from the Kinesis Data Firehose console or from your code to the Kinesis Data Firehose API\. Use the information collected by CloudTrail to determine the request that was made to Kinesis Data Firehose, the IP address that it came from, who made the request, when it was made, and so on\.
 
 To learn more about CloudTrail, including how to configure and enable it, see the *[AWS CloudTrail User Guide](http://docs.aws.amazon.com/awscloudtrail/latest/userguide/)*\. 
 

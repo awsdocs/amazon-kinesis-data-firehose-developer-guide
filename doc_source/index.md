@@ -1,4 +1,4 @@
-# Amazon Kinesis Firehose Developer Guide
+# Amazon Kinesis Data Firehose Developer Guide
 
 -----
 *****Copyright &copy; 2018 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
@@ -22,22 +22,22 @@ Amazon's trademarks and trade dress may not be used in
    + [Choose destination](create-destination.md)
    + [Configure settings](create-configure.md)
 + [Testing Your Delivery Stream Using Sample Data](test-drive-firehose.md)
-+ [Sending Data to an Amazon Kinesis Firehose Delivery Stream](basic-write.md)
-   + [Writing to Amazon Kinesis Data Firehose Using Kinesis Data Streams](writing-with-kinesis-streams.md)
-   + [Writing to Amazon Kinesis Data Firehose Using Kinesis Agent](writing-with-agents.md)
-   + [Writing to a Kinesis Data Delivery Stream Using the AWS SDK](writing-with-sdk.md)
-   + [Writing to Amazon Kinesis Data Firehose Using CloudWatch Logs](writing-with-cloudwatch-logs.md)
-   + [Writing to Amazon Kinesis Data Firehose Using CloudWatch Events](writing-with-cloudwatch-events.md)
-   + [Writing to Amazon Kinesis Data Firehose Using AWS IoT](writing-with-iot.md)
++ [Sending Data to an Amazon Kinesis Data Firehose Delivery Stream](basic-write.md)
+   + [Writing to Kinesis Data Firehose Using Kinesis Data Streams](writing-with-kinesis-streams.md)
+   + [Writing to Kinesis Data Firehose Using Kinesis Agent](writing-with-agents.md)
+   + [Writing to Kinesis Data Firehose Using the AWS SDK](writing-with-sdk.md)
+   + [Writing to Kinesis Data Firehose Using CloudWatch Logs](writing-with-cloudwatch-logs.md)
+   + [Writing to Kinesis Data Firehose Using CloudWatch Events](writing-with-cloudwatch-events.md)
+   + [Writing to Kinesis Data Firehose Using AWS IoT](writing-with-iot.md)
 + [Amazon Kinesis Data Firehose Data Transformation](data-transformation.md)
 + [Converting Your Input Record Format in Kinesis Data Firehose](record-format-conversion.md)
 + [Amazon Kinesis Data Firehose Data Delivery](basic-deliver.md)
 + [Using Server-Side Encryption with Amazon Kinesis Data Firehose](encryption.md)
 + [Monitoring Amazon Kinesis Data Firehose](monitoring.md)
-   + [Monitoring with Amazon CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)
-   + [Monitoring with Amazon CloudWatch Logs](monitoring-with-cloudwatch-logs.md)
+   + [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)
+   + [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)
    + [Monitoring Kinesis Agent Health](agent-health.md)
-   + [Monitoring Amazon Kinesis Data Firehose API Calls with AWS CloudTrail](monitoring-with-cloudtrail.md)
+   + [Monitoring Kinesis Data Firehose API Calls Using AWS CloudTrail](monitoring-with-cloudtrail.md)
 + [Controlling Access with Amazon Kinesis Data Firehose](controlling-access.md)
 + [Troubleshooting Amazon Kinesis Data Firehose](troubleshooting.md)
 + [Amazon Kinesis Data Firehose Limits](limits.md)

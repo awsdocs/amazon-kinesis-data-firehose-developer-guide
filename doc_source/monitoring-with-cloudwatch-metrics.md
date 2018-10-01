@@ -43,7 +43,7 @@ The `AWS/Firehose` namespace includes the following service\-level metrics\.
 | DeliveryToSplunk\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
 | IncomingBytes |  The number of bytes ingested into the Kinesis Data Firehose stream over the specified time period\. Units: Bytes  | 
 | IncomingRecords |  The number of records ingested into the Kinesis Data Firehose stream over the specified time period\. Units: Count  | 
-| KinesisMillisBehindLatest |  When the data source is a Kinesis data stream, this metric indicates the number of milliseconds that the last read record is behind the newest record in the Kinesis data stream\. Units: Millisecond  | 
+| KinesisMillisBehindLatest |  When the data source is a Kinesis data stream, this metric indicates the number of milliseconds that the last read record is behind the newest record in the Kinesis data stream\. Units: Milliseconds  | 
 
 ## API\-Level CloudWatch Metrics<a name="fh-metrics-api-cw"></a>
 

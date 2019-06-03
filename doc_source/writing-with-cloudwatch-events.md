@@ -12,4 +12,4 @@ You can configure Amazon CloudWatch to send events to a Kinesis Data Firehose de
 
 1. For **Delivery stream**, choose an existing Kinesis Data Firehose delivery stream\. 
 
-For more information about creating CloudWatch Events rules, see [Getting Started with Amazon CloudWatch Events](http://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CWE_GettingStarted.html)\.
+For more information about creating CloudWatch Events rules, see [Getting Started with Amazon CloudWatch Events](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CWE_GettingStarted.html)\.

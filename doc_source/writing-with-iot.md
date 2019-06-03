@@ -18,4 +18,4 @@ You can configure AWS IoT to send information to a Amazon Kinesis Data Firehose 
 
 1. Choose **Add action**\.
 
-For more information about creating AWS IoT rules, see [AWS IoT Rule Tutorials](http://docs.aws.amazon.com/iot/latest/developerguide/iot-rules-tutorial.html)\.
+For more information about creating AWS IoT rules, see [AWS IoT Rule Tutorials](https://docs.aws.amazon.com/iot/latest/developerguide/iot-rules-tutorial.html)\.

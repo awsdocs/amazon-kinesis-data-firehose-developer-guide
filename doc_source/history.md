@@ -5,6 +5,8 @@ The following table describes the important changes to the Amazon Kinesis Data F
 
 | Change | Description | Date Changed | 
 | --- | --- | --- | 
+| Added a topic on custom prefixes\. | Added a topic about the expressions that you can use when building a custom prefix for data that is delivered to Amazon S3\. See [Custom Prefixes for Amazon S3 Objects](s3-prefixes.md)\. | December 20, 2018 | 
+| Added New Kinesis Data Firehose Tutorial | Added a tutorial that demonstrates how to send Amazon VPC flow logs to Splunk through Kinesis Data Firehose\. See [Tutorial: Sending VPC Flow Logs to Splunk Using Amazon Kinesis Data Firehose](vpc-splunk-tutorial.md)\. | October 30, 2018 | 
 | Added Four New Kinesis Data Firehose Regions | Added Paris, Mumbai, Sao Paulo, and London\. For more information, see [Amazon Kinesis Data Firehose Limits](limits.md)\. | June 27, 2018 | 
 | Added Two New Kinesis Data Firehose Regions | Added Seoul and Montreal\. For more information, see [Amazon Kinesis Data Firehose Limits](limits.md)\. | June 13, 2018 | 
 | New Kinesis Streams as Source feature | Added Kinesis Streams as a potential source for records for a Firehose Delivery Stream\. For more information, see [Name and source](create-name.md)\. | August 18, 2017 | 

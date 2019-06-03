@@ -25,8 +25,8 @@ The `AWS/Firehose` namespace includes the following service\-level metrics\.
 | BackupToS3\.DataFreshness |  Age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to the Amazon S3 bucket for backup\. Kinesis Data Firehose emits this metric when data transformation is enabled for Amazon S3 or Amazon Redshift destinations\. Units: Seconds  | 
 | BackupToS3\.Records |  The number of records delivered to Amazon S3 for backup over the specified time period\. Kinesis Data Firehose emits this metric when data transformation is enabled for Amazon S3 or Amazon Redshift destinations\. Units: Count  | 
 | BackupToS3\.Success |  Sum of successful Amazon S3 put commands for backup over sum of all Amazon S3 backup put commands\. Kinesis Data Firehose emits this metric when data transformation is enabled for Amazon S3 or Amazon Redshift destinations\.  | 
-| DataReadFromKinesisStream\.Bytes |  When the data source is a Kinesis data stream, this metric indicates the number of bytes read from that Kinesis data stream\. This number includes rereads due to failovers\. Units: Bytes  | 
-| DataReadFromKinesisStream\.Records |  When the data source is a Kinesis data stream, this metric indicates the number of records read from that Kinesis data stream\. This number includes rereads due to failovers\. Units: Count  | 
+| DataReadFromKinesisStream\.Bytes |  When the data source is a Kinesis data stream, this metric indicates the number of bytes read from that data stream\. This number includes rereads due to failovers\. Units: Bytes  | 
+| DataReadFromKinesisStream\.Records |  When the data source is a Kinesis data stream, this metric indicates the number of records read from that data stream\. This number includes rereads due to failovers\. Units: Count  | 
 | DeliveryToElasticsearch\.Bytes |  The number of bytes indexed to Amazon ES over the specified time period\. Units: Bytes  | 
 | DeliveryToElasticsearch\.Records |  The number of records indexed to Amazon ES over the specified time period\. Units: Count  | 
 | DeliveryToElasticsearch\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
@@ -38,6 +38,7 @@ The `AWS/Firehose` namespace includes the following service\-level metrics\.
 | DeliveryToS3\.Records |  The number of records delivered to Amazon S3 over the specified time period\. Units: Count  | 
 | DeliveryToS3\.Success |  The sum of successful Amazon S3 put commands over the sum of all Amazon S3 put commands\.  | 
 | DeliveryToSplunk\.Bytes |  The number of bytes delivered to Splunk over the specified time period\. Units: Bytes  | 
+| DeliveryToSplunk\.DataAckLatency |  The approximate duration it takes to receive an acknowledgement from Splunk after Kinesis Data Firehose sends it data\. The increasing or decreasing trend for this metric is more useful than the absolute approximate value\. Increasing trends can indicate slower indexing and acknowledgement rates from Splunk indexers\. Units: Seconds  | 
 | DeliveryToSplunk\.DataFreshness |  Age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to Splunk\. Units: Seconds  | 
 | DeliveryToSplunk\.Records |  The number of records delivered to Splunk over the specified time period\. Units: Count  | 
 | DeliveryToSplunk\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
@@ -116,7 +117,7 @@ You can monitor metrics for Kinesis Data Firehose using the CloudWatch console, 
 1. Select a metric to add to the graph\.
 
 **To access metrics using the AWS CLI**  
-Use the [list\-metrics](http://docs.aws.amazon.com/cli/latest/reference/cloudwatch/list-metrics.html) and [get\-metric\-statistics](http://docs.aws.amazon.com/cli/latest/reference/cloudwatch/get-metric-statistics.html) commands\.
+Use the [list\-metrics](https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/list-metrics.html) and [get\-metric\-statistics](https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/get-metric-statistics.html) commands\.
 
 ```
 aws cloudwatch list-metrics --namespace "AWS/Firehose"

@@ -43,7 +43,7 @@ Use the following procedure to test your delivery stream using Amazon Redshift a
 
 **To test a delivery stream using Amazon Redshift**
 
-1. Your delivery stream expects a table to be present in your Amazon Redshift cluster\. [Connect to Amazon Redshift through a SQL interface](http://docs.aws.amazon.com/redshift/latest/mgmt/connecting-to-cluster.html) and run the following statement to create a table that accepts the sample data\.
+1. Your delivery stream expects a table to be present in your Amazon Redshift cluster\. [Connect to Amazon Redshift through a SQL interface](https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-to-cluster.html) and run the following statement to create a table that accepts the sample data\.
 
    ```
    create table firehose_test_table
@@ -83,7 +83,7 @@ Use the following procedure to test your delivery stream using Amazon Elasticsea
 
 1. Under **Test with demo data**, choose **Start sending demo data** to generate sample stock ticker data\.
 
-1. Follow the onscreen instructions to verify that data is being delivered to your Amazon ES domain\. For more information, see [Searching Documents in an Amazon ES Domain](http://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-gsg-search.html) in the *Amazon Elasticsearch Service Developer Guide*\.
+1. Follow the onscreen instructions to verify that data is being delivered to your Amazon ES domain\. For more information, see [Searching Documents in an Amazon ES Domain](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-gsg-search.html) in the *Amazon Elasticsearch Service Developer Guide*\.
 
 1. When the test is complete, choose **Stop sending demo data** to stop incurring usage charges\.
 
@@ -101,6 +101,6 @@ Use the following procedure to test your delivery stream using Splunk as the des
 
 1. Check whether the data is being delivered to your Splunk index\. Example search terms in Splunk are `sourcetype="aws:firehose:json"` and `index="name-of-your-splunk-index"`\. For more information about how to search for events in Splunk, see [Search Manual](http://docs.splunk.com/Documentation/Splunk/latest/Search/GetstartedwithSearch) in the Splunk documentation\.
 
-   If the test data doesn't appear in your Splunk index, check your Amazon S3 bucket for failed events\. Also see [Data Not Delivered to Splunk](http://docs.aws.amazon.com/firehose/latest/dev/troubleshooting.html#data-not-delivered-to-splunk)\.
+   If the test data doesn't appear in your Splunk index, check your Amazon S3 bucket for failed events\. Also see [Data Not Delivered to Splunk](https://docs.aws.amazon.com/firehose/latest/dev/troubleshooting.html#data-not-delivered-to-splunk)\.
 
 1. When you finish testing, choose **Stop sending demo data** to stop incurring usage charges\.

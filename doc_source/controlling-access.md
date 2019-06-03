@@ -1,6 +1,6 @@
 # Controlling Access with Amazon Kinesis Data Firehose<a name="controlling-access"></a>
 
-The following sections cover how to control access to and from your Kinesis Data Firehose resources\. The information they cover includes how to grant your application access so it can send data to your Kinesis Data Firehose delivery stream\. They also describe how you can grant Kinesis Data Firehose access to your Amazon Simple Storage Service \(Amazon S3\) bucket, Amazon Redshift cluster, or Amazon Elasticsearch Service cluster, as well as the access permissions you need if you use Splunk as your destination\. Finally, you'll find in this topic guidance on how to configure Kinesis Data Firehose so it can deliver data to a destination that belongs to a different AWS account\. The technology for managing all these forms of access is AWS Identity and Access Management \(IAM\)\. For more information about IAM, see [What is IAM?](http://docs.aws.amazon.com/IAM/latest/UserGuide/IAM_Introduction.html)\.
+The following sections cover how to control access to and from your Kinesis Data Firehose resources\. The information they cover includes how to grant your application access so it can send data to your Kinesis Data Firehose delivery stream\. They also describe how you can grant Kinesis Data Firehose access to your Amazon Simple Storage Service \(Amazon S3\) bucket, Amazon Redshift cluster, or Amazon Elasticsearch Service cluster, as well as the access permissions you need if you use Splunk as your destination\. Finally, you'll find in this topic guidance on how to configure Kinesis Data Firehose so it can deliver data to a destination that belongs to a different AWS account\. The technology for managing all these forms of access is AWS Identity and Access Management \(IAM\)\. For more information about IAM, see [What is IAM?](https://docs.aws.amazon.com/IAM/latest/UserGuide/IAM_Introduction.html)\.
 
 **Topics**
 + [Grant Your Application Access to Your Kinesis Data Firehose Resources](#access-to-firehose)
@@ -8,8 +8,9 @@ The following sections cover how to control access to and from your Kinesis Data
 + [Grant Kinesis Data Firehose Access to an Amazon Redshift Destination](#using-iam-rs)
 + [Grant Kinesis Data Firehose Access to an Amazon ES Destination](#using-iam-es)
 + [Grant Kinesis Data Firehose Access to a Splunk Destination](#using-iam-splunk)
-+ [VPC Access to Splunk](#using-iam-splunk-vpc)
++ [Access to Splunk in VPC](#using-iam-splunk-vpc)
 + [Cross\-Account Delivery](#cross-account-delivery)
++ [Using Tags to Control Access](#tag-based-access-control)
 
 ## Grant Your Application Access to Your Kinesis Data Firehose Resources<a name="access-to-firehose"></a>
 
@@ -133,7 +134,7 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 }
 ```
 
-For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](http://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
+For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
 
 ## Grant Kinesis Data Firehose Access to an Amazon Redshift Destination<a name="using-iam-rs"></a>
 
@@ -241,7 +242,7 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 }
 ```
 
-For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](http://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
+For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
 
 ### VPC Access to an Amazon Redshift Cluster<a name="using-iam-rs-vpc"></a>
 
@@ -261,8 +262,10 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `13.228.64.192/27` for Asia Pacific \(Singapore\)
 + `13.210.67.224/27` for Asia Pacific \(Sydney\)
 + `35.183.92.128/27` for Canada \(Central\)
++ `52.61.204.160/27 for AWS GovCloud (US-West)`
++ `13.53.63.224/27` for EU \(Stockholm\)
 
-For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](http://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
+For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
 
 ## Grant Kinesis Data Firehose Access to an Amazon ES Destination<a name="using-iam-es"></a>
 
@@ -391,11 +394,11 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 }
 ```
 
-For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](http://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
+For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
 
 ## Grant Kinesis Data Firehose Access to a Splunk Destination<a name="using-iam-splunk"></a>
 
-When you're using a Splunk destination, Kinesis Data Firehose delivers data to your Splunk HTTP Event Collector \(HEC\) endpoint\. It also backs up that data to the Amazon S3 bucket that you specify, and you can optionally use an AWS KMS key that you own for Amazon S3 server\-side encryption\. If error logging is enabled, Kinesis Data Firehose sends data delivery errors to your CloudWatch log streams\. You can also use AWS Lambda for data transformation\.
+When you're using a Splunk destination, Kinesis Data Firehose delivers data to your Splunk HTTP Event Collector \(HEC\) endpoint\. It also backs up that data to the Amazon S3 bucket that you specify, and you can optionally use an AWS KMS key that you own for Amazon S3 server\-side encryption\. If error logging is enabled, Kinesis Data Firehose sends data delivery errors to your CloudWatch log streams\. You can also use AWS Lambda for data transformation\. If you use an AWS load balancer, make sure that it is a Classic Load Balancer\. Kinesis Data Firehose supports neither Application Load Balancers nor Network Load Balancers\. Also, enable duration\-based sticky sessions with cookie expiration disabled\. For information about how to do this, see [Duration\-Based Session Stickiness](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-sticky-sessions.html#enable-sticky-sessions-duration)\.
 
 You are required to have an IAM role when creating a delivery stream\. Kinesis Data Firehose assumes that IAM role and gains access to the specified bucket, key, and CloudWatch log group and streams\.
 
@@ -493,9 +496,9 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 }
 ```
 
-For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](http://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
+For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide//id_roles_create_for-service.html) in the *IAM User Guide*\.
 
-## VPC Access to Splunk<a name="using-iam-splunk-vpc"></a>
+## Access to Splunk in VPC<a name="using-iam-splunk-vpc"></a>
 
 If your Splunk platform is in a VPC, it must be publicly accessible with a public IP address\. Also, grant Kinesis Data Firehose access to your Splunk platform by unblocking the Kinesis Data Firehose IP addresses\. Kinesis Data Firehose currently uses the following CIDR blocks\.
 + `34.216.24.32/27, 34.216.24.192/27, 34.216.24.224/27` for US West \(Oregon\)
@@ -513,18 +516,20 @@ If your Splunk platform is in a VPC, it must be publicly accessible with a publi
 + `13.229.187.128/26` for Asia Pacific \(Singapore\)
 + `13.211.12.0/26` for Asia Pacific \(Sydney\)
 + `35.183.92.64/26` for Canada \(Central\)
++ `52.61.204.192/26 for AWS GovCloud (US-West)`
++ `13.53.191.0/26` for EU \(Stockholm\)
 
 ## Cross\-Account Delivery<a name="cross-account-delivery"></a>
 
-You can configure your Kinesis Data Firehose delivery stream to deliver data to a destination that belongs to a different AWS account, as long as the destination supports resource\-based permissions\. For more information about resource\-based permissions, see [Identity\-Based \(IAM\) Permissions and Resource\-Based Permissions](http://docs.aws.amazon.com/IAM/latest/UserGuide/access_permissions.html#TypesPermissions)\. For a list of AWS services that support resource\-based permissions, see [AWS Services That Work with IAM](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-services-that-work-with-iam.html)\.
+You can configure your Kinesis Data Firehose delivery stream to deliver data to a destination that belongs to a different AWS account, as long as the destination supports resource\-based permissions\. For more information about resource\-based permissions, see [Identity\-Based \(IAM\) Permissions and Resource\-Based Permissions](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_permissions.html#TypesPermissions)\. For a list of AWS services that support resource\-based permissions, see [AWS Services That Work with IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-services-that-work-with-iam.html)\.
 
 The following procedure shows an example of configuring a Kinesis Data Firehose delivery stream owned by account A to deliver data to an Amazon S3 bucket owned by account B\.
 
-1. Create an IAM role under account A using steps described in [Grant Kinesis Firehose Access to an Amazon S3 Destination](http://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3)\. 
+1. Create an IAM role under account A using steps described in [Grant Kinesis Firehose Access to an Amazon S3 Destination](https://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3)\. 
 **Note**  
 The Amazon S3 bucket specified in the access policy is owned by account B in this case\. Make sure you add `s3:PutObjectAcl` to the list of Amazon S3 actions in the access policy, which grants account B full access to the objects delivered by Amazon Kinesis Data Firehose\.
 
-1. To allow access from the IAM role previously created, create an S3 bucket policy under account B\. The following code is an example of the bucket policy\. For more information, see [Using Bucket Policies and User Policies](http://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html)\. 
+1. To allow access from the IAM role previously created, create an S3 bucket policy under account B\. The following code is an example of the bucket policy\. For more information, see [Using Bucket Policies and User Policies](https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html)\. 
 
    ```
    {
@@ -557,3 +562,76 @@ The Amazon S3 bucket specified in the access policy is owned by account B in thi
    ```
 
 1. Create a Kinesis Data Firehose delivery stream under account A using the IAM role that you created in step 1\.
+
+## Using Tags to Control Access<a name="tag-based-access-control"></a>
+
+You can use the optional `Condition` element \(or `Condition` *block*\) in an IAM policy to fine\-tune access to Kinesis Data Firehose operations based on tag keys and values\. The following subsections describe how to do this for the different Kinesis Data Firehose operations\. For more on the use of the `Condition` element and the operators that you can use within it, see [IAM JSON Policy Elements: Condition](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html)\.
+
+### CreateDeliveryStream and TagDeliveryStream<a name="aws-requesttag"></a>
+
+For the `CreateDeliveryStream` and `TagDeliveryStream` operations, use the `aws:RequestTag` condition key\. In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "firehose:CreateDeliveryStream",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestTag/MyKey": "MyValue"
+                }
+            }
+        }
+    ]
+}
+```
+
+### UntagDeliveryStream<a name="aws-tagkeys"></a>
+
+For the `UntagDeliveryStream` operation, use the `aws:TagKeys` condition key\. In the following example, `MyKey` is an example tag key\.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "firehose:UntagDeliveryStream",
+            "Resource": "*",
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:TagKeys": "MyKey"
+                 }
+            }
+        }
+    ]
+}
+```
+
+### ListDeliveryStreams<a name="list-delivery-streams"></a>
+
+You can't use tag\-based access control with `ListDeliveryStreams`\.
+
+### Other Kinesis Data Firehose Operations<a name="firehose-resourcetag"></a>
+
+For all Kinesis Data Firehose operations other than `CreateDeliveryStream`, `TagDeliveryStream`, `UntagDeliveryStream`, and `ListDeliveryStreams`, use the `aws:RequestTag` condition key\. In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+            "Effect": "Deny",
+            "Action": "firehose:DescribeDeliveryStream",
+            "Resource": "*",
+            "Condition": {
+                "Null": {
+                    "firehose:ResourceTag/MyKey": "MyValue"
+            }
+        }
+    ]
+}
+```

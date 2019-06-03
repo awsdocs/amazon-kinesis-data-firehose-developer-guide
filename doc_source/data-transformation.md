@@ -4,7 +4,7 @@ Kinesis Data Firehose can invoke your Lambda function to transform incoming sour
 
 ## Data Transformation Flow<a name="data-transformation-flow"></a>
 
-When you enable Kinesis Data Firehose data transformation, Kinesis Data Firehose buffers incoming data up to 3 MB by default\. \(To adjust the buffering size, use the [ProcessingConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessingConfiguration.html) API with the [ProcessorParameter](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessorParameter.html) called `BufferSizeInMBs`\.\) Kinesis Data Firehose then invokes the specified Lambda function asynchronously with each buffered batch using the AWS Lambda synchronous invocation mode\. The transformed data is sent from Lambda to Kinesis Data Firehose\. Kinesis Data Firehose then sends it to the destination when the specified destination buffering size or buffering interval is reached, whichever happens first\.
+When you enable Kinesis Data Firehose data transformation, Kinesis Data Firehose buffers incoming data up to 3 MB by default\. \(To adjust the buffering size, use the [https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessingConfiguration.html](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessingConfiguration.html) API with the [https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessorParameter.html](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ProcessorParameter.html) called `BufferSizeInMBs`\.\) Kinesis Data Firehose then invokes the specified Lambda function asynchronously with each buffered batch using the AWS Lambda synchronous invocation mode\. The transformed data is sent from Lambda to Kinesis Data Firehose\. Kinesis Data Firehose then sends it to the destination when the specified destination buffering size or buffering interval is reached, whichever happens first\.
 
 **Important**  
 The Lambda synchronous invocation mode has a payload size limit of 6 MB for both the request and the response\. Make sure that your buffering size for sending the request to the function is less than or equal to 6 MB\. Also ensure that the response that your function returns doesn't exceed 6 MB\.
@@ -41,15 +41,15 @@ Lambda blueprints are only available in the Node\.js and Python languages\. You 
 
 1. Choose **Create function**, and then choose **Blueprints**\.
 
-1. Search for the keyword "firehose" to find the [Kinesis Data Firehose Lambda Blueprints](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create?f0=a3c%3D%3AZmlyZWhvc2U%3D&tab=blueprints)\.
+1. Search for the keyword "`firehose`" to find the [Kinesis Data Firehose Lambda Blueprints](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create?f0=a3c%3D%3AZmlyZWhvc2U%3D&tab=blueprints)\.
 
 ## Data Transformation Failure Handling<a name="data-transformation-failure-handling"></a>
 
-If your Lambda function invocation fails because of a network timeout or because you've reached the Lambda invocation limit, Kinesis Data Firehose retries the invocation three times by default\. If the invocation does not succeed, Kinesis Data Firehose then skips that batch of records\. The skipped records are treated as unsuccessfully processed records\. You can specify or override the retry options using the [CreateDeliveryStream](http://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html) or [UpdateDestination](http://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html) API\. For this type of failure, you can log invocation errors to Amazon CloudWatch Logs\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
+If your Lambda function invocation fails because of a network timeout or because you've reached the Lambda invocation limit, Kinesis Data Firehose retries the invocation three times by default\. If the invocation does not succeed, Kinesis Data Firehose then skips that batch of records\. The skipped records are treated as unsuccessfully processed records\. You can specify or override the retry options using the [CreateDeliveryStream](https://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html) or `[UpdateDestination](https://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html)` API\. For this type of failure, you can log invocation errors to Amazon CloudWatch Logs\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
 
-If the status of the data transformation of a record is `ProcessingFailed`, Kinesis Data Firehose treats the record as unsuccessfully processed\. For this type of failure, you can emit error logs to Amazon CloudWatch Logs from your Lambda function\. For more information, see [Accessing Amazon CloudWatch Logs for AWS Lambda](http://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-logs.html) in the *AWS Lambda Developer Guide*\.
+If the status of the data transformation of a record is `ProcessingFailed`, Kinesis Data Firehose treats the record as unsuccessfully processed\. For this type of failure, you can emit error logs to Amazon CloudWatch Logs from your Lambda function\. For more information, see [Accessing Amazon CloudWatch Logs for AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-logs.html) in the *AWS Lambda Developer Guide*\.
 
-If data transformation fails, the unsuccessfully processed records are delivered to your S3 bucket in the `processing_failed` folder\. The records have the following format:
+If data transformation fails, the unsuccessfully processed records are delivered to your S3 bucket in the `processing-failed` folder\. The records have the following format:
 
 ```
 {
@@ -83,6 +83,12 @@ The base64\-encoded record data\.
 
 `lambdaArn`  
 The Amazon Resource Name \(ARN\) of the Lambda function\.
+
+## Duration of a Lambda Invocation<a name="data-transformation-execution-duration"></a>
+
+Kinesis Data Firehose supports a Lambda invocation time of up to 5 minutes\. If your Lambda function takes more than 5 minutes to complete, you get the following error: Firehose encountered timeout errors when calling AWS Lambda\. The maximum supported function timeout is 5 minutes\.
+
+For information about what Kinesis Data Firehose does if such an error occurs, see [Data Transformation Failure Handling](#data-transformation-failure-handling)\.
 
 ## Source Record Backup<a name="data-transformation-source-record-backup"></a>
 

@@ -8,6 +8,8 @@ You can install the agent on Linux\-based server environments such as web server
 
 **Topics**
 + [Prerequisites](#prereqs)
++ [Credentials](#agent-credentials)
++ [Custom Credential Providers](#custom-cred-provider)
 + [Download and Install the Agent](#download-install)
 + [Configure and Start the Agent](#config-start)
 + [Agent Configuration Settings](#agent-config-settings)
@@ -17,13 +19,46 @@ You can install the agent on Linux\-based server environments such as web server
 
 ## Prerequisites<a name="prereqs"></a>
 + Your operating system must be either Amazon Linux AMI with version 2015\.09 or later, or Red Hat Enterprise Linux version 7 or later\.
++ You need version 1\.7 or later of the JRE\.
 + If you are using Amazon EC2 to run your agent, launch your EC2 instance\.
-+ Manage your AWS credentials using one of the following methods:
-  + Specify an IAM role when you launch your EC2 instance\.
-  + Specify AWS credentials when you configure the agent \(see the entries for `awsAccessKeyId` and `awsSecretAccessKey` in the configuration table under [Agent Configuration Settings](#agent-config-settings)\)\.
-  + Edit `/etc/sysconfig/aws-kinesis-agent` to specify your AWS Region and AWS access keys\.
-  + If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Data Firehose service\. Specify that role when you configure the agent \(see [assumeRoleARN](#assumeRoleARN) and [assumeRoleExternalId](#assumeRoleExternalId)\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
 + The IAM role or AWS credentials that you specify must have permission to perform the Kinesis Data Firehose [PutRecordBatch](https://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html) operation for the agent to send data to your delivery stream\. If you enable CloudWatch monitoring for the agent, permission to perform the CloudWatch [PutMetricData](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation is also needed\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md), [Monitoring Kinesis Agent Health](agent-health.md), and [Authentication and Access Control for Amazon CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/auth-and-access-control-cw.html)\.
+
+## Credentials<a name="agent-credentials"></a>
+
+Manage your AWS credentials using one of the following methods:
++ Create a custom credentials provider\. For details, see [Custom Credential Providers](#custom-cred-provider)\.
++ Specify an IAM role when you launch your EC2 instance\.
++ Specify AWS credentials when you configure the agent \(see the entries for `awsAccessKeyId` and `awsSecretAccessKey` in the configuration table under [Agent Configuration Settings](#agent-config-settings)\)\.
++ Edit `/etc/sysconfig/aws-kinesis-agent` to specify your AWS Region and AWS access keys\.
++ If your EC2 instance is in a different AWS account, create an IAM role to provide access to the Kinesis Data Firehose service\. Specify that role when you configure the agent \(see [assumeRoleARN](#assumeRoleARN) and [assumeRoleExternalId](#assumeRoleExternalId)\)\. Use one of the previous methods to specify the AWS credentials of a user in the other account who has permission to assume this role\.
+
+## Custom Credential Providers<a name="custom-cred-provider"></a>
+
+You can create a custom credentials provider and give its class name and jar path to the Kinesis Agent in the following configuration settings: `userDefinedCredentialsProvider.classname` and `userDefinedCredentialsProvider.location`\. For the descriptions of these two configuration settings, see [Agent Configuration Settings](#agent-config-settings)\.
+
+To create a custom credentials provider, define a class that implements the `AWSCredentialsProvider` interface, like the one in the following example\.
+
+```
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+
+public class YourClassName implements AWSCredentialsProvider {
+    public YourClassName() {
+    }
+
+    public AWSCredentials getCredentials() {
+        return new BasicAWSCredentials("key1", "key2");
+    }
+
+    public void refresh() {
+    }
+}
+```
+
+Your class must have a constructor that takes no arguments\.
+
+AWS invokes the refresh method periodically to get updated credentials\. If you want your credentials provider to provide different credentials throughout its lifetime, include code to refresh the credentials in this method\. Alternatively, you can leave this method empty if you want a credentials provider that vends static \(non\-changing\) credentials\. 
 
 ## Download and Install the Agent<a name="download-install"></a>
 
@@ -31,21 +66,20 @@ First, connect to your instance\. For more information, see [Connect to Your Ins
 
 Next, install the agent using one of the following methods\.
 
-**To set up the agent using the Amazon Linux AMI**  
-Use the following command to download and install the agent:
-
-```
-sudo yum install –y aws-kinesis-agent
-```
-
 **To set up the agent using Red Hat Enterprise Linux**  
-Use the following command to download and install the agent:
+Use the following command to download and install the latest version of the agent:
 
 ```
 sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn1.noarch.rpm
 ```
 
-**To set up the agent using GitHub**
+To install a specific version of the agent, specify the version number in the command\. For example, the following command installs version 1\.1\.4\.
+
+```
+sudo yum install –y https://streaming-data-agent.s3.amazonaws.com/aws-kinesis-agent-1.1.4-1.amzn1.noarch.rpm
+```
+
+**Second option**
 
 1. Download the agent from [awslabs/amazon\-kinesis\-agent](https://github.com/awslabs/amazon-kinesis-agent)\. 
 
@@ -119,15 +153,18 @@ The following are the general configuration settings\.
 | cloudwatch\.emitMetrics |  Enables the agent to emit metrics to CloudWatch if set \(true\)\. Default: true  | 
 | cloudwatch\.endpoint |  The regional endpoint for CloudWatch\. Default: `monitoring.us-east-1.amazonaws.com`  | 
 | firehose\.endpoint |  The regional endpoint for Kinesis Data Firehose\. Default: `firehose.us-east-1.amazonaws.com`  | 
+| userDefinedCredentialsProvider\.classname | If you define a custom credentials provider, provide its fully\-qualified class name using this setting\. Don't include \.class at the end of the class name\.  | 
+| userDefinedCredentialsProvider\.location | If you define a custom credentials provider, use this setting to specify the absolute path of the jar that contains the custom credentials provider\. The agent also looks for the jar file in the following location: /usr/share/aws\-kinesis\-agent/lib/\. | 
 
 The following are the flow configuration settings\.
 
 
 | Configuration Setting | Description | 
 | --- | --- | 
+| aggregatedRecordSizeBytes |  To make the agent aggregate records and then put them to the delivery stream in one operation, specify this setting\. Set it to the size that you want the aggregate record to have before the agent puts it to the delivery stream\.  Default: 0 \(no aggregation\)  | 
 | dataProcessingOptions |  The list of processing options applied to each parsed record before it is sent to the delivery stream\. The processing options are performed in the specified order\. For more information, see [Use the Agent to Preprocess Data](#pre-processing)\.  | 
 | deliveryStream |  \[Required\] The name of the delivery stream\.  | 
-| filePattern |  \[Required\] A glob for the files that need to be monitored by the agent\. Any file that matches this pattern is picked up by the agent automatically and monitored\. For all files matching this pattern, read permission must be granted to `aws-kinesis-agent-user`\. For the directory containing the files, read and execute permissions must be granted to `aws-kinesis-agent-user`\.  | 
+| filePattern |  \[Required\] A glob for the files that need to be monitored by the agent\. Any file that matches this pattern is picked up by the agent automatically and monitored\. For all files matching this pattern, grant read permission to `aws-kinesis-agent-user`\. For the directory containing the files, grant read and execute permissions to `aws-kinesis-agent-user`\.  The agent picks up any file that matches this pattern\. To ensure that the agent doesn't pick up unintended records, choose this pattern carefully\.   | 
 | initialPosition |  The initial position from which the file started to be parsed\. Valid values are `START_OF_FILE` and `END_OF_FILE`\. Default: `END_OF_FILE`  | 
 | maxBufferAgeMillis |  The maximum time, in milliseconds, for which the agent buffers data before sending it to the delivery stream\. Value range: 1,000–900,000 \(1 second to 15 minutes\) Default: 60,000 \(1 minute\)  | 
 | maxBufferSizeBytes |  The maximum size, in bytes, for which the agent buffers data before sending it to the delivery stream\. Value range: 1–4,194,304 \(4 MB\) Default: 4,194,304 \(4 MB\)  | 

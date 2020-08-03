@@ -6,7 +6,7 @@ If you enable Kinesis Data Firehose error logging in the Kinesis Data Firehose c
 
 For example, if you create a delivery stream "MyStream" with Amazon Redshift as the destination and enable Kinesis Data Firehose error logging, the following are created on your behalf: a log group named `aws/kinesisfirehose/MyStream` and two log streams named **S3Delivery** and **RedshiftDelivery**\. In this example, the **S3Delivery** log stream is used for logging errors related to delivery failure to the intermediate S3 bucket\. The **RedshiftDelivery** log stream is used for logging errors related to Lambda invocation failure and delivery failure to your Amazon Redshift cluster\.
 
-If you enable Kinesis Data Firehose error logging through the AWS CLI or an AWS SDK using the `CloudWatchLoggingOptions` configuration, you must create a log group and a log stream in advance\. We recommend reserving that log group and log stream for Kinesis Data Firehose error logging exclusively\. Also ensure that the associated IAM policy has `"logs:putLogEvents"` permission\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md)\.
+You can enable Kinesis Data Firehose error logging through the AWS CLI, the API, or AWS CloudFormation using the `CloudWatchLoggingOptions` configuration\. To do so, create a log group and a log stream in advance\. We recommend reserving that log group and log stream for Kinesis Data Firehose error logging exclusively\. Also ensure that the associated IAM policy has `"logs:putLogEvents"` permission\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md)\.
 
 Note that Kinesis Data Firehose does not guarantee that all delivery error logs are sent to CloudWatch Logs\. In circumstances where delivery failure rate is high, Kinesis Data Firehose samples delivery error logs before sending them to CloudWatch Logs\.
 
@@ -25,6 +25,7 @@ The following is a list of data delivery error codes and messages for each Kines
 + [Amazon S3 Data Delivery Errors](#monitoring-s3-errors)
 + [Amazon Redshift Data Delivery Errors](#monitoring-rs-errors)
 + [Splunk Data Delivery Errors](#monitoring-splunk-errors)
++ [HTTPS Endpoint Data Delivery Errors](#monitoring-http-errors)
 + [Amazon Elasticsearch Service Data Delivery Errors](#monitoring-es-errors)
 
 ### Amazon S3 Data Delivery Errors<a name="monitoring-s3-errors"></a>
@@ -93,6 +94,21 @@ Kinesis Data Firehose can send the following Splunk\-related errors to CloudWatc
 | Splunk\.ConnectionClosed | "Unable to send data to Splunk due to a connection failure\. This might be a transient error\. Increasing the retry duration in your Kinesis Data Firehose configuration might guard against such transient failures\."  | 
 | Splunk\.SSLUnverified | "Could not connect to the HEC endpoint\. The host does not match the certificate provided by the peer\. Make sure that the certificate and the host are valid\."  | 
 | Splunk\.SSLHandshake | "Could not connect to the HEC endpoint\. Make sure that the certificate and the host are valid\."  | 
+
+### HTTPS Endpoint Data Delivery Errors<a name="monitoring-http-errors"></a>
+
+Kinesis Data Firehose can send the following HTTP Endpoint\-related errors to CloudWatch Logs\. If none of these errors are a match to the problem that you're experiencing, the default error is the following: "An internal error occurred while attempting to deliver data\. Delivery will be retried; if the error persists, then it will be reported to AWS for resolution\."
+
+
+| Error Code | Error Message and Information | 
+| --- | --- | 
+| HttpEndpoint\.RequestTimeout |  The delivery timed out before a response was received and will be retried\. If this error persists, contact the AWS Firehose service team\.  | 
+| HttpEndpoint\.ResponseTooLarge | "The response received from the endpoint is too large\. Contact the owner of the endpoint to resolve this issue\." | 
+| HttpEndpoint\.InvalidResponseFromDestination | "The response received from the specified endpoint is invalid\. Contact the owner of the endpoint to resolve the issue\." | 
+| HttpEndpoint\.DestinationException | "The following response was received from the endpoint destination\." | 
+| HttpEndpoint\.ConnectionFailed | "Unable to connect to the destination endpoint\. Contact the owner of the endpoint to resolve this issue\." | 
+| HttpEndpoint\.ConnectionReset | "Unable to maintain connection with the endpoint\. Contact the owner of the endpoint to resolve this issue\." | 
+| HttpEndpoint\.ConnectionReset | "Trouble maintaining connection with the endpoint\. Please reach out to the owner of the endpoint\." | 
 
 ### Amazon Elasticsearch Service Data Delivery Errors<a name="monitoring-es-errors"></a>
 

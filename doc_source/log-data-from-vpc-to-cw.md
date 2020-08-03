@@ -6,10 +6,9 @@ In the first part of this [Kinesis Data Firehose tutorial](vpc-splunk-tutorial.m
 
 1. Sign in to the AWS Management Console and open the CloudWatch console at [https://console\.aws\.amazon\.com/cloudwatch/](https://console.aws.amazon.com/cloudwatch/)\.
 
-1. In the navigation pane, choose **Logs**\.
+1. In the navigation pane, choose **Log groups**\.
 
-1. Choose **Actions**, and then choose **Create log group**\.  
-![\[Screenshot showing the Actions menu and Create log group action.\]](http://docs.aws.amazon.com/firehose/latest/dev/images/firehose-createloggroup-console.png)
+1. Choose **Actions**, and then choose **Create log group**\.
 
 1. Enter the name **VPCtoSplunkLogGroup**, and choose **Create log group**\.
 

@@ -12,7 +12,7 @@ The logs that CloudWatch sends to the delivery stream are in a compressed format
 
 1. For the name of the delivery stream, enter **VPCtoSplunkStream**\. Then scroll to the bottom, and choose **Next**\.
 
-1. For **Record transformation\***, choose **Enabled**\.
+1. For **Data transformation\***, choose **Enabled**\.
 
 1. For **Lambda function\***, choose **Create new**\.
 
@@ -21,18 +21,15 @@ The logs that CloudWatch sends to the delivery stream are in a compressed format
 
 1. On the AWS Lambda console, for the function name, enter **VPCtoSplunkLambda**\.
 
-1. For **Role**, choose **Create a custom role** in the drop\-down list\. This opens the AWS Identity and Access Management \(IAM\) console\.
+1. In the description text under **Execution role**, choose the **IAM console** link to create a custom role\. This opens the AWS Identity and Access Management \(IAM\) console\.
 
-1. In the IAM console, in the **IAM Role** list, choose **Create a new IAM Role**\.
+1. In the IAM console, choose **Lambda**\.
 
-1. For **Role Name**, enter **VPCtoSplunkLambdaRole**\.
+1. Choose **Next: Permissions**\.
 
-1. Choose the arrow next to **View Policy Document** to expand the policy\.  
-![\[Screenshot showing the arrow to view and modify the policy document.\]](http://docs.aws.amazon.com/firehose/latest/dev/images/firehose-lambdapolicydoc-console.png)
+1. Choose **Create policy**\.
 
-1. Choose **Edit** to the right of the policy, and then choose **Ok**\.
-
-1. In the policy field, delete the existing policy\. Then paste the following policy\. Be sure to replace the *your\-region* and *your\-aws\-account\-id* placeholders with your AWS Region code and account ID\. Don't include any hyphens or dashes in the account ID\. For a list of AWS Region codes, see [AWS Regions and Endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html)\.
+1. Choose the **JSON** tab and replace the existing JSON with the following\. Be sure to replace the *your\-region* and *your\-aws\-account\-id* placeholders with your AWS Region code and account ID\. Don't include any hyphens or dashes in the account ID\. For a list of AWS Region codes, see [AWS Regions and Endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html)\.
 
    ```
    {
@@ -60,7 +57,15 @@ The logs that CloudWatch sends to the delivery stream are in a compressed format
 
    This policy allows the Lambda function to put data back into the delivery stream by invoking the `PutRecordBatch` operation\. This step is needed because a Lambda function can only return up to 6 MiB of data every time Kinesis Data Firehose invokes it\. If the size of the uncompressed data exceeds 6 MiB, the function invokes `PutRecordBatch` to put some of the data back into the delivery stream for future processing\. 
 
-1. Choose **Allow**\. This takes you back to the AWS Lambda console\.
+1. Back in the **Create role** window, refresh the list of policies, then choose **VPCtoSplunkLambdaPolicy** by selecting the box to its left\.
+
+1. Choose **Next: Tags**\.
+
+1. Choose **Next: Review**\.
+
+1. For **Role Name**, enter **VPCtoSplunkLambdaRole**, then choose **Create role**\.
+
+1. Back in the Lambda console, refresh the list of existing roles, then select **VPCtoSplunkLambdaRole**\.
 
 1. Scroll down and choose **Create function**\.
 

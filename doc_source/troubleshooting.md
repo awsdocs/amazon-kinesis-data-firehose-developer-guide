@@ -1,6 +1,14 @@
 # Troubleshooting Amazon Kinesis Data Firehose<a name="troubleshooting"></a>
 
-To monitor the freshness of your data delivery, check the `DataFreshness` metric under the **Monitoring** tab in the Kinesis Data Firehose console\. `DataFreshness` indicates how current your data is within your Kinesis Data Firehose delivery stream\. If the value of `DataFreshness` doesn't increase over time, this means that your delivery stream is successfully delivering your data\. When Kinesis Data Firehose encounters an error, it uses Amazon S3 to back up all data that it can't deliver to your primary destination\. If you enable CloudWatch Logs for your delivery stream, you can see all delivery errors\. Kinesis Data Firehose automatically retries all failed deliveries until the configured retry duration expires\. For more information, see [Monitoring with CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
+If Kinesis Data Firehose encounters errors while delivering or processing data, it retries until the configured retry duration expires\. If the retry duration ends before the data is delivered successfully, Kinesis Data Firehose backs up the data to the configured S3 backup bucket\. If the destination is Amazon S3 and delivery fails or if delivery to the backup S3 bucket fails, Kinesis Data Firehose keeps retrying until the retention period ends\. For `DirectPut` delivery streams, Kinesis Data Firehose retains the records for 24 hours\. For a delivery stream whose data source is a Kinesis data stream, you can change the retention period as described in [Changing the Data Retention Period](https://docs.aws.amazon.com/streams/latest/dev/kinesis-extended-retention.html)\. 
+
+If the data source is a Kinesis data stream, Kinesis Data Firehose retries the following operations indefinitely: `DescribeStream`, `GetRecords`, and `GetShardIterator`\.
+
+If the delivery stream uses `DirectPut`, check the `IncomingBytes` and `IncomingRecords` metrics to see if there's incoming traffic\. If you are using the `PutRecord` or `PutRecordBatch`, make sure you catch exceptions and retry\. We recommend a retry policy with exponential back\-off with jitter and several retries\. Also, if you use the `PutRecordBatch` API, make sure your code checks the value of [FailedPutCount](https://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html#Firehose-PutRecordBatch-response-FailedPutCount) in the response even when the API call succeeds\.
+
+If the delivery stream uses a Kinesis data stream as its source, check the `IncomingBytes` and `IncomingRecords` metrics for the source data stream\. Additionally, ensure that the `DataReadFromKinesisStream.Bytes` and `DataReadFromKinesisStream.Records` metrics are being emitted for the delivery stream\.
+
+For information about tracking delivery errors using CloudWatch, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
 
 **Topics**
 + [Data Not Delivered to Amazon S3](#data-not-delivered-to-s3)
@@ -8,6 +16,9 @@ To monitor the freshness of your data delivery, check the `DataFreshness` metric
 + [Data Not Delivered to Amazon Elasticsearch Service](#data-not-delivered-to-es)
 + [Data Not Delivered to Splunk](#data-not-delivered-to-splunk)
 + [Delivery Stream Not Available as a Target for CloudWatch Logs, CloudWatch Events, or AWS IoT Action](#delivery-stream-not-available)
++ [Data Freshness Metric Increasing or Not Emitted](#data-freshness-metric-not-emitted)
++ [Record Format Conversion to Apache Parquet Fails](#apache-parquet-conversion-fails)
++ [No Data at Destination Despite Good Metrics](#no-date-despite-good-metrics)
 
 ## Data Not Delivered to Amazon S3<a name="data-not-delivered-to-s3"></a>
 
@@ -47,7 +58,7 @@ Data can be backed up to your Amazon S3 bucket concurrently\. If data was not de
 + Enable error logging if it is not already enabled, and check error logs for delivery failure\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
 + Make sure that the Amazon ES configuration in your delivery stream is accurate and valid\.
 + If data transformation with Lambda is enabled, make sure that the Lambda function that is specified in your delivery stream still exists\.
-+ Make sure that the IAM role that is specified in your delivery stream can access your Amazon ES cluster and Lambda function \(if data transformation is enabled\)\. For more information, see [Grant Kinesis Data Firehose Access to an Amazon ES Destination](controlling-access.md#using-iam-es)\.
++ Make sure that the IAM role that is specified in your delivery stream can access your Amazon ES cluster and Lambda function \(if data transformation is enabled\)\. For more information, see [Grant Kinesis Data Firehose Access to a Public Amazon ES Destination](controlling-access.md#using-iam-es)\.
 + If you're using data transformation, make sure that your Lambda function never returns responses whose payload size exceeds 6 MB\. For more information, see [Amazon Kinesis Data Firehose Data Transformation](https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html)\.
 
 ## Data Not Delivered to Splunk<a name="data-not-delivered-to-splunk"></a>
@@ -76,3 +87,55 @@ Check the following if data is not delivered to your Splunk endpoint\.
 ## Delivery Stream Not Available as a Target for CloudWatch Logs, CloudWatch Events, or AWS IoT Action<a name="delivery-stream-not-available"></a>
 
 Some AWS services can only send messages and events to a Kinesis Data Firehose delivery stream that is in the same AWS Region\. Verify that your Kinesis Data Firehose delivery stream is located in the same Region as your other services\.
+
+## Data Freshness Metric Increasing or Not Emitted<a name="data-freshness-metric-not-emitted"></a>
+
+Data freshness is a measure of how current your data is within your delivery stream\. It is the age of the oldest data record in the delivery stream, measured from the time that Kinesis Data Firehose ingested the data to the present time\. Kinesis Data Firehose provides metrics that you can use to monitor data freshness\. To identify the data\-freshness metric for a given destination, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
+
+If you enable backup for all events or all documents, monitor two separate data\-freshness metrics: one for the main destination and one for the backup\. 
+
+If the data\-freshness metric isn't being emitted, this means that there is no active delivery for the delivery stream\. This happens when data delivery is completely blocked or when there's no incoming data\.
+
+If the data\-freshness metric is constantly increasing, this means that data delivery is falling behind\. This can happen for one of the following reasons\.
++ The destination can't handle the rate of delivery\. If Kinesis Data Firehose encounters transient errors due to high traffic, then the delivery might fall behind\. This can happen for destinations other than Amazon S3 \(it can happen for Amazon Elasticsearch Service, Amazon Redshift, or Splunk\)\. Ensure that your destination has enough capacity to handle the incoming traffic\.
++ The destination is slow\. Data delivery might fall behind if Kinesis Data Firehose encounters high latency\. Monitor the destination's latency metric\.
++ The Lambda function is slow\. This might lead to a data delivery rate that is less than the data ingestion rate for the delivery stream\. If possible, improve the efficiency of the Lambda function\. For instance, if the function does network IO, use multiple threads or asynchronous IO to increase parallelism\. Also, consider increasing the memory size of the Lambda function so that the CPU allocation can increase accordingly\. This might lead to faster Lambda invocations\. For information about configuring Lambda functions, see [Configuring AWS Lambda Functions](https://docs.aws.amazon.com/lambda/latest/dg/resource-model.html)\.
++ There are failures during data delivery\. For information about how to monitor errors using Amazon CloudWatch Logs, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
++ If the data source of the delivery stream is a Kinesis data stream, throttling might be happening\. Check the `ThrottledGetRecords`, `ThrottledGetShardIterator`, and `ThrottledDescribeStream` metrics\. If there are multiple consumers attached to the Kinesis data stream, consider the following:
+  + If the `ThrottledGetRecords` and `ThrottledGetShardIterator` metrics are high, we recommend you increase the number of shards provisioned for the data stream\.
+  + If the `ThrottledDescribeStream` is high, we recommend you add the `kinesis:listshards` permission to the role configured in [KinesisStreamSourceConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html#Firehose-CreateDeliveryStream-request-KinesisStreamSourceConfiguration)\.
++ Low buffering hints for the destination\. This might increase the number of round trips that Kinesis Data Firehose needs to make to the destination, which might cause delivery to fall behind\. Consider increasing the value of the buffering hints\. For more information, see [BufferingHints](https://docs.aws.amazon.com/firehose/latest/APIReference/API_BufferingHints.html)\.
++ A high retry duration might cause delivery to fall behind when the errors are frequent\. Consider reducing the retry duration\. Also, monitor the errors and try to reduce them\. For information about how to monitor errors using Amazon CloudWatch Logs, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
++ If the destination is Splunk and `DeliveryToSplunk.DataFreshness` is high but `DeliveryToSplunk.Success` looks good, the Splunk cluster might be busy\. Free the Splunk cluster if possible\. Alternatively, contact AWS Support and request an increase in the number of channels that Kinesis Data Firehose is using to communicate with the Splunk cluster\.
+
+## Record Format Conversion to Apache Parquet Fails<a name="apache-parquet-conversion-fails"></a>
+
+This happens if you take DynamoDB data that includes the `Set` type, stream it through Lambda to a delivery stream, and use an AWS Glue Data Catalog to convert the record format to Apache Parquet\.
+
+When the AWS Glue crawler indexes the DynamoDB set data types \(`StringSet`, `NumberSet`, and `BinarySet`\), it stores them in the data catalog as `SET<STRING>`, `SET<BIGINT>`, and `SET<BINARY>`, respectively\. However, for Kinesis Data Firehose to convert the data records to the Apache Parquet format, it requires Apache Hive data types\. Because the set types aren't valid Apache Hive data types, conversion fails\. To get conversion to work, update the data catalog with Apache Hive data types\. You can do that by changing `set` to `array` in the data catalog\.
+
+**To change one or more data types from `set` to `array` in an AWS Glue data catalog**
+
+1. Sign in to the AWS Management Console and open the AWS Glue console at [https://console\.aws\.amazon\.com/glue/](https://console.aws.amazon.com/glue/)\.
+
+1. In the left pane, under the **Data catalog** heading, choose **Tables**\.
+
+1. In the list of tables, choose the name of the table where you need to modify one or more data types\. This takes you to the details page for the table\.
+
+1. Choose the **Edit schema** button in the top right corner of the details page\.
+
+1. In the **Data type** column choose the first `set` data type\.
+
+1. In the **Column type** drop\-down list, change the type from `set` to `array`\.
+
+1. In the **ArraySchema** field, enter `array<string>`, `array<int>`, or `array<binary>`, depending on the appropriate type of data for your scenario\.
+
+1. Choose **Update**\.
+
+1. Repeat the previous steps to convert other `set` types to `array` types\.
+
+1. Choose **Save**\.
+
+## No Data at Destination Despite Good Metrics<a name="no-date-despite-good-metrics"></a>
+
+If there are no data ingestion problems and the metrics emitted for the delivery stream look good, but you don't see the data at the destination, check the reader logic\. Make sure your reader is correctly parsing out all the data\.

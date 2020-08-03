@@ -11,6 +11,8 @@ If you use the Kinesis Producer Library \(KPL\) to write data to a Kinesis data 
 + [Data Delivery Failure Handling](#retry)
 + [Amazon S3 Object Name Format](#s3-object-name)
 + [Index Rotation for the Amazon ES Destination](#es-index-rotation)
++ [Delivery Across AWS Accounts and Across AWS Regions for HTTP Endpoint Destinations](#across)
++ [Duplicated Records](#duplication)
 
 ## Data Delivery Format<a name="format"></a>
 
@@ -18,9 +20,11 @@ For data delivery to Amazon Simple Storage Service \(Amazon S3\), Kinesis Data F
 
 For data delivery to Amazon Redshift, Kinesis Data Firehose first delivers incoming data to your S3 bucket in the format described earlier\. Kinesis Data Firehose then issues an Amazon Redshift COPY command to load the data from your S3 bucket to your Amazon Redshift cluster\. Ensure that after Kinesis Data Firehose concatenates multiple incoming records to an Amazon S3 object, the Amazon S3 object can be copied to your Amazon Redshift cluster\. For more information, see [Amazon Redshift COPY Command Data Format Parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html)\.
 
-For data delivery to Amazon ES, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an Elasticsearch bulk request to index multiple records to your Elasticsearch cluster\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your Elasticsearch cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [Amazon ES Configure Advanced Options](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide//es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon Elasticsearch Service Developer Guide*\. 
+For data delivery to Amazon ES, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an Elasticsearch bulk request to index multiple records to your Elasticsearch cluster\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your Elasticsearch cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [Amazon ES Configure Advanced Options](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon Elasticsearch Service Developer Guide*\. 
 
 For data delivery to Splunk, Kinesis Data Firehose concatenates the bytes that you send\. If you want delimiters in your data, such as a new line character, you must insert them yourself\. Make sure that Splunk is configured to parse any such delimiters\.
+
+When delivering data to an HTTP endpoint owned by a supported third\-party service provider, you can use the integrated Amazon Lambda service to create a function to transform the incoming record\(s\) to the format that matches the format the service provider's integration is expecting\. Contact the third\-party service provider whose HTTP endpoint you've chosen for your destination to learn more about their accepted record format\. 
 
 ## Data Delivery Frequency<a name="frequency"></a>
 
@@ -37,6 +41,9 @@ The frequency of data delivery to Amazon ES is determined by the Elasticsearch *
 
 **Splunk**  
 Kinesis Data Firehose buffers incoming data before delivering it to Splunk\. The buffer size is 5 MB, and the buffer interval is 60 seconds\. The condition satisfied first triggers data delivery to Splunk\. The buffer size and interval aren't configurable\. These numbers are optimal\.
+
+**HTTP endpoint destination**  
+Kinesis Data Firehose buffers incoming data before delivering it to the specified HTTP endpoint destination\. For the HTTP endpoint destinations, including Datadog, MongoDB, and New Relic you can choose a buffer size of 1\-64 MiBs and a buffer interval \(60\-900 seconds\)\. The recommended buffer size for the destination varies from service provider to service provider\. For example, the recommended buffer size for Datadog is 4 MiBs and the recommended buffer size for New Relic is 1 MiB\. Contact the third\-party service provider whose endpoint you've chosen as your data destination for more information about their recommended buffer size\.
 
 ## Data Delivery Failure Handling<a name="retry"></a>
 
@@ -85,11 +92,30 @@ The following is an example error record\.
 }
 ```
 
+**HTTP endpoint destination**  
+When Kinesis Data Firehose sends data to an HTTP endpoint destination, it waits for a response from this destination\. If an error occurs, or the response doesn’t arrive within the response timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time Kinesis Data Firehose sends data to an HTTP endpoint destination, whether it's the initial attempt or a retry, it restarts the response timeout counter\. It then waits for a response to arrive from the HTTP endpoint destination\. Even if the retry duration expires, Kinesis Data Firehose still waits for the response until it receives it or the response timeout is reached\. If the response times out, Kinesis Data Firehose checks to determine whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives a response or determines that the retry time has expired\.  
+A failure to receive a response isn't the only type of data delivery error that can occur\. For information about the other types of data delivery errors, see [HTTP Endpoint Data Delivery Errors](https://docs.aws.amazon.com/firehose/latest/dev/monitoring-with-cloudwatch-logs.html#monitoring-http-errors)  
+The following is an example error record\.  
+
+```
+{
+	"attemptsMade":5,
+	"arrivalTimestamp":1594265943615,
+	"errorCode":"HttpEndpoint.DestinationException",
+	"errorMessage":"Received the following response from the endpoint destination. {"requestId": "109777ac-8f9b-4082-8e8d-b4f12b5fc17b", "timestamp": 1594266081268, "errorMessage": "Unauthorized"}", 
+	"attemptEndingTimestamp":1594266081318,
+	"rawData":"c2FtcGxlIHJhdyBkYXRh",
+	"subsequenceNumber":0,
+	"dataId":"49607357361271740811418664280693044274821622880012337186.0"
+}
+```
+
 ## Amazon S3 Object Name Format<a name="s3-object-name"></a>
 
-Kinesis Data Firehose adds a UTC time prefix in the format `YYYY/MM/DD/HH` before writing objects to Amazon S3\. This prefix creates a logical hierarchy in the bucket, where each forward slash \(`/`\) creates a level in the hierarchy\. You can modify this structure by specifying a custom prefix\. For information about how to specify a custom prefix, see [Custom Prefixes for Amazon S3 Objects](s3-prefixes.md)\. 
+Kinesis Data Firehose adds a UTC time prefix in the format `YYYY/MM/dd/HH` before writing objects to Amazon S3\. This prefix creates a logical hierarchy in the bucket, where each forward slash \(`/`\) creates a level in the hierarchy\. You can modify this structure by specifying a custom prefix\. For information about how to specify a custom prefix, see [Custom Prefixes for Amazon S3 Objects](s3-prefixes.md)\. 
 
-The Amazon S3 object name follows the pattern `DeliveryStreamName-DeliveryStreamVersion-YYYY-MM-DD-HH-MM-SS-RandomString`, where `DeliveryStreamVersion` begins with `1` and increases by 1 for every configuration change of the Kinesis Data Firehose delivery stream\. You can change delivery stream configurations \(for example, the name of the S3 bucket, buffering hints, compression, and encryption\)\. You can do so by using the Kinesis Data Firehose console or the [UpdateDestination](https://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html) API operation\.
+The Amazon S3 object name follows the pattern `DeliveryStreamName-DeliveryStreamVersion-YYYY-MM-dd-HH-MM-SS-RandomString`, where `DeliveryStreamVersion` begins with `1` and increases by 1 for every configuration change of the Kinesis Data Firehose delivery stream\. You can change delivery stream configurations \(for example, the name of the S3 bucket, buffering hints, compression, and encryption\)\. You can do so by using the Kinesis Data Firehose console or the [UpdateDestination](https://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html) API operation\.
 
 ## Index Rotation for the Amazon ES Destination<a name="es-index-rotation"></a>
 
@@ -105,3 +131,13 @@ Depending on the rotation option you choose, Kinesis Data Firehose appends a por
 | OneDay | myindex\-2016\-02\-25 | 
 | OneWeek | myindex\-2016\-w08 | 
 | OneMonth | myindex\-2016\-02 | 
+
+## Delivery Across AWS Accounts and Across AWS Regions for HTTP Endpoint Destinations<a name="across"></a>
+
+Kinesis Data Firehose supports data delivery to HTTP endpoint destinations across AWS accounts\. Kinesis Data Firehose delivery stream and the HTTP endpoint that you've chosen as your destination can be in different AWS accounts\.
+
+Kinesis Data Firehose also supports data delivery to HTTP endpoint destinations across AWS regions\. You can deliver data from a delivery stream in one AWS region to an HTTP endpoint in another AWS region\. You can also delivery data from a delivery stream to an HTTP endpoint destination outside of AWS regions, for example to your own on\-premises server by setting the HTTP endpoint URL to your desired destination\. For these scenarios, additional data transfer charges are added to your delivery costs\. For more information, see the [Data Transfer](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer) section in the "On\-Demand Pricing" page\.
+
+## Duplicated Records<a name="duplication"></a>
+
+Kinesis Data Firehose uses at\-least\-once semantics for data delivery\. In some circumstances, such as when data delivery times out, delivery retries by Kinesis Data Firehose might introduce duplicates if the original data\-delivery request eventually goes through\. This applies to all destination types that Kinesis Data Firehose supports\.

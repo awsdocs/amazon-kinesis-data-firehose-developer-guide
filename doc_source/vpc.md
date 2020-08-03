@@ -61,7 +61,7 @@ The following example shows how you can set up an AWS Lambda function in a VPC a
 
 1. Open the IAM console at [https://console\.aws\.amazon\.com/iam/](https://console.aws.amazon.com/iam/)\.
 
-1. Choose **Create role**\.
+1. In the left pane, chose **Roles** and then choose **Create role**\.
 
 1. Under **Select type of trusted entity**, leave the default selection **AWS service**\.
 
@@ -69,7 +69,9 @@ The following example shows how you can set up an AWS Lambda function in a VPC a
 
 1. Choose **Next: Permissions**\.
 
-1. In the list of policies, search for and add the two policies named `AWSLambdaVPCAccessExecutionRole` and `AmazonKinesisFirehoseFullAccess`\.
+1. In the list of policies, search for and add the two policies named `AWSLambdaVPCAccessExecutionRole` and `AmazonKinesisFirehoseReadOnlyAccess`\.
+**Important**  
+This is an example\. You might need stricter policies for your production environment\.
 
 1. Choose **Next: Tags**\. You don't need to add tags for the purpose of this exercise\. Choose **Next: Review**\.
 
@@ -149,21 +151,23 @@ The following example shows how you can set up an AWS Lambda function in a VPC a
 
 ## Availability<a name="availability"></a>
 
-Interface VPC endpoints are currently supported within the following Regions:
-+ Asia Pacific \(Tokyo\)
-+ Asia Pacific \(Seoul\)
-+ Asia Pacific \(Mumbai\)
-+ Asia Pacific \(Singapore\)
-+ Asia Pacific \(Sydney\)
-+ Canada \(Central\)
-+ EU \(Frankfurt\)
-+ EU \(Ireland\)
-+ EU \(London\)
-+ EU \(Paris\)
-+ US East \(N\. Virginia\)
+Interface VPC endpoints are currently supported within the following Regions: 
 + US East \(Ohio\)
++ US East \(N\. Virginia\)
 + US West \(N\. California\)
 + US West \(Oregon\)
-+ South America \(São Paulo\)
++ Asia Pacific \(Mumbai\)
++ Asia Pacific \(Seoul\)
++ Asia Pacific \(Singapore\)
++ Asia Pacific \(Sydney\)
++ Asia Pacific \(Tokyo\)
++ Canada \(Central\)
 + China \(Beijing\)
 + China \(Ningxia\)
++ Europe \(Frankfurt\)
++ Europe \(Ireland\)
++ Europe \(London\)
++ Europe \(Paris\)
++ South America \(São Paulo\)
++ AWS GovCloud \(US\-East\)
++ AWS GovCloud \(US\-West\)

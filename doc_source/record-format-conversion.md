@@ -9,11 +9,16 @@ Amazon Kinesis Data Firehose can convert the format of your input data from JSON
 + [Converting Input Record Format \(Console\)](#record-format-conversion-using-console)
 + [Converting Input Record Format \(API\)](#record-format-conversion-using-api)
 + [Record Format Conversion Error Handling](#record-format-conversion-error-handling)
++ [Record Format Conversion Example](#record-format-conversion-example)
 
 ## Record Format Conversion Requirements<a name="record-format-conversion-concepts"></a>
 
 Kinesis Data Firehose requires the following three elements to convert the format of your record data: 
 + **A deserializer to read the JSON of your input data** – You can choose one of two types of deserializers: [Apache Hive JSON SerDe](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-JSON) or [OpenX JSON SerDe](https://github.com/rcongiu/Hive-JSON-Serde)\.
+**Note**  
+When combining multiple JSON documents into the same record, make sure that your input is still presented in the supported JSON format\. An array of JSON documents is NOT a valid input\.   
+For example, this is the correct input: `{"a":1}{"a":2}`  
+And this is the INCORRECT input: `[{"a":1}, {"a":2}]`
 + **A schema to determine how to interpret that data** – Use [AWS Glue](https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html) to create a schema in the AWS Glue Data Catalog\. Kinesis Data Firehose then references that schema and uses it to interpret your input data\. You can use the same schema to configure both Kinesis Data Firehose and your analytics software\. For more information, see [Populating the AWS Glue Data Catalog](https://docs.aws.amazon.com/glue/latest/dg/populate-data-catalog.html) in the *AWS Glue Developer Guide*\.
 + **A serializer to convert the data to the target columnar storage format \(Parquet or ORC\)** – You can choose one of two types of serializers: [ORC SerDe](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC) or [Parquet SerDe](https://cwiki.apache.org/confluence/display/Hive/Parquet)\.
 
@@ -31,7 +36,7 @@ Choose the [OpenX JSON SerDe](https://github.com/rcongiu/Hive-JSON-Serde) if you
 +  Epoch milliseconds – For example, `1518033528123`\.
 +  Floating point epoch seconds – For example, `1518033528.123`\.
 
-The OpenX JSON SerDe can convert periods \(`.`\) to underscores \(`_`\)\. It can also convert JSON keys to lowercase before deserializing them\. For more information about the options that are available with this deserializer through Kinesis Data Firehose, see [OpenXJsonSerDe](https://alpha-docs-aws.amazon.com/firehose/latest/APIReference/API_OpenXJsonSerDe.html)\.
+The OpenX JSON SerDe can convert periods \(`.`\) to underscores \(`_`\)\. It can also convert JSON keys to lowercase before deserializing them\. For more information about the options that are available with this deserializer through Kinesis Data Firehose, see [OpenXJsonSerDe](https://docs.aws.amazon.com/firehose/latest/APIReference/API_OpenXJsonSerDe.html)\.
 
 If you're not sure which deserializer to choose, use the OpenX JSON SerDe, unless you have time stamps that it doesn't support\.
 
@@ -69,7 +74,7 @@ You can enable data format conversion on the console when you create or update a
 ## Converting Input Record Format \(API\)<a name="record-format-conversion-using-api"></a>
 
 If you want Kinesis Data Firehose to convert the format of your input data from JSON to Parquet or ORC, specify the optional [DataFormatConversionConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_DataFormatConversionConfiguration.html) element in [ExtendedS3DestinationConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ExtendedS3DestinationConfiguration.html) or in [ExtendedS3DestinationUpdate](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ExtendedS3DestinationUpdate.html)\. If you specify [DataFormatConversionConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_DataFormatConversionConfiguration.html), the following restrictions apply:
-+ In [BufferingHints](https://alpha-docs-aws.amazon.com/firehose/latest/APIReference/API_BufferingHints.html), you can't set `SizeInMBs` to a value less than 64 if you enable record format conversion\. Also, when format conversion isn't enabled, the default value is 5\. The value becomes 128 when you enable it\.
++ In [BufferingHints](https://docs.aws.amazon.com/firehose/latest/APIReference/API_BufferingHints.html), you can't set `SizeInMBs` to a value less than 64 if you enable record format conversion\. Also, when format conversion isn't enabled, the default value is 5\. The value becomes 128 when you enable it\.
 + You must set `CompressionFormat` in [ExtendedS3DestinationConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ExtendedS3DestinationConfiguration.html) or in [ExtendedS3DestinationUpdate](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ExtendedS3DestinationUpdate.html) to `UNCOMPRESSED`\. The default value for `CompressionFormat` is `UNCOMPRESSED`\. Therefore, you can also leave it unspecified in [ExtendedS3DestinationConfiguration](https://docs.aws.amazon.com/firehose/latest/APIReference/API_ExtendedS3DestinationConfiguration.html)\. The data still gets compressed as part of the serialization process, using Snappy compression by default\. The framing format for Snappy that Kinesis Data Firehose uses in this case is compatible with Hadoop\. This means that you can use the results of the Snappy compression and run queries on this data in Athena\. For the Snappy framing format that Hadoop relies on, see [BlockCompressorStream\.java](https://github.com/apache/hadoop/blob/f67237cbe7bc48a1b9088e990800b37529f1db2a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/compress/BlockCompressorStream.java)\. When you configure the serializer, you can choose other types of compression\.
 
 ## Record Format Conversion Error Handling<a name="record-format-conversion-error-handling"></a>
@@ -96,3 +101,7 @@ When Kinesis Data Firehose can't parse or deserialize a record \(for example, wh
   }
 }
 ```
+
+## Record Format Conversion Example<a name="record-format-conversion-example"></a>
+
+For an example of how to set up record format conversion with AWS CloudFormation, see [AWS::KinesisFirehose::DeliveryStream](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#aws-resource-kinesisfirehose-deliverystream--examples)\.

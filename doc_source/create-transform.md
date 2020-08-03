@@ -12,6 +12,7 @@ To specify a Lambda function for Kinesis Data Firehose to invoke and use to tran
 1. In the **Convert record format** section, provide values for the following field:  
 **Record format conversion**  
 To create a Kinesis Data Firehose delivery stream that doesn't convert the format of the incoming data records, choose **Disabled**\.   
-To convert the format of the incoming records, choose **Enabled**, then specify the output format you want\. You need to specify an AWS Glue table that holds the schema that you want Kinesis Data Firehose to use to convert your record format\. For more information, see [Converting Your Input Record Format in Kinesis Data Firehose](record-format-conversion.md)
+To convert the format of the incoming records, choose **Enabled**, then specify the output format you want\. You need to specify an AWS Glue table that holds the schema that you want Kinesis Data Firehose to use to convert your record format\. For more information, see [Converting Your Input Record Format in Kinesis Data Firehose](record-format-conversion.md)\.  
+For an example of how to set up record format conversion with AWS CloudFormation, see [AWS::KinesisFirehose::DeliveryStream](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#aws-resource-kinesisfirehose-deliverystream--examples)\.
 
 1. Choose **Next** to go to the **Select destination** page\.

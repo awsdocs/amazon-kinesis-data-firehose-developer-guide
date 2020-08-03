@@ -1,7 +1,7 @@
 # Amazon Kinesis Data Firehose Developer Guide
 
 -----
-*****Copyright &copy; 2019 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
+*****Copyright &copy; 2020 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
 Amazon's trademarks and trade dress may not be used in 
@@ -43,9 +43,9 @@ Amazon's trademarks and trade dress may not be used in
 + [Amazon Kinesis Data Firehose Data Delivery](basic-deliver.md)
 + [Monitoring Amazon Kinesis Data Firehose](monitoring.md)
    + [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)
-   + [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)
-   + [Monitoring Kinesis Agent Health](agent-health.md)
-   + [Logging Kinesis Data Firehose API Calls with AWS CloudTrail](monitoring-using-cloudtrail.md)
+      + [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)
+      + [Monitoring Kinesis Agent Health](agent-health.md)
+      + [Logging Kinesis Data Firehose API Calls with AWS CloudTrail](monitoring-using-cloudtrail.md)
 + [Custom Prefixes for Amazon S3 Objects](s3-prefixes.md)
 + [Using Amazon Kinesis Data Firehose with AWS PrivateLink](vpc.md)
 + [Tagging Your Delivery Streams in Amazon Kinesis Data Firehose](firehose-tagging.md)
@@ -55,6 +55,7 @@ Amazon's trademarks and trade dress may not be used in
    + [Step 3: Send the Data from Amazon CloudWatch to Kinesis Data Firehose](cw-to-delivery-stream.md)
    + [Step 4: Check the Results in Splunk and in Kinesis Data Firehose](check-vpc-to-splunk-results.md)
 + [Troubleshooting Amazon Kinesis Data Firehose](troubleshooting.md)
-+ [Amazon Kinesis Data Firehose Limits](limits.md)
++ [Amazon Kinesis Data Firehose Quota](limits.md)
++ [Appendix - HTTP Endpoint Delivery Request and Response Specifications](httpdeliveryrequestresponse.md)
 + [Document History](history.md)
-+ [AWS Glossary](glossary.md)
++ [AWS glossary](glossary.md)

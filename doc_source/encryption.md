@@ -15,3 +15,16 @@ For information about how to enable server\-side encryption for Kinesis Data Str
 If you send data to your delivery stream using [PutRecord](https://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecord.html) or [PutRecordBatch](https://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html), or if you send the data using AWS IoT, Amazon CloudWatch Logs, or CloudWatch Events, you can turn on server\-side encryption by using the [StartDeliveryStreamEncryption](https://docs.aws.amazon.com/firehose/latest/APIReference/API_StartDeliveryStreamEncryption.html) operation\. 
 
 To stop server\-side\-encryption, use the [StopDeliveryStreamEncryption](https://docs.aws.amazon.com/firehose/latest/APIReference/API_StopDeliveryStreamEncryption.html) operation\.
+
+You can also enable SSE when you create the delivery stream\. To do that, specify [DeliveryStreamEncryptionConfigurationInput](https://docs.aws.amazon.com/firehose/latest/APIReference/API_DeliveryStreamEncryptionConfigurationInput.html) when you invoke [CreateDeliveryStream](https://docs.aws.amazon.com/firehose/latest/APIReference/API_CreateDeliveryStream.html)\.
+
+When the CMK is of type `CUSTOMER_MANAGED_CMK`, if the Amazon Kinesis Data Firehose service is unable to decrypt records because of a `KMSNotFoundException`, a `KMSInvalidStateException`, a `KMSDisabledException`, or a `KMSAccessDeniedException`, the service waits up to 24 hours \(the retention period\) for you to resolve the problem\. If the problem persists beyond the retention period, the service skips those records that have passed the retention period and couldn't be decrypted, and then discards the data\. Amazon Kinesis Data Firehose provides the following four CloudWatch metrics that you can use to track the four AWS KMS exceptions:
++ `KMSKeyAccessDenied`
++ `KMSKeyDisabled`
++ `KMSKeyInvalidState`
++ `KMSKeyNotFound`
+
+For more information about these four metrics, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
+
+**Important**  
+To encrypt your delivery stream, use symmetric CMKs\. Kinesis Data Firehose doesn't support asymmetric CMKs\. For information about symmetric and asymmetric CMKs, see [About Symmetric and Asymmetric CMKs](https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html) in the AWS Key Management Service developer guide\.

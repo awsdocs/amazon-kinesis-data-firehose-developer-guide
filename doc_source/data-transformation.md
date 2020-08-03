@@ -24,24 +24,25 @@ The transformed data payload, after base64\-encoding\.
 
 ## Lambda Blueprints<a name="lambda-blueprints"></a>
 
-Kinesis Data Firehose provides the following Lambda blueprints that you can use to create a Lambda function for data transformation\.
-+ **General Firehose Processing** — Contains the data transformation and status model described in the previous section\. Use this blueprint for any custom transformation logic\.
-+ **Apache Log to JSON** — Parses and converts Apache log lines to JSON objects, using predefined JSON field names\.
-+ **Apache Log to CSV** — Parses and converts Apache log lines to CSV format\.
-+ **Syslog to JSON** — Parses and converts Syslog lines to JSON objects, using predefined JSON field names\.
-+ **Syslog to CSV** — Parses and converts Syslog lines to CSV format\.
-+ **Kinesis Data Firehose Process Record Streams as source** — Accesses the Kinesis Data Streams records in the input and returns them with a processing status\.
-+ **Kinesis Data Firehose CloudWatch Logs Processor** — Parses and extracts individual log events from records sent by CloudWatch Logs subscription filters\.
+There are blueprints that you can use to create a Lambda function for data transformation\. Some of these blueprints are in the AWS Lambda console and some are in the AWS Serverless Application Repository\.
 
-Lambda blueprints are only available in the Node\.js and Python languages\. You can implement your own functions in other supported languages\. For information about AWS Lambda supported languages, see [Introduction: Building Lambda Functions](http://docs.aws.amazon.com/lambda/latest/dg/lambda-app.html)\.
-
-**To see all the Lambda blueprints for Kinesis Data Firehose, with examples in Python and Node\.js**
+**To see the blueprints that are available in the AWS Lambda console**
 
 1. Sign in to the AWS Management Console and open the AWS Lambda console at [https://console\.aws\.amazon\.com/lambda/](https://console.aws.amazon.com/lambda/)\.
 
-1. Choose **Create function**, and then choose **Blueprints**\.
+1. Choose **Create function**, and then choose **Use a blueprint**\.
 
-1. Search for the keyword "`firehose`" to find the [Kinesis Data Firehose Lambda Blueprints](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create?f0=a3c%3D%3AZmlyZWhvc2U%3D&tab=blueprints)\.
+1. In the **Blueprints** field, search for the keyword `firehose` to find the Kinesis Data Firehose Lambda blueprints\.
+
+**To see the blueprints that are available in the AWS Serverless Application Repository**
+
+1. Go to [AWS Serverless Application Repository](https://aws.amazon.com/serverless/serverlessrepo)\.
+
+1. Choose **Browse all applications**\.
+
+1. In the **Applications** field, search for the keyword `firehose`\.
+
+You can also create a Lambda function without using a blueprint\. See [Getting Started with AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)\.
 
 ## Data Transformation Failure Handling<a name="data-transformation-failure-handling"></a>
 

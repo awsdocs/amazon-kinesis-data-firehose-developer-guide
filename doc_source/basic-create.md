@@ -9,5 +9,5 @@ The following topics describe how to create a Kinesis Data Firehose delivery str
 **Topics**
 + [Name and source](create-name.md)
 + [Process records](create-transform.md)
-+ [Select destination](create-destination.md)
++ [Choose destination](create-destination.md)
 + [Configure settings](create-configure.md)

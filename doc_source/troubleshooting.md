@@ -19,6 +19,7 @@ For information about tracking delivery errors using CloudWatch, see [Monitoring
 + [Data Freshness Metric Increasing or Not Emitted](#data-freshness-metric-not-emitted)
 + [Record Format Conversion to Apache Parquet Fails](#apache-parquet-conversion-fails)
 + [No Data at Destination Despite Good Metrics](#no-date-despite-good-metrics)
++ [Troubleshooting HTTP Endpoints](http_troubleshooting.md)
 
 ## Data Not Delivered to Amazon S3<a name="data-not-delivered-to-s3"></a>
 

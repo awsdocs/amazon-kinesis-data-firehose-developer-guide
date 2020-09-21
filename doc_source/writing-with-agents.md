@@ -1,6 +1,6 @@
 # Writing to Kinesis Data Firehose Using Kinesis Agent<a name="writing-with-agents"></a>
 
-Amazon Kinesis Agent is a standalone Java software application that offers an easy way to collect and send data to Kinesis Data Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis Data Firehose delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
+Amazon Kinesis agent is a standalone Java software application that offers an easy way to collect and send data to Kinesis Data Firehose\. The agent continuously monitors a set of files and sends new data to your Kinesis Data Firehose delivery stream\. The agent handles file rotation, checkpointing, and retry upon failures\. It delivers all of your data in a reliable, timely, and simple manner\. It also emits Amazon CloudWatch metrics to help you better monitor and troubleshoot the streaming process\.
 
 By default, records are parsed from each file based on the newline \(`'\n'`\) character\. However, the agent can also be configured to parse multi\-line records \(see [Agent Configuration Settings](#agent-config-settings)\)\. 
 
@@ -14,12 +14,12 @@ You can install the agent on Linux\-based server environments such as web server
 + [Configure and Start the Agent](#config-start)
 + [Agent Configuration Settings](#agent-config-settings)
 + [Monitor Multiple File Directories and Write to Multiple Streams](#sim-writes)
-+ [Use the Agent to Preprocess Data](#pre-processing)
-+ [Agent CLI Commands](#cli-commands)
++ [Use the agent to Preprocess Data](#pre-processing)
++ [agent CLI Commands](#cli-commands)
 
 ## Prerequisites<a name="prereqs"></a>
-+ Your operating system must be either Amazon Linux AMI with version 2015\.09 or later, or Red Hat Enterprise Linux version 7 or later\.
-+ You need version 1\.7 or later of the JRE\.
++ Your operating system must be Amazon Linux, or Red Hat Enterprise Linux version 7 or later\. 
++ Agent version 2\.0\.0 or later runs using JRE version 1\.8 or later\. Agent version 1\.1\.x runs using JRE 1\.7 or later\. 
 + If you are using Amazon EC2 to run your agent, launch your EC2 instance\.
 + The IAM role or AWS credentials that you specify must have permission to perform the Kinesis Data Firehose [PutRecordBatch](https://docs.aws.amazon.com/firehose/latest/APIReference/API_PutRecordBatch.html) operation for the agent to send data to your delivery stream\. If you enable CloudWatch monitoring for the agent, permission to perform the CloudWatch [PutMetricData](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation is also needed\. For more information, see [Controlling Access with Amazon Kinesis Data Firehose ](controlling-access.md), [Monitoring Kinesis Agent Health](agent-health.md), and [Authentication and Access Control for Amazon CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/auth-and-access-control-cw.html)\.
 
@@ -34,7 +34,7 @@ Manage your AWS credentials using one of the following methods:
 
 ## Custom Credential Providers<a name="custom-cred-provider"></a>
 
-You can create a custom credentials provider and give its class name and jar path to the Kinesis Agent in the following configuration settings: `userDefinedCredentialsProvider.classname` and `userDefinedCredentialsProvider.location`\. For the descriptions of these two configuration settings, see [Agent Configuration Settings](#agent-config-settings)\.
+You can create a custom credentials provider and give its class name and jar path to the Kinesis agent in the following configuration settings: `userDefinedCredentialsProvider.classname` and `userDefinedCredentialsProvider.location`\. For the descriptions of these two configuration settings, see [Agent Configuration Settings](#agent-config-settings)\.
 
 To create a custom credentials provider, define a class that implements the `AWSCredentialsProvider` interface, like the one in the following example\.
 
@@ -65,29 +65,51 @@ AWS invokes the refresh method periodically to get updated credentials\. If you 
 First, connect to your instance\. For more information, see [Connect to Your Instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-connect-to-instance-linux.html) in the *Amazon EC2 User Guide for Linux Instances*\. If you have trouble connecting, see [Troubleshooting Connecting to Your Instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html) in the *Amazon EC2 User Guide for Linux Instances*\.
 
 Next, install the agent using one of the following methods\.
++ **To set up the agent from the Amazon Linux repositories **
 
-**To set up the agent using Red Hat Enterprise Linux**  
-Use the following command to download and install the latest version of the agent:
+  This method works only for Amazon Linux instances\. Use the following command:
 
-```
-sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn1.noarch.rpm
-```
+  ```
+  sudo yum install –y aws-kinesis-agent
+  ```
 
-To install a specific version of the agent, specify the version number in the command\. For example, the following command installs version 1\.1\.4\.
+  Agent v 2\.0\.0 or later is installed on computers with operating system Amazon Linux 2 \(AL2\)\. This agent version requires Java 1\.8 or later\. If required Java version is not yet present, the agent installation process installs it\. For more information regarding Amazon Linux 2 see [https://aws\.amazon\.com/amazon\-linux\-2/](https://aws.amazon.com/amazon-linux-2/)\.
++ **To set up the agent from the Amazon S3 repository**
 
-```
-sudo yum install –y https://streaming-data-agent.s3.amazonaws.com/aws-kinesis-agent-1.1.4-1.amzn1.noarch.rpm
-```
+  This method works for Red Hat Enterprise Linux, as well as Amazon Linux 2 instances because it installs the agent from the publicly available repository\. Use the following command to download and install the latest version of the agent version 2\.x\.x: 
 
-**Second option**
+  ```
+  sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn2.noarch.rpm
+  ```
 
-1. Download the agent from [awslabs/amazon\-kinesis\-agent](https://github.com/awslabs/amazon-kinesis-agent)\. 
+  To install a specific version of the agent, specify the version number in the command\. For example, the following command installs agent v 2\.0\.0\. 
 
-1. Install the agent by navigating to the download directory and running the following command:
+  ```
+  sudo yum install –y https://streaming-data-agent.s3.amazonaws.com/aws-kinesis-agent-2.0.0-2.amzn2.noarch.rpm
+  ```
 
-   ```
-   sudo ./setup --install
-   ```
+  If you have Java 1\.7 and you don’t want to upgrade it, you can download agent version 1\.x\.x, which is compatible with Java 1\.7\. For example, to download agent v1\.1\.6, you can use the following command: 
+
+  ```
+  sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-1.1.6-1.amzn1.noarch.rpm
+  ```
+
+  The latest agent v1\.x\.x can be downloaded using the following command:
+
+  ```
+  sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn1.noarch.rpm
+  ```
++ **To set up the agent from the GitHub repo**
+
+  1. First, make sure that you have required Java version installed, depending on agent version\.
+
+  1.  Download the agent from the [awslabs/amazon\-kinesis\-agent](https://github.com/awslabs/amazon-kinesis-agent) GitHub repo\.
+
+  1. Install the agent by navigating to the download directory and running the following command:
+
+     ```
+     sudo ./setup --install
+     ```
 
 ## Configure and Start the Agent<a name="config-start"></a>
 
@@ -162,7 +184,7 @@ The following are the flow configuration settings\.
 | Configuration Setting | Description | 
 | --- | --- | 
 | aggregatedRecordSizeBytes |  To make the agent aggregate records and then put them to the delivery stream in one operation, specify this setting\. Set it to the size that you want the aggregate record to have before the agent puts it to the delivery stream\.  Default: 0 \(no aggregation\)  | 
-| dataProcessingOptions |  The list of processing options applied to each parsed record before it is sent to the delivery stream\. The processing options are performed in the specified order\. For more information, see [Use the Agent to Preprocess Data](#pre-processing)\.  | 
+| dataProcessingOptions |  The list of processing options applied to each parsed record before it is sent to the delivery stream\. The processing options are performed in the specified order\. For more information, see [Use the agent to Preprocess Data](#pre-processing)\.  | 
 | deliveryStream |  \[Required\] The name of the delivery stream\.  | 
 | filePattern |  \[Required\] A glob for the files that need to be monitored by the agent\. Any file that matches this pattern is picked up by the agent automatically and monitored\. For all files matching this pattern, grant read permission to `aws-kinesis-agent-user`\. For the directory containing the files, grant read and execute permissions to `aws-kinesis-agent-user`\.  The agent picks up any file that matches this pattern\. To ensure that the agent doesn't pick up unintended records, choose this pattern carefully\.   | 
 | initialPosition |  The initial position from which the file started to be parsed\. Valid values are `START_OF_FILE` and `END_OF_FILE`\. Default: `END_OF_FILE`  | 
@@ -198,7 +220,7 @@ By specifying multiple flow configuration settings, you can configure the agent 
 
 For more detailed information about using the agent with Amazon Kinesis Data Streams, see [Writing to Amazon Kinesis Data Streams with Kinesis Agent](https://docs.aws.amazon.com/kinesis/latest/dev/writing-with-agents.html)\.
 
-## Use the Agent to Preprocess Data<a name="pre-processing"></a>
+## Use the agent to Preprocess Data<a name="pre-processing"></a>
 
 The agent can pre\-process the records parsed from monitored files before sending them to your delivery stream\. You can enable this feature by adding the `dataProcessingOptions` configuration setting to your file flow\. One or more processing options can be added, and they are performed in the specified order\.
 
@@ -353,7 +375,7 @@ After conversion:
 {"host":"123.45.67.89","ident":null,"authuser":null,"datetime":"27/Oct/2000:09:27:09 -0400","request":"GET /java/javaResources.html HTTP/1.0","response":"200"}
 ```
 
-## Agent CLI Commands<a name="cli-commands"></a>
+## agent CLI Commands<a name="cli-commands"></a>
 
 Automatically start the agent on system startup:
 

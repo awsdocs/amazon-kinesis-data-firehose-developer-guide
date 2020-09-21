@@ -1,6 +1,6 @@
 # Appendix \- HTTP Endpoint Delivery Request and Response Specifications<a name="httpdeliveryrequestresponse"></a>
 
-This section describes the format of the HTTP requests that the Kinesis Data Firehose service sends to custom HTTP endpoints, as well as the format of the HTTP responses that the Kinesis Data Firehose service expects\.
+For Kinesis Data Firehose to successfully deliver data to custom HTTP endpoints, these endpoints must accept requests and send responses using certain Kinesis Data Firehose request and response formats\. This section describes the format specifications of the HTTP requests that the Kinesis Data Firehose service sends to custom HTTP endpoints, as well as the format specifications of the HTTP responses that the Kinesis Data Firehose service expects\. HTTP endpoints have 3 minutes to respond to a request before Kinesis Data Firehose times out that request\. Kinesis Data Firehose treats responses that do not adhere to the proper format as delivery failures\.
 
 **Topics**
 + [Request Format](#requestformat)

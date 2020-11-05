@@ -82,10 +82,10 @@ Next, install the agent using one of the following methods\.
   sudo yum install –y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn2.noarch.rpm
   ```
 
-  To install a specific version of the agent, specify the version number in the command\. For example, the following command installs agent v 2\.0\.0\. 
+  To install a specific version of the agent, specify the version number in the command\. For example, the following command installs agent v 2\.0\.1\. 
 
   ```
-  sudo yum install –y https://streaming-data-agent.s3.amazonaws.com/aws-kinesis-agent-2.0.0-2.amzn2.noarch.rpm
+  sudo yum install –y https://streaming-data-agent.s3.amazonaws.com/aws-kinesis-agent-2.0.1-1.amzn1.noarch.rpm
   ```
 
   If you have Java 1\.7 and you don’t want to upgrade it, you can download agent version 1\.x\.x, which is compatible with Java 1\.7\. For example, to download agent v1\.1\.6, you can use the following command: 
@@ -175,6 +175,7 @@ The following are the general configuration settings\.
 | cloudwatch\.emitMetrics |  Enables the agent to emit metrics to CloudWatch if set \(true\)\. Default: true  | 
 | cloudwatch\.endpoint |  The regional endpoint for CloudWatch\. Default: `monitoring.us-east-1.amazonaws.com`  | 
 | firehose\.endpoint |  The regional endpoint for Kinesis Data Firehose\. Default: `firehose.us-east-1.amazonaws.com`  | 
+| sts\.endpoint |  The regional endpoint for the AWS Security Token Service\. Default: `https://sts.amazonaws.com`  | 
 | userDefinedCredentialsProvider\.classname | If you define a custom credentials provider, provide its fully\-qualified class name using this setting\. Don't include \.class at the end of the class name\.  | 
 | userDefinedCredentialsProvider\.location | If you define a custom credentials provider, use this setting to specify the absolute path of the jar that contains the custom credentials provider\. The agent also looks for the jar file in the following location: /usr/share/aws\-kinesis\-agent/lib/\. | 
 

@@ -34,7 +34,7 @@ The following rules apply to `Prefix` and `ErrorOutputPrefix` expressions\.
 + For the `timestamp` namespace, any character that isn't in single quotes is evaluated\. In other words, any string escaped with single quotes in the value field is taken literally\.
 + If you specify a prefix that doesn't contain a timestamp namespace expression, Kinesis Data Firehose appends the expression `!{timestamp:yyyy/MM/dd/HH/}`to the value in the `Prefix` field\.
 + The sequence `!{` can only appear in `!{namespace:value}` expressions\.
-+ `ErrorOutputPrefix` can be null only if `Prefix` contains no expressions\. In this case, `Prefix` evaluates to `<specified-prefix>YYYY/MM/DDD/HH/` and `ErrorOutputPrefix` evaluates to `<specified-prefix><error-output-type>YYYY/MM/DDD/HH/`\. `DDD` represents the day of the year\.
++ `ErrorOutputPrefix` can be null only if `Prefix` contains no expressions\. In this case, `Prefix` evaluates to `<specified-prefix>yyyy/MM/DDD/HH/` and `ErrorOutputPrefix` evaluates to `<specified-prefix><error-output-type>YYYY/MM/DDD/HH/`\. `DDD` represents the day of the year\.
 + If you specify an expression for `ErrorOutputPrefix`, you must include at least one instance of `!{firehose:error-output-type}`\.
 + `Prefix` can't contain `!{firehose:error-output-type}`\.
 + Neither `Prefix` nor `ErrorOutputPrefix` can be greater than 512 characters after they're evaluated\.

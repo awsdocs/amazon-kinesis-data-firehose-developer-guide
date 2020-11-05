@@ -2,6 +2,9 @@
 
 If you have sensitive data, you can enable server\-side data encryption when you use Amazon Kinesis Data Firehose\. How you do this depends on the source of your data\.
 
+**Note**  
+If you require FIPS 140\-2 validated cryptographic modules when accessing AWS through a command line interface or an API, use a FIPS endpoint\. For more information about the available FIPS endpoints, see [Federal Information Processing Standard \(FIPS\) 140\-2](http://aws.amazon.com/compliance/fips/)\.
+
 ## Server\-Side Encryption with Kinesis Data Streams as the Data Source<a name="sse-with-data-stream-as-source"></a>
 
 When you configure a Kinesis data stream as the data source of a Kinesis Data Firehose delivery stream, Kinesis Data Firehose no longer stores the data at rest\. Instead, the data is stored in the data stream\. 

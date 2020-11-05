@@ -143,11 +143,11 @@ This is an example\. You might need stricter policies for your production enviro
 
 1. Choose **Test** again\. This causes the function to run\. After the execution result appears, expand **Details** and compare the log output to the function code\. Successful results show a list of the delivery streams in the Region, as well as the following output:
 
-   Calling describe\_delivery\_stream\.
+    Calling describe\_delivery\_stream\. 
 
-   AccessDeniedException 
+    AccessDeniedException  
 
-   Access denied test succeeded\.
+    Access denied test succeeded\. 
 
 ## Availability<a name="availability"></a>
 
@@ -161,6 +161,7 @@ Interface VPC endpoints are currently supported within the following Regions:
 + Asia Pacific \(Singapore\)
 + Asia Pacific \(Sydney\)
 + Asia Pacific \(Tokyo\)
++ Asia Pacific \(Hong Kong\)
 + Canada \(Central\)
 + China \(Beijing\)
 + China \(Ningxia\)

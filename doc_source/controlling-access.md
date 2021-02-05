@@ -603,7 +603,7 @@ You can use the AWS CLI or the Kinesis Data Firehose APIs to create a delivery s
 
 1. Create an IAM role under account A using steps described in [Grant Kinesis Firehose Access to an Amazon S3 Destination](https://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3)\. 
 **Note**  
-The Amazon S3 bucket specified in the access policy is owned by account B in this case\. Make sure you add `s3:PutObjectAcl` to the list of Amazon S3 actions in the access policy, which grants account B full access to the objects delivered by Amazon Kinesis Data Firehose\.
+The Amazon S3 bucket specified in the access policy is owned by account B in this case\. Make sure you add `s3:PutObjectAcl` to the list of Amazon S3 actions in the access policy, which grants account B full access to the objects delivered by Amazon Kinesis Data Firehose\. This permission is required for cross account delivery\. Kinesis Data Firehose sets the "x\-amz\-acl" header on the request to "bucket\-owner\-full\-control"\.
 
 1. To allow access from the IAM role previously created, create an S3 bucket policy under account B\. The following code is an example of the bucket policy\. For more information, see [Using Bucket Policies and User Policies](https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html)\. 
 

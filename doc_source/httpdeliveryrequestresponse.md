@@ -10,7 +10,8 @@ For Kinesis Data Firehose to successfully deliver data to custom HTTP endpoints,
 ## Request Format<a name="requestformat"></a>
 
 **Path and URL Parameters**  
-These are configured directly by you as part of a single URL field\. Kinesis Data Firehose sends them as configured without modification\. Only https destinations are supported\. URL restrictions are applied during delivery\-stream configuration\.
+These are configured directly by you as part of a single URL field\. Kinesis Data Firehose sends them as configured without modification\. Only https destinations are supported\. URL restrictions are applied during delivery\-stream configuration\.  
+Currently, only port 443 is supported for HTTP endpoint data delivery\.
 
 **HTTP Headers \- X\-Amz\-Firehose\-Protocol\-Version**  
 This header is used to indicate the version of the request/response formats\. Currently the only version is 1\.0\.

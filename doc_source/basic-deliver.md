@@ -132,6 +132,11 @@ Depending on the rotation option you choose, Kinesis Data Firehose appends a por
 | OneWeek | myindex\-2016\-w08 | 
 | OneMonth | myindex\-2016\-02 | 
 
+**Note**  
+With the `OneWeek` option, Data Firehose auto\-create indexes using the format of <YEAR>\-w<WEEK NUMBER> \(for example, `2020-w33`\), where the week number is calculated using UTC time and according to the following US conventions:  
+A week starts on Sunday
+The first week of the year is the first week that contains a Saturday in this year
+
 ## Delivery Across AWS Accounts and Across AWS Regions for HTTP Endpoint Destinations<a name="across"></a>
 
 Kinesis Data Firehose supports data delivery to HTTP endpoint destinations across AWS accounts\. Kinesis Data Firehose delivery stream and the HTTP endpoint that you've chosen as your destination can be in different AWS accounts\.

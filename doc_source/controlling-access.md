@@ -273,7 +273,7 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `15.185.91.0/27` for Middle East \(Bahrain\)
 + `18.228.1.128/27` for South America \(São Paulo\)
 + `15.161.135.128/27` for Europe \(Milan\)
-+ `13.244.121.224/277` for Africa \(Cape Town\)
++ `13.244.121.224/27` for Africa \(Cape Town\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
 

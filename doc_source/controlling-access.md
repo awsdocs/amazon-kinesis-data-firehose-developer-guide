@@ -274,6 +274,7 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `18.228.1.128/27` for South America \(São Paulo\)
 + `15.161.135.128/27` for Europe \(Milan\)
 + `13.244.121.224/277` for Africa \(Cape Town\)
++ `13.208.177.192/27` for Asia Pacific \(Osaka\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
 
@@ -509,6 +510,7 @@ If your Splunk platform is in a VPC, it must be publicly accessible with a publi
 + `18.228.1.192/26` for South America \(São Paulo\)
 + `15.161.135.192/26` for Europe \(Milan\)
 + `13.244.165.128/26` for Africa \(Cape Town\)
++ `13.208.217.0/26` for Asia Pacific \(Osaka\)
 
 ## Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination<a name="using-iam-http"></a>
 

@@ -2,7 +2,7 @@
 
 This topic describes the **Choose destination** page of the **Create Delivery Stream** wizard in Amazon Kinesis Data Firehose\.
 
-Kinesis Data Firehose can send records to Amazon Simple Storage Service \(Amazon S3\), Amazon Redshift, Amazon Elasticsearch Service \(Amazon ES\), and any HTTP enpoint owned by you or any of your third\-party service providers, including Datadog, New Relic, and Splunk\.
+Kinesis Data Firehose can send records to Amazon Simple Storage Service \(Amazon S3\), Amazon Redshift, Amazon Elasticsearch Service \(Amazon ES\), and any HTTP endpoint owned by you or any of your third\-party service providers, including Datadog, New Relic, and Splunk\.
 
 **Topics**
 + [Choose Amazon S3 for Your Destination](#create-destination-s3)

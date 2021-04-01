@@ -10,9 +10,12 @@ Kinesis Data Firehose can send records to Amazon Simple Storage Service \(Amazon
 + [Choose Amazon ES for Your Destination](#create-destination-elasticsearch)
 + [Choose HTTP Endpoint for Your Destination](#create-destination-http)
 + [Choose Datadog for Your Destination](#create-destination-datadog)
++ [Choose Dynatrace for Your Destination](#create-destination-dynatrace)
++ [Choose LogicMonitor for Your Destination](#create-destination-logicmonitor)
 + [Choose MongoDB Cloud for Your Destination](#create-destination-mongodb)
 + [Choose New Relic for Your Destination](#create-destination-new-relic)
 + [Choose Splunk for Your Destination](#create-destination-splunk)
++ [Choose Sumo Logic for Your Destination](#create-destination-sumo-logic)
 
 ## Choose Amazon S3 for Your Destination<a name="create-destination-s3"></a>
 
@@ -128,14 +131,19 @@ Choose an existing backup bucket or create a new one\.
 
 ## Choose Datadog for Your Destination<a name="create-destination-datadog"></a>
 
-This section describes options for using **Datadog** for your destination\.
+This section describes options for using **Datadog** for your destination\. For more information about Datadog, see [https://docs\.datadoghq\.com/integrations/amazon\_web\_services/](https://docs.datadoghq.com/integrations/amazon_web_services/)\.
 
 **To choose **Datadog** for your destination**
 + On the **Choose destination** page, provide values for the following fields:  
  **Destination**   
 Choose **Third\-party service provider** and then in the drop\-down menu, choose **Datadog**\.  
  **HTTP endpoint URL**   
-Choose the HTTP endpoint URL \(**Datadog EU** or **Datadog US**\) from the drop down menu\.  
+Choose the HTTP endpoint URL from the following options in the drop down menu:  
+  + **Datadog logs \- US**
+  + **Datadog logs \- EU**
+  + **Datadog logs \- GOV**
+  + **Datadog metrics \- US**
+  + **Datadog metrics \- EU**  
  **API key**   
 Contact Datadog to obtain the API key required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
  **Content encoding**   
@@ -155,9 +163,67 @@ Choose an existing backup bucket or create a new one\.
  **Backup S3 bucket prefix**   
 \(Optional\) To use the default prefix for Amazon S3 objects, leave this option blank\. Kinesis Data Firehose automatically uses a prefix in "`YYYY/MM/dd/HH`" UTC time format for delivered Amazon S3 objects\. You can add to the start of this prefix\. For more information, see [Amazon S3 Object Name Format](basic-deliver.md#s3-object-name)\.
 
+## Choose Dynatrace for Your Destination<a name="create-destination-dynatrace"></a>
+
+This section describes options for using **Dynatrace** for your destination\. For more information, see [https://www\.dynatrace\.com](https://www.dynatrace.com)\.
+
+**To choose **Dynatrace** for your destination**
++ On the **Choose destination** page, provide values for the following fields:  
+ **Destination**   
+Choose **Third\-party service provider** and then in the drop\-down menu, choose **Dynatrace**\.  
+ **HTTP endpoint URL**   
+Choose the HTTP endpoint URL \(**Dynatrace US**, **Dynatrace EU**, or **Dynatrace Global**\) from the drop down menu\.  
+ **API key**   
+Contact Dynatrace to obtain the API key required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to the selected HTTP endpoint\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **S3 backup mode**   
+Choose whether to back up all the events that Kinesis Data Firehose sends to the specified HTTP endpoint or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in the specified HTTP endpoint service\.  
+ **S3 backup bucket**   
+Choose an existing backup bucket or create a new one\.  
+ **Backup S3 bucket prefix**   
+\(Optional\) To use the default prefix for Amazon S3 objects, leave this option blank\. Kinesis Data Firehose automatically uses a prefix in "`YYYY/MM/dd/HH`" UTC time format for delivered Amazon S3 objects\. You can add to the start of this prefix\. For more information, see [Amazon S3 Object Name Format](basic-deliver.md#s3-object-name)\.
+
+## Choose LogicMonitor for Your Destination<a name="create-destination-logicmonitor"></a>
+
+This section describes options for using **LogicMonitor** for your destination\. For more information, see [https://www\.logicmonitor\.com](https://www.logicmonitor.com)\.
+
+**To choose **LogicMonitor** for your destination**
++ On the **Choose destination** page, provide values for the following fields:  
+ **Destination**   
+Choose **Third\-party service provider** and then in the drop\-down menu, choose **LogicMonitor**\.  
+ **HTTP endpoint URL**   
+Specify the URL for the HTTP endpoint in the following format: https://ACCOUNT\.logicmonitor\.com  
+ **API key**   
+Contact LogicMonitor to obtain the API key required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to the selected HTTP endpoint\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **S3 backup mode**   
+Choose whether to back up all the events that Kinesis Data Firehose sends to the specified HTTP endpoint or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in the specified HTTP endpoint service\.  
+ **S3 backup bucket**   
+Choose an existing backup bucket or create a new one\.  
+ **Backup S3 bucket prefix**   
+\(Optional\) To use the default prefix for Amazon S3 objects, leave this option blank\. Kinesis Data Firehose automatically uses a prefix in "`YYYY/MM/dd/HH`" UTC time format for delivered Amazon S3 objects\. You can add to the start of this prefix\. For more information, see [Amazon S3 Object Name Format](basic-deliver.md#s3-object-name)\.
+
 ## Choose MongoDB Cloud for Your Destination<a name="create-destination-mongodb"></a>
 
-This section describes options for using **MongoDB Cloud** for your destination\.
+This section describes options for using **MongoDB Cloud** for your destination\. For more information, see [https://www\.mongodb\.com](https://www.mongodb.com)\.
 
 **To choose **MongoDB Cloud** for your destination**
 + On the **Choose destination** page, provide values for the following fields:  
@@ -186,28 +252,31 @@ Choose an existing backup bucket or create a new one\.
 
 ## Choose New Relic for Your Destination<a name="create-destination-new-relic"></a>
 
-This section describes options for using **New Relic** for your destination\.
+This section describes options for using **New Relic** for your destination\. For more information, see [https://newrelic\.com](https://newrelic.com)\. 
 
 **To choose **New Relic** for your destination**
 + On the **Choose destination** page, provide values for the following fields:  
  **Destination**   
 Choose **Third\-party service provider** and then in the drop\-down menu, choose **New Relic**\.  
  **HTTP endpoint URL**   
-Specify the URL for the HTTP endpoint in the following format: `https://xyz.httpendpoint.com`\. The URL must be an HTTPS URL\.   
+Choose the HTTP endpoint URL from the following options in the drop down menu:  
+  + **New Relic logs \- US**
+  + **New Relic metrics \- US**
+  + **New Relic metrics \- EU**  
  **API key**   
-Contact New Relic to obtain the API key required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
+Enter your License Key \(40\-characters hexadecimal string\) from your New Relic One Account settings\. This API key is required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
  **Content encoding**   
 Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
  **Parameters \- optional**   
 Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
  **Retry duration**   
-Specify how long Kinesis Data Firehose retries sending data to New Relic\.   
+Specify how long Kinesis Data Firehose retries sending data to the New Relic HTTP endpoint\.   
 After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
 Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
 Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
 If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
  **S3 backup mode**   
-Choose whether to back up all the events that Kinesis Data Firehose sends to the specified New Relic or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in New Relic\.  
+Choose whether to back up all the events that Kinesis Data Firehose sends to the specified New Relic HTTP endpoint or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in New Relic\.  
  **S3 backup bucket**   
 Choose an existing backup bucket or create a new one\.  
  **Backup S3 bucket prefix**   
@@ -240,4 +309,31 @@ Choose whether to back up all the events that Kinesis Data Firehose sends to Spl
  **S3 backup bucket**   
 Choose an existing backup bucket or create a new one\.  
 Backup S3 bucket prefix  
+\(Optional\) To use the default prefix for Amazon S3 objects, leave this option blank\. Kinesis Data Firehose automatically uses a prefix in "`YYYY/MM/dd/HH`" UTC time format for delivered Amazon S3 objects\. You can add to the start of this prefix\. For more information, see [Amazon S3 Object Name Format](basic-deliver.md#s3-object-name)\.
+
+## Choose Sumo Logic for Your Destination<a name="create-destination-sumo-logic"></a>
+
+This section describes options for using **Sumo Logic** for your destination\. For more information, see [https://www\.sumologic\.com](https://www.sumologic.com)\.
+
+**To choose **Sumo Logic** for your destination**
++ On the **Choose destination** page, provide values for the following fields:  
+ **Destination**   
+Choose **Third\-party service provider** and then in the drop\-down menu, choose **Sumo Logic**\.  
+ **HTTP endpoint URL**   
+Specify the URL for the HTTP endpoint in the following format: `https://deployment name.sumologic.net/receiver/v1/kinesis/dataType/access token`\. The URL must be an HTTPS URL\.   
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to New Relic\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **S3 backup mode**   
+Choose whether to back up all the events that Kinesis Data Firehose sends to the specified New Relic or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in New Relic\.  
+ **S3 backup bucket**   
+Choose an existing backup bucket or create a new one\.  
+ **Backup S3 bucket prefix**   
 \(Optional\) To use the default prefix for Amazon S3 objects, leave this option blank\. Kinesis Data Firehose automatically uses a prefix in "`YYYY/MM/dd/HH`" UTC time format for delivered Amazon S3 objects\. You can add to the start of this prefix\. For more information, see [Amazon S3 Object Name Format](basic-deliver.md#s3-object-name)\.

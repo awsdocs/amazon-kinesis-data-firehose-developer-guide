@@ -1,6 +1,6 @@
 # Troubleshooting HTTP Endpoints<a name="http_troubleshooting"></a>
 
-This section describes common troubleshooting steps when dealing with Kinesis Data Firehose delivering data to generic HTTP Endpoints destinations and to partner destinations, including Datadog, MongoDB, and New Relic\. For the purposes of this section, all applicable destinations are referred to as HTTP endpoints\. 
+This section describes common troubleshooting steps when dealing with Kinesis Data Firehose delivering data to generic HTTP Endpoints destinations and to partner destinations, including Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, Splunk, or Sumo Logic\. For the purposes of this section, all applicable destinations are referred to as HTTP endpoints\. 
 
 **Note**  
 The information in this section does not apply to the following destinations: Splunk, ElasticSearch, S3, and Redshift\.
@@ -11,7 +11,7 @@ It is highly recommended that you enable [CloudWatch Logging for Firehose](https
 
 ### Destination Exceptions<a name="destination_exceptions"></a>
 
-**ErrorCode: HttpEndpoint\.DestinationException**
+ **ErrorCode: HttpEndpoint\.DestinationException** 
 
 ```
 {
@@ -37,7 +37,7 @@ Important: While these are the common troubleshooting recommendations, specific 
 
 ### Invalid Response<a name="invalid_response"></a>
 
-**ErrorCode: HttpEndpoint\.InvalidResponseFromDestination**
+ **ErrorCode: HttpEndpoint\.InvalidResponseFromDestination** 
 
 ```
 {

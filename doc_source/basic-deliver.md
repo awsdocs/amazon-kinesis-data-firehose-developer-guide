@@ -43,7 +43,7 @@ The frequency of data delivery to Amazon ES is determined by the Elasticsearch *
 Kinesis Data Firehose buffers incoming data before delivering it to Splunk\. The buffer size is 5 MB, and the buffer interval is 60 seconds\. The condition satisfied first triggers data delivery to Splunk\. The buffer size and interval aren't configurable\. These numbers are optimal\.
 
 **HTTP endpoint destination**  
-Kinesis Data Firehose buffers incoming data before delivering it to the specified HTTP endpoint destination\. For the HTTP endpoint destinations, including Datadog, MongoDB, and New Relic you can choose a buffer size of 1\-64 MiBs and a buffer interval \(60\-900 seconds\)\. The recommended buffer size for the destination varies from service provider to service provider\. For example, the recommended buffer size for Datadog is 4 MiBs and the recommended buffer size for New Relic is 1 MiB\. Contact the third\-party service provider whose endpoint you've chosen as your data destination for more information about their recommended buffer size\.
+Kinesis Data Firehose buffers incoming data before delivering it to the specified HTTP endpoint destination\.  The recommended buffer size for the destination varies from service provider to service provider\. For example, the recommended buffer size for Datadog is 4 MiBs and the recommended buffer size for New Relic and Sumo Logic is 1 MiB\. Contact the third\-party service provider whose endpoint you've chosen as your data destination for more information about their recommended buffer size\.
 
 ## Data Delivery Failure Handling<a name="retry"></a>
 

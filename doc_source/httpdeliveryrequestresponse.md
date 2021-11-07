@@ -116,7 +116,7 @@ Here's an example:
 ```
 {
   "requestId": "ed4acda5-034f-9f42-bba1-f29aea6d7d8f",
-  "timestamp": 1578090901599
+  "timestamp": 1578090901599,
   "records": [
     {
       "data": "aGVsbG8="

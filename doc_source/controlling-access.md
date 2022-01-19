@@ -75,7 +75,11 @@ If your delivery stream performs data\-format conversion, Kinesis Data Firehose 
     "glue:GetTableVersion",
     "glue:GetTableVersions"
   ],
-  "Resource": "table-arn"
+  "Resource": [
+      "table-arn",
+      "database-arn",
+      "catalog-arn"
+  ]
 }
 ```
 

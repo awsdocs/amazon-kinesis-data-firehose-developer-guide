@@ -326,13 +326,13 @@ Kinesis Data Firehose uses content encoding to compress the body of a request be
  **Parameters \- optional**   
 Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
  **Retry duration**   
-Specify how long Kinesis Data Firehose retries sending data to New Relic\.   
+Specify how long Kinesis Data Firehose retries sending data to Sumo Logic\.   
 After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
 Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
 Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
 If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
  **S3 backup mode**   
-Choose whether to back up all the events that Kinesis Data Firehose sends to the specified New Relic or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in New Relic\.  
+Choose whether to back up all the events that Kinesis Data Firehose sends to the specified Sumo Logic or only the ones for which delivery to the HTTP endpoint fails\. If you require high data durability, turn on this backup mode for all events\. Also consider backing up all events initially, until you verify that your data is getting indexed correctly in New Relic\.  
  **S3 backup bucket**   
 Choose an existing backup bucket or create a new one\.  
  **Backup S3 bucket prefix**   

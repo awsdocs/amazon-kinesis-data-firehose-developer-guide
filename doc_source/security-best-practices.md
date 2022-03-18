@@ -18,7 +18,7 @@ For more information, see the following topics in the *IAM User Guide*:
 
 ## Implement Server\-Side Encryption in Dependent Resources<a name="security-best-practices-sse"></a>
 
-Data at rest and data in transit can be encrypted in Kinesis Data Firehose\. For more information, see [Data Protection](encryption.md)\.
+Data at rest and data in transit can be encrypted in Kinesis Data Firehose\. For more information, see [Data Protection in Amazon Kinesis Data Firehose\.](https://docs.aws.amazon.com/firehose/latest/dev/encryption.html)
 
 ## Use CloudTrail to Monitor API Calls<a name="security-best-practices-cloudtrail"></a>
 

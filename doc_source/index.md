@@ -1,7 +1,7 @@
 # Amazon Kinesis Data Firehose Developer Guide
 
 -----
-*****Copyright &copy;  Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
+*****Copyright &copy; Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
 Amazon's trademarks and trade dress may not be used in 
@@ -17,10 +17,10 @@ Amazon's trademarks and trade dress may not be used in
 + [What Is Amazon Kinesis Data Firehose?](what-is-this-service.md)
 + [Setting Up for Amazon Kinesis Data Firehose](before-you-begin.md)
 + [Creating an Amazon Kinesis Data Firehose Delivery Stream](basic-create.md)
-   + [Name and source](create-name.md)
-   + [Process records](create-transform.md)
-   + [Choose destination](create-destination.md)
-   + [Configure settings](create-configure.md)
+   + [Source, Destination, and Name](create-name.md)
+   + [Record Transformation and Record Format Conversion](create-transform.md)
+   + [Destination Settings](create-destination.md)
+   + [Backup and Advanced Settings](create-configure.md)
 + [Testing Your Delivery Stream Using Sample Data](test-drive-firehose.md)
 + [Sending Data to an Amazon Kinesis Data Firehose Delivery Stream](basic-write.md)
    + [Writing to Kinesis Data Firehose Using Kinesis Data Streams](writing-with-kinesis-streams.md)
@@ -38,6 +38,7 @@ Amazon's trademarks and trade dress may not be used in
    + [Infrastructure Security in Kinesis Data Firehose](infrastructure-security.md)
    + [Security Best Practices for Kinesis Data Firehose](security-best-practices.md)
 + [Amazon Kinesis Data Firehose Data Transformation](data-transformation.md)
++ [Dynamic Partitioning in Kinesis Data Firehose](dynamic-partitioning.md)
 + [Converting Your Input Record Format in Kinesis Data Firehose](record-format-conversion.md)
 + [Using Amazon Kinesis Data Analytics](data-analysis.md)
 + [Amazon Kinesis Data Firehose Data Delivery](basic-deliver.md)

@@ -7,7 +7,7 @@ You can update the configuration of your delivery stream at any time after it’
 The following topics describe how to create a Kinesis Data Firehose delivery stream:
 
 **Topics**
-+ [Name and source](create-name.md)
-+ [Process records](create-transform.md)
-+ [Choose destination](create-destination.md)
-+ [Configure settings](create-configure.md)
++ [Source, Destination, and Name](create-name.md)
++ [Record Transformation and Record Format Conversion](create-transform.md)
++ [Destination Settings](create-destination.md)
++ [Backup and Advanced Settings](create-configure.md)

@@ -23,7 +23,7 @@ And this is the INCORRECT input: `[{"a":1}, {"a":2}]`
 + **A serializer to convert the data to the target columnar storage format \(Parquet or ORC\)** – You can choose one of two types of serializers: [ORC SerDe](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC) or [Parquet SerDe](https://cwiki.apache.org/confluence/display/Hive/Parquet)\.
 
 **Important**  
-If you enable record format conversion, you can't set your Kinesis Data Firehose destination to be Amazon Elasticsearch Service \(Amazon ES\), Amazon Redshift, or Splunk\. With format conversion enabled, Amazon S3 is the only destination that you can use for your Kinesis Data Firehose delivery stream\.
+If you enable record format conversion, you can't set your Kinesis Data Firehose destination to be Amazon OpenSearch Service, Amazon Redshift, or Splunk\. With format conversion enabled, Amazon S3 is the only destination that you can use for your Kinesis Data Firehose delivery stream\.
 
 You can convert the format of your data even if you aggregate your records before sending them to Kinesis Data Firehose\.
 

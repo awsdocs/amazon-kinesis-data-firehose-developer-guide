@@ -1,6 +1,6 @@
 # Controlling Access with Amazon Kinesis Data Firehose<a name="controlling-access"></a>
 
-The following sections cover how to control access to and from your Kinesis Data Firehose resources\. The information they cover includes how to grant your application access so it can send data to your Kinesis Data Firehose delivery stream\. They also describe how you can grant Kinesis Data Firehose access to your Amazon Simple Storage Service \(Amazon S3\) bucket, Amazon Redshift cluster, or Amazon Elasticsearch Service cluster, as well as the access permissions you need if you use Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, Splunk, or Sumo Logic as your destination\. Finally, you'll find in this topic guidance on how to configure Kinesis Data Firehose so it can deliver data to a destination that belongs to a different AWS account\. The technology for managing all these forms of access is AWS Identity and Access Management \(IAM\)\. For more information about IAM, see [What is IAM?](https://docs.aws.amazon.com/IAM/latest/UserGuide/IAM_Introduction.html)\.
+The following sections cover how to control access to and from your Kinesis Data Firehose resources\. The information they cover includes how to grant your application access so it can send data to your Kinesis Data Firehose delivery stream\. They also describe how you can grant Kinesis Data Firehose access to your Amazon Simple Storage Service \(Amazon S3\) bucket, Amazon Redshift cluster, or Amazon OpenSearch Service cluster, as well as the access permissions you need if you use Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, Splunk, or Sumo Logic as your destination\. Finally, you'll find in this topic guidance on how to configure Kinesis Data Firehose so it can deliver data to a destination that belongs to a different AWS account\. The technology for managing all these forms of access is AWS Identity and Access Management \(IAM\)\. For more information about IAM, see [What is IAM?](https://docs.aws.amazon.com/IAM/latest/UserGuide/IAM_Introduction.html)\.
 
 **Topics**
 + [Grant Your Application Access to Your Kinesis Data Firehose Resources](#access-to-firehose)
@@ -8,13 +8,13 @@ The following sections cover how to control access to and from your Kinesis Data
 + [Grant Kinesis Data Firehose Access to AWS Glue for Data Format Conversion](#using-iam-glue)
 + [Grant Kinesis Data Firehose Access to an Amazon S3 Destination](#using-iam-s3)
 + [Grant Kinesis Data Firehose Access to an Amazon Redshift Destination](#using-iam-rs)
-+ [Grant Kinesis Data Firehose Access to a Public Amazon ES Destination](#using-iam-es)
-+ [Grant Kinesis Data Firehose Access to an Amazon ES Destination in a VPC](#using-iam-es-vpc)
++ [Grant Kinesis Data Firehose Access to a Public OpenSearch Service Destination](#using-iam-es)
++ [Grant Kinesis Data Firehose Access to an OpenSearch Service Destination in a VPC](#using-iam-es-vpc)
 + [Grant Kinesis Data Firehose Access to a Splunk Destination](#using-iam-splunk)
 + [Access to Splunk in VPC](#using-iam-splunk-vpc)
 + [Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination](#using-iam-http)
 + [Cross\-Account Delivery to an Amazon S3 Destination](#cross-account-delivery-s3)
-+ [Cross\-Account Delivery to an Amazon ES Destination](#cross-account-delivery-es)
++ [Cross\-Account Delivery to an OpenSearch Service Destination](#cross-account-delivery-es)
 + [Using Tags to Control Access](#tag-based-access-control)
 
 ## Grant Your Application Access to Your Kinesis Data Firehose Resources<a name="access-to-firehose"></a>
@@ -273,16 +273,16 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `15.185.91.0/27` for Middle East \(Bahrain\)
 + `18.228.1.128/27` for South America \(São Paulo\)
 + `15.161.135.128/27` for Europe \(Milan\)
-+ `13.244.121.224/277` for Africa \(Cape Town\)
++ `13.244.121.224/27` for Africa \(Cape Town\)
 + `13.208.177.192/27` for Asia Pacific \(Osaka\)
 
-For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started* guide\. 
+For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started Guide* guide\. 
 
-## Grant Kinesis Data Firehose Access to a Public Amazon ES Destination<a name="using-iam-es"></a>
+## Grant Kinesis Data Firehose Access to a Public OpenSearch Service Destination<a name="using-iam-es"></a>
 
-When you're using an Amazon ES destination, Kinesis Data Firehose delivers data to your Amazon ES cluster, and concurrently backs up failed or all documents to your S3 bucket\. If error logging is enabled, Kinesis Data Firehose also sends data delivery errors to your CloudWatch log group and streams\. Kinesis Data Firehose uses an IAM role to access the specified Elasticsearch domain, S3 bucket, AWS KMS key, and CloudWatch log group and streams\. You are required to have an IAM role when creating a delivery stream\.
+When you're using an OpenSearch Service destination, Kinesis Data Firehose delivers data to your OpenSearch Service cluster, and concurrently backs up failed or all documents to your S3 bucket\. If error logging is enabled, Kinesis Data Firehose also sends data delivery errors to your CloudWatch log group and streams\. Kinesis Data Firehose uses an IAM role to access the specified OpenSearch Service domain, S3 bucket, AWS KMS key, and CloudWatch log group and streams\. You are required to have an IAM role when creating a delivery stream\.
 
-Use the following access policy to enable Kinesis Data Firehose to access your S3 bucket, Amazon ES domain, and AWS KMS key\. If you do not own the S3 bucket, add `s3:PutObjectAcl` to the list of Amazon S3 actions, which grants the bucket owner full access to the objects delivered by Kinesis Data Firehose\. This policy also has a statement that allows access to Amazon Kinesis Data Streams\. If you don't use Kinesis Data Streams as your data source, you can remove that statement\.
+Use the following access policy to enable Kinesis Data Firehose to access your S3 bucket, OpenSearch Service domain, and AWS KMS key\. If you do not own the S3 bucket, add `s3:PutObjectAcl` to the list of Amazon S3 actions, which grants the bucket owner full access to the objects delivered by Kinesis Data Firehose\. This policy also has a statement that allows access to Amazon Kinesis Data Streams\. If you don't use Kinesis Data Streams as your data source, you can remove that statement\.
 
 ```
 {
@@ -324,9 +324,9 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
         {
            "Effect": "Allow",
            "Action": [
-               "es:DescribeElasticsearchDomain",
-               "es:DescribeElasticsearchDomains",
-               "es:DescribeElasticsearchDomainConfig",
+               "es:DescribeDomain",
+               "es:DescribeDomains",
+               "es:DescribeDomainConfig",
                "es:ESHttpPost",
                "es:ESHttpPut"
            ],
@@ -386,11 +386,11 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 
 For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-service.html) in the *IAM User Guide*\.
 
-To learn how to grant Kinesis Data Firehose access to an Amazon ES cluster in another account, see [Cross\-Account Delivery to an Amazon ES Destination](#cross-account-delivery-es)\.
+To learn how to grant Kinesis Data Firehose access to an OpenSearch Service cluster in another account, see [Cross\-Account Delivery to an OpenSearch Service Destination](#cross-account-delivery-es)\.
 
-## Grant Kinesis Data Firehose Access to an Amazon ES Destination in a VPC<a name="using-iam-es-vpc"></a>
+## Grant Kinesis Data Firehose Access to an OpenSearch Service Destination in a VPC<a name="using-iam-es-vpc"></a>
 
-If your Amazon ES domain is in a VPC, make sure you give Kinesis Data Firehose the permissions that are described in the previous section\. In addition, you need to give Kinesis Data Firehose the following permissions to enable it to access your Amazon ES domain's VPC\.
+If your OpenSearch Service domain is in a VPC, make sure you give Kinesis Data Firehose the permissions that are described in the previous section\. In addition, you need to give Kinesis Data Firehose the following permissions to enable it to access your OpenSearch Service domain's VPC\.
 + `ec2:DescribeVpcs`
 + `ec2:DescribeVpcAttribute`
 + `ec2:DescribeSubnets`
@@ -402,7 +402,7 @@ If your Amazon ES domain is in a VPC, make sure you give Kinesis Data Firehose t
 
 If you revoke these permissions after you create the delivery stream, Kinesis Data Firehose can't scale out by creating more ENIs when necessary\. You might therefore see a degradation in performance\.
 
-When you create or update your delivery stream, you specify a security group for Kinesis Data Firehose to use when it sends data to your Amazon ES domain\. You can use the same security group that the Amazon ES domain uses or a different one\. If you specify a different security group, ensure that it allows outbound HTTPS traffic to the Amazon ES domain's security group\. Also ensure that the Amazon ES domain's security group allows HTTPS traffic from the security group you specified when you configured your delivery stream\. If you use the same security group for both your delivery stream and the Amazon ES domain, make sure the security group inbound rule allows HTTPS traffic\. For more information about security group rules, see [Security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#SecurityGroupRules) in the Amazon VPC documentation\.
+When you create or update your delivery stream, you specify a security group for Kinesis Data Firehose to use when it sends data to your OpenSearch Service domain\. You can use the same security group that the OpenSearch Service domain uses or a different one\. If you specify a different security group, ensure that it allows outbound HTTPS traffic to the OpenSearch Service domain's security group\. Also ensure that the OpenSearch Service domain's security group allows HTTPS traffic from the security group you specified when you configured your delivery stream\. If you use the same security group for both your delivery stream and the OpenSearch Service domain, make sure the security group inbound rule allows HTTPS traffic\. For more information about security group rules, see [Security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#SecurityGroupRules) in the Amazon VPC documentation\.
 
 ## Grant Kinesis Data Firehose Access to a Splunk Destination<a name="using-iam-splunk"></a>
 
@@ -511,6 +511,8 @@ If your Splunk platform is in a VPC, it must be publicly accessible with a publi
 + `15.161.135.192/26` for Europe \(Milan\)
 + `13.244.165.128/26` for Africa \(Cape Town\)
 + `13.208.217.0/26` for Asia Pacific \(Osaka\)
++ `52.81.151.64/26` for China \(Beijing\)
++ `161.189.23.128/26` for China \(Ningxia\)
 
 ## Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination<a name="using-iam-http"></a>
 
@@ -641,13 +643,13 @@ The Amazon S3 bucket specified in the access policy is owned by account B in thi
 
 1. Create a Kinesis Data Firehose delivery stream under account A using the IAM role that you created in step 1\.
 
-## Cross\-Account Delivery to an Amazon ES Destination<a name="cross-account-delivery-es"></a>
+## Cross\-Account Delivery to an OpenSearch Service Destination<a name="cross-account-delivery-es"></a>
 
-You can use the AWS CLI or the Kinesis Data Firehose APIs to create a delivery stream in one AWS account with an Amazon ES destination in a different account\. The following procedure shows an example of how you can create a Kinesis Data Firehose delivery stream under account A and configure it to deliver data to an Amazon ES destination owned by account B\.
+You can use the AWS CLI or the Kinesis Data Firehose APIs to create a delivery stream in one AWS account with an OpenSearch Service destination in a different account\. The following procedure shows an example of how you can create a Kinesis Data Firehose delivery stream under account A and configure it to deliver data to an OpenSearch Service destination owned by account B\.
 
-1. Create an IAM role under account A using the steps described in [Grant Kinesis Data Firehose Access to a Public Amazon ES Destination](#using-iam-es)\. 
+1. Create an IAM role under account A using the steps described in [Grant Kinesis Data Firehose Access to a Public OpenSearch Service Destination](#using-iam-es)\. 
 
-1. To allow access from the IAM role that you created in the previous step, create an Amazon ES policy under account B\. The following JSON is an example\.
+1. To allow access from the IAM role that you created in the previous step, create an OpenSearch Service policy under account B\. The following JSON is an example\.
 
    ```
    {
@@ -674,10 +676,10 @@ You can use the AWS CLI or the Kinesis Data Firehose APIs to create a delivery s
    }
    ```
 
-1. Create a Kinesis Data Firehose delivery stream under account A using the IAM role that you created in step 1\. When you create the delivery stream, use the AWS CLI or the Kinesis Data Firehose APIs and specify the `ClusterEndpoint` field instead of `DomainARN` for Amazon ES\.
+1. Create a Kinesis Data Firehose delivery stream under account A using the IAM role that you created in step 1\. When you create the delivery stream, use the AWS CLI or the Kinesis Data Firehose APIs and specify the `ClusterEndpoint` field instead of `DomainARN` for OpenSearch Service\.
 
 **Note**  
-To create a delivery stream in one AWS account with an Amazon ES destination in a different account, you must use the AWS CLI or the Kinesis Data Firehose APIs\. You can't use the AWS Management Console to create this kind of cross\-account configuration\.
+To create a delivery stream in one AWS account with an OpenSearch Service destination in a different account, you must use the AWS CLI or the Kinesis Data Firehose APIs\. You can't use the AWS Management Console to create this kind of cross\-account configuration\.
 
 ## Using Tags to Control Access<a name="tag-based-access-control"></a>
 

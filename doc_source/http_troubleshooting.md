@@ -3,7 +3,7 @@
 This section describes common troubleshooting steps when dealing with Kinesis Data Firehose delivering data to generic HTTP Endpoints destinations and to partner destinations, including Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, Splunk, or Sumo Logic\. For the purposes of this section, all applicable destinations are referred to as HTTP endpoints\. 
 
 **Note**  
-The information in this section does not apply to the following destinations: Splunk, ElasticSearch, S3, and Redshift\.
+The information in this section does not apply to the following destinations: Splunk, OpenSearch Service, S3, and Redshift\.
 
 ## CloudWatch Logs<a name="cloudwatch_logs"></a>
 

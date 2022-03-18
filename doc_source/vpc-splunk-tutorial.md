@@ -2,11 +2,7 @@
 
 In this tutorial, you learn how to capture information about the IP traffic going to and from network interfaces in an Amazon Virtual Private Cloud \(Amazon VPC\)\. You then use Amazon Kinesis Data Firehose to send that information to Splunk\. For more information about VPC network traffic, see [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) in the *Amazon VPC User Guide*\.
 
-The following diagram shows the flow of data that is demonstrated in this tutorial\. 
-
-![\[Diagram showing data logs flowing from VPC to CloudWatch to Kinesis Data Firehose, then to AWS Lambda, then to Splunk.\]](http://docs.aws.amazon.com/firehose/latest/dev/images/vpc-to-splunk-tutorial-flow.png)
-
-As the diagram shows, first you send the Amazon VPC flow logs to Amazon CloudWatch\. Then from CloudWatch, the data goes to a Kinesis Data Firehose delivery stream\. Kinesis Data Firehose then invokes an AWS Lambda function to decompress the data, and sends the decompressed log data to Splunk\.
+First you send the Amazon VPC flow logs to Amazon CloudWatch\. Then from CloudWatch, the data goes to a Kinesis Data Firehose delivery stream\. Kinesis Data Firehose then invokes an AWS Lambda function to decompress the data, and sends the decompressed log data to Splunk\.
 
 **Prerequisites**  
 Before you begin, ensure that you have the following prerequisites:

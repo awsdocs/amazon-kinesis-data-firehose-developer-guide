@@ -14,7 +14,7 @@ Note that standard Amazon Kinesis Data Firehose charges apply when your delivery
 + [Prerequisites](#test-drive-requirements)
 + [Test Using Amazon S3 as the Destination](#test-drive-destination-s3)
 + [Test Using Amazon Redshift as the Destination](#test-drive-destination-redshift)
-+ [Test Using Amazon ES as the Destination](#test-drive-destination-elasticsearch)
++ [Test Using OpenSearch Service as the Destination](#test-drive-destination-elasticsearch)
 + [Test Using Splunk as the Destination](#test-drive-destination-splunk)
 
 ## Prerequisites<a name="test-drive-requirements"></a>
@@ -71,11 +71,11 @@ Use the following procedure to test your delivery stream using Amazon Redshift a
 
 1. \(Optional\) Delete the `firehose_test_table` table\.
 
-## Test Using Amazon ES as the Destination<a name="test-drive-destination-elasticsearch"></a>
+## Test Using OpenSearch Service as the Destination<a name="test-drive-destination-elasticsearch"></a>
 
-Use the following procedure to test your delivery stream using Amazon Elasticsearch Service \(Amazon ES\) as the destination\.
+Use the following procedure to test your delivery stream using Amazon OpenSearch Service as the destination\.
 
-**To test a delivery stream using Amazon ES**
+**To test a delivery stream using OpenSearch Service**
 
 1. Open the Kinesis Data Firehose console at [https://console\.aws\.amazon\.com/firehose/](https://console.aws.amazon.com/firehose/)\.
 
@@ -83,7 +83,7 @@ Use the following procedure to test your delivery stream using Amazon Elasticsea
 
 1. Under **Test with demo data**, choose **Start sending demo data** to generate sample stock ticker data\.
 
-1. Follow the onscreen instructions to verify that data is being delivered to your Amazon ES domain\. For more information, see [Searching Documents in an Amazon ES Domain](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-gsg-search.html) in the *Amazon Elasticsearch Service Developer Guide*\.
+1. Follow the onscreen instructions to verify that data is being delivered to your OpenSearch Service domain\. For more information, see [Searching Documents in an OpenSearch Service Domain](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/es-gsg-search.html) in the *Amazon OpenSearch Service Developer Guide*\.
 
 1. When the test is complete, choose **Stop sending demo data** to stop incurring usage charges\.
 

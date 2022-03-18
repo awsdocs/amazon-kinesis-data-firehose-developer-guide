@@ -13,7 +13,7 @@ For information about tracking delivery errors using CloudWatch, see [Monitoring
 **Topics**
 + [Data Not Delivered to Amazon S3](#data-not-delivered-to-s3)
 + [Data Not Delivered to Amazon Redshift](#data-not-delivered-to-rs)
-+ [Data Not Delivered to Amazon Elasticsearch Service](#data-not-delivered-to-es)
++ [Data Not Delivered to Amazon OpenSearch Service](#data-not-delivered-to-es)
 + [Data Not Delivered to Splunk](#data-not-delivered-to-splunk)
 + [Delivery Stream Not Available as a Target for CloudWatch Logs, CloudWatch Events, or AWS IoT Action](#delivery-stream-not-available)
 + [Data Freshness Metric Increasing or Not Emitted](#data-freshness-metric-not-emitted)
@@ -48,18 +48,18 @@ Data is delivered to your S3 bucket before loading into Amazon Redshift\. If the
 + Make sure that the Amazon Redshift cluster is publicly available\.
 + If you're using data transformation, make sure that your Lambda function never returns responses whose payload size exceeds 6 MB\. For more information, see [Amazon Kinesis Data Firehose Data Transformation](https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html)\.
 
-## Data Not Delivered to Amazon Elasticsearch Service<a name="data-not-delivered-to-es"></a>
+## Data Not Delivered to Amazon OpenSearch Service<a name="data-not-delivered-to-es"></a>
 
-Check the following if data is not delivered to your Elasticsearch domain\.
+Check the following if data is not delivered to your OpenSearch Service domain\.
 
 Data can be backed up to your Amazon S3 bucket concurrently\. If data was not delivered to your S3 bucket, see [Data Not Delivered to Amazon S3](#data-not-delivered-to-s3)\.
 + Check the Kinesis Data Firehose `IncomingBytes` and `IncomingRecords` metrics to make sure that data is sent to your Kinesis Data Firehose delivery stream successfully\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
 + If data transformation with Lambda is enabled, check the Kinesis Data Firehose `ExecuteProcessingSuccess` metric to make sure that Kinesis Data Firehose has tried to invoke your Lambda function\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
-+ Check the Kinesis Data Firehose `DeliveryToElasticsearch.Success` metric to make sure that Kinesis Data Firehose has tried to index data to the Amazon ES cluster\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
++ Check the Kinesis Data Firehose `DeliveryToAmazonOpenSearchService.Success` metric to make sure that Kinesis Data Firehose has tried to index data to the OpenSearch Service cluster\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Metrics](monitoring-with-cloudwatch-metrics.md)\.
 + Enable error logging if it is not already enabled, and check error logs for delivery failure\. For more information, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.
-+ Make sure that the Amazon ES configuration in your delivery stream is accurate and valid\.
++ Make sure that the OpenSearch Service configuration in your delivery stream is accurate and valid\.
 + If data transformation with Lambda is enabled, make sure that the Lambda function that is specified in your delivery stream still exists\.
-+ Make sure that the IAM role that is specified in your delivery stream can access your Amazon ES cluster and Lambda function \(if data transformation is enabled\)\. For more information, see [Grant Kinesis Data Firehose Access to a Public Amazon ES Destination](controlling-access.md#using-iam-es)\.
++ Make sure that the IAM role that is specified in your delivery stream can access your OpenSearch Service cluster and Lambda function \(if data transformation is enabled\)\. For more information, see [Grant Kinesis Data Firehose Access to a Public OpenSearch Service Destination](controlling-access.md#using-iam-es)\.
 + If you're using data transformation, make sure that your Lambda function never returns responses whose payload size exceeds 6 MB\. For more information, see [Amazon Kinesis Data Firehose Data Transformation](https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html)\.
 
 ## Data Not Delivered to Splunk<a name="data-not-delivered-to-splunk"></a>
@@ -98,7 +98,7 @@ If you enable backup for all events or all documents, monitor two separate data\
 If the data\-freshness metric isn't being emitted, this means that there is no active delivery for the delivery stream\. This happens when data delivery is completely blocked or when there's no incoming data\.
 
 If the data\-freshness metric is constantly increasing, this means that data delivery is falling behind\. This can happen for one of the following reasons\.
-+ The destination can't handle the rate of delivery\. If Kinesis Data Firehose encounters transient errors due to high traffic, then the delivery might fall behind\. This can happen for destinations other than Amazon S3 \(it can happen for Amazon Elasticsearch Service, Amazon Redshift, or Splunk\)\. Ensure that your destination has enough capacity to handle the incoming traffic\.
++ The destination can't handle the rate of delivery\. If Kinesis Data Firehose encounters transient errors due to high traffic, then the delivery might fall behind\. This can happen for destinations other than Amazon S3 \(it can happen for OpenSearch Service, Amazon Redshift, or Splunk\)\. Ensure that your destination has enough capacity to handle the incoming traffic\.
 + The destination is slow\. Data delivery might fall behind if Kinesis Data Firehose encounters high latency\. Monitor the destination's latency metric\.
 + The Lambda function is slow\. This might lead to a data delivery rate that is less than the data ingestion rate for the delivery stream\. If possible, improve the efficiency of the Lambda function\. For instance, if the function does network IO, use multiple threads or asynchronous IO to increase parallelism\. Also, consider increasing the memory size of the Lambda function so that the CPU allocation can increase accordingly\. This might lead to faster Lambda invocations\. For information about configuring Lambda functions, see [Configuring AWS Lambda Functions](https://docs.aws.amazon.com/lambda/latest/dg/resource-model.html)\.
 + There are failures during data delivery\. For information about how to monitor errors using Amazon CloudWatch Logs, see [Monitoring Kinesis Data Firehose Using CloudWatch Logs](monitoring-with-cloudwatch-logs.md)\.

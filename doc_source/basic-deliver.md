@@ -10,7 +10,7 @@ If you use the Kinesis Producer Library \(KPL\) to write data to a Kinesis data 
 + [Data Delivery Frequency](#frequency)
 + [Data Delivery Failure Handling](#retry)
 + [Amazon S3 Object Name Format](#s3-object-name)
-+ [Index Rotation for the Amazon ES Destination](#es-index-rotation)
++ [Index Rotation for the OpenSearch Service Destination](#es-index-rotation)
 + [Delivery Across AWS Accounts and Across AWS Regions for HTTP Endpoint Destinations](#across)
 + [Duplicated Records](#duplication)
 
@@ -20,7 +20,7 @@ For data delivery to Amazon Simple Storage Service \(Amazon S3\), Kinesis Data F
 
 For data delivery to Amazon Redshift, Kinesis Data Firehose first delivers incoming data to your S3 bucket in the format described earlier\. Kinesis Data Firehose then issues an Amazon Redshift COPY command to load the data from your S3 bucket to your Amazon Redshift cluster\. Ensure that after Kinesis Data Firehose concatenates multiple incoming records to an Amazon S3 object, the Amazon S3 object can be copied to your Amazon Redshift cluster\. For more information, see [Amazon Redshift COPY Command Data Format Parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html)\.
 
-For data delivery to Amazon ES, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an Elasticsearch bulk request to index multiple records to your Elasticsearch cluster\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your Elasticsearch cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [Amazon ES Configure Advanced Options](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon Elasticsearch Service Developer Guide*\. 
+For data delivery to OpenSearch Service, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an OpenSearch Service bulk request to index multiple records to your OpenSearch Service cluster\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your OpenSearch Service cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [OpenSearch Service Configure Advanced Options](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon OpenSearch Service Developer Guide*\. 
 
 For data delivery to Splunk, Kinesis Data Firehose concatenates the bytes that you send\. If you want delimiters in your data, such as a new line character, you must insert them yourself\. Make sure that Splunk is configured to parse any such delimiters\.
 
@@ -36,8 +36,8 @@ The frequency of data delivery to Amazon S3 is determined by the Amazon S3 **Buf
 **Amazon Redshift**  
 The frequency of data COPY operations from Amazon S3 to Amazon Redshift is determined by how fast your Amazon Redshift cluster can finish the COPY command\. If there is still data to copy, Kinesis Data Firehose issues a new COPY command as soon as the previous COPY command is successfully finished by Amazon Redshift\. 
 
-**Amazon Elasticsearch Service**  
-The frequency of data delivery to Amazon ES is determined by the Elasticsearch **Buffer size** and **Buffer interval** values that you configured for your delivery stream\. Kinesis Data Firehose buffers incoming data before delivering it to Amazon ES\. You can configure the values for Elasticsearch **Buffer size** \(1–100 MB\) or **Buffer interval** \(60–900 seconds\), and the condition satisfied first triggers data delivery to Amazon ES\. 
+**Amazon OpenSearch Service**  
+The frequency of data delivery to OpenSearch Service is determined by the OpenSearch Service **Buffer size** and **Buffer interval** values that you configured for your delivery stream\. Kinesis Data Firehose buffers incoming data before delivering it to OpenSearch Service\. You can configure the values for OpenSearch Service **Buffer size** \(1–100 MB\) or **Buffer interval** \(60–900 seconds\), and the condition satisfied first triggers data delivery to OpenSearch Service\. 
 
 **Splunk**  
 Kinesis Data Firehose buffers incoming data before delivering it to Splunk\. The buffer size is 5 MB, and the buffer interval is 60 seconds\. The condition satisfied first triggers data delivery to Splunk\. The buffer size and interval aren't configurable\. These numbers are optimal\.
@@ -56,20 +56,20 @@ Data delivery to your S3 bucket might fail for various reasons\. For example, th
 For an Amazon Redshift destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
 Data delivery to your Amazon Redshift cluster might fail for several reasons\. For example, you might have an incorrect cluster configuration of your delivery stream, a cluster under maintenance, or a network failure\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and skips that particular batch of Amazon S3 objects\. The skipped objects' information is delivered to your S3 bucket as a manifest file in the `errors/` folder, which you can use for manual backfill\. For information about how to COPY data manually with manifest files, see [Using a Manifest to Specify Data Files](https://docs.aws.amazon.com/redshift/latest/dg/loading-data-files-using-manifest.html)\. 
 
-**Amazon Elasticsearch Service**  
-For the Amazon ES destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
-Data delivery to your Amazon ES cluster might fail for several reasons\. For example, you might have an incorrect Amazon ES cluster configuration of your delivery stream, an Amazon ES cluster under maintenance, a network failure, or similar events\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and then skips that particular index request\. The skipped documents are delivered to your S3 bucket in the `elasticsearch_failed/` folder, which you can use for manual backfill\. Each document has the following JSON format:  
+**Amazon OpenSearch Service**  
+For the OpenSearch Service destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
+Data delivery to your OpenSearch Service cluster might fail for several reasons\. For example, you might have an incorrect OpenSearch Service cluster configuration of your delivery stream, an OpenSearch Service cluster under maintenance, a network failure, or similar events\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and then skips that particular index request\. The skipped documents are delivered to your S3 bucket in the `AmazonOpenSearchService_failed/` folder, which you can use for manual backfill\. Each document has the following JSON format:  
 
 ```
 {
     "attemptsMade": "(number of index requests attempted)",
     "arrivalTimestamp": "(the time when the document was received by Firehose)",
-    "errorCode": "(http error code returned by Elasticsearch)",
-    "errorMessage": "(error message returned by Elasticsearch)",
+    "errorCode": "(http error code returned by OpenSearch Service)",
+    "errorMessage": "(error message returned by OpenSearch Service)",
     "attemptEndingTimestamp": "(the time when Firehose stopped attempting index request)",
-    "esDocumentId": "(intended Elasticsearch document ID)",
-    "esIndexName": "(intended Elasticsearch index name)",
-    "esTypeName": "(intended Elasticsearch type name)",
+    "esDocumentId": "(intended OpenSearch Service document ID)",
+    "esIndexName": "(intended OpenSearch Service index name)",
+    "esTypeName": "(intended OpenSearch Service type name)",
     "rawData": "(base64-encoded document data)"
 }
 ```
@@ -117,11 +117,11 @@ Kinesis Data Firehose adds a UTC time prefix in the format `YYYY/MM/dd/HH` befor
 
 The Amazon S3 object name follows the pattern `DeliveryStreamName-DeliveryStreamVersion-YYYY-MM-dd-HH-MM-SS-RandomString`, where `DeliveryStreamVersion` begins with `1` and increases by 1 for every configuration change of the Kinesis Data Firehose delivery stream\. You can change delivery stream configurations \(for example, the name of the S3 bucket, buffering hints, compression, and encryption\)\. You can do so by using the Kinesis Data Firehose console or the [UpdateDestination](https://docs.aws.amazon.com/firehose/latest/APIReference/API_UpdateDestination.html) API operation\.
 
-## Index Rotation for the Amazon ES Destination<a name="es-index-rotation"></a>
+## Index Rotation for the OpenSearch Service Destination<a name="es-index-rotation"></a>
 
-For the Amazon ES destination, you can specify a time\-based index rotation option from one of the following five options: NoRotation, OneHour, OneDay, OneWeek, or OneMonth\.
+For the OpenSearch Service destination, you can specify a time\-based index rotation option from one of the following five options: NoRotation, OneHour, OneDay, OneWeek, or OneMonth\.
 
-Depending on the rotation option you choose, Kinesis Data Firehose appends a portion of the UTC arrival timestamp to your specified index name\. It rotates the appended timestamp accordingly\. The following example shows the resulting index name in Amazon ES for each index rotation option, where the specified index name is myindex and the arrival timestamp is `2016-02-25T13:00:00Z`\. 
+Depending on the rotation option you choose, Kinesis Data Firehose appends a portion of the UTC arrival timestamp to your specified index name\. It rotates the appended timestamp accordingly\. The following example shows the resulting index name in OpenSearch Service for each index rotation option, where the specified index name is myindex and the arrival timestamp is `2016-02-25T13:00:00Z`\. 
 
 
 | RotationPeriod | IndexName | 

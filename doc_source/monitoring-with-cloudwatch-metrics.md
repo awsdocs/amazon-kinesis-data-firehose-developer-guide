@@ -7,6 +7,7 @@ The metrics that you configure for your Kinesis Data Firehose delivery streams a
 The metrics collected for Kinesis Data Firehose delivery streams are free of charge\. For information about Kinesis agent metrics, see [Monitoring Kinesis Agent Health](agent-health.md)\.
 
 **Topics**
++ [Dynamic Partitioning CloudWatch Metrics](#dp-metrics-cw)
 + [Data Delivery CloudWatch Metrics](#fh-metrics-cw)
 + [Data Ingestion Metrics](#fh-ingestion-metrics)
 + [API\-Level CloudWatch Metrics](#fh-metrics-api-cw)
@@ -21,19 +22,32 @@ The metrics collected for Kinesis Data Firehose delivery streams are free of cha
 + [Monitoring Kinesis Agent Health](agent-health.md)
 + [Logging Kinesis Data Firehose API Calls with AWS CloudTrail](monitoring-using-cloudtrail.md)
 
-## Data Delivery CloudWatch Metrics<a name="fh-metrics-cw"></a>
+## Dynamic Partitioning CloudWatch Metrics<a name="dp-metrics-cw"></a>
 
-The `AWS/Firehose` namespace includes the following service\-level metrics\. If you see small drops in the average for `BackupToS3.Success`, `DeliveryToS3.Success`, `DeliveryToSplunk.Success`, `DeliveryToElasticsearch.Success`, or `DeliveryToRedshift.Success`, that doesn't indicate that there's data loss\. Kinesis Data Firehose retries delivery errors and doesn't move forward until the records are successfully delivered either to the configured destination or to the backup S3 bucket\. 
-
-### Delivery to Amazon ES<a name="fh-es-metrics"></a>
+If [dynamic partitioning](https://docs.aws.amazon.com/firehose/latest/dev/dynamic-partitioning.html) is enabled, the AWS/Firehose namespace includes the following metrics\. 
 
 
 | Metric | Description | 
 | --- | --- | 
-| DeliveryToElasticsearch\.Bytes |  The number of bytes indexed to Amazon ES over the specified time period\. Units: Bytes  | 
-| DeliveryToElasticsearch\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to Amazon ES\. Units: Seconds  | 
-| DeliveryToElasticsearch\.Records |  The number of records indexed to Amazon ES over the specified time period\. Units: Count  | 
-| DeliveryToElasticsearch\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
+| PartitionCount |  The number of partitions that are being processed, in other words, the active partition count\. This number varies between 1 and the partition count limit of 500 \(default\)\. Units: Count  | 
+| PartitionCountExceeded |  This metric indicates if you are exceeding the partition count limit\. It emits 1 or 0 based on whether limit is breached or not\.  | 
+| JQProcessing\.Duration |  Returns the amount of time it took to execute JQ expression in the JQ Lambda function\. Units: Milliseconds  | 
+| PerPartitionThroughput |  Indicates the throughtput that is being processed per partition\. This metric enables you to monitor the per partition throughput\. A max throughput of 25 MB per second is supported for each active partition\.  Units: StandardUnit\.BytesSecond  | 
+| DeliveryToS3\.ObjectCount |  Indicates the number of objects that are being delivered to your S3 bucket\. Units: Count  | 
+
+## Data Delivery CloudWatch Metrics<a name="fh-metrics-cw"></a>
+
+The `AWS/Firehose` namespace includes the following service\-level metrics\. If you see small drops in the average for `BackupToS3.Success`, `DeliveryToS3.Success`, `DeliveryToSplunk.Success`, `DeliveryToAmazonOpenSearchService.Success`, or `DeliveryToRedshift.Success`, that doesn't indicate that there's data loss\. Kinesis Data Firehose retries delivery errors and doesn't move forward until the records are successfully delivered either to the configured destination or to the backup S3 bucket\. 
+
+### Delivery to OpenSearch Service<a name="fh-es-metrics"></a>
+
+
+| Metric | Description | 
+| --- | --- | 
+| DeliveryToAmazonOpenSearchService\.Bytes |  The number of bytes indexed to OpenSearch Service over the specified time period\. Units: Bytes  | 
+| DeliveryToAmazonOpenSearchService\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to OpenSearch Service\. Units: Seconds  | 
+| DeliveryToAmazonOpenSearchService\.Records |  The number of records indexed to OpenSearch Service over the specified time period\. Units: Count  | 
+| DeliveryToAmazonOpenSearchService\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
 | DeliveryToS3\.Bytes |  The number of bytes delivered to Amazon S3 over the specified time period\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Count  | 
 | DeliveryToS3\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to the S3 bucket\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Seconds  | 
 | DeliveryToS3\.Records |  The number of records delivered to Amazon S3 over the specified time period\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Count  | 
@@ -125,10 +139,10 @@ The metrics in the following table are related to delivery to Amazon S3 when it 
 | BytesPerSecondLimit | The current maximum number of bytes per second that a delivery stream can ingest before throttling\. To request an increase to this limit, go to the [AWS Support Center](https://console.aws.amazon.com/support/home) and choose Create case, then choose Service limit increase\. | 
 | DataReadFromKinesisStream\.Bytes |  When the data source is a Kinesis data stream, this metric indicates the number of bytes read from that data stream\. This number includes rereads due to failovers\. Units: Bytes  | 
 | DataReadFromKinesisStream\.Records |  When the data source is a Kinesis data stream, this metric indicates the number of records read from that data stream\. This number includes rereads due to failovers\. Units: Count  | 
-| DeliveryToElasticsearch\.Bytes |  The number of bytes indexed to Amazon ES over the specified time period\. Units: Bytes  | 
-| DeliveryToElasticsearch\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to Amazon ES\. Units: Seconds  | 
-| DeliveryToElasticsearch\.Records |  The number of records indexed to Amazon ES over the specified time period\. Units: Count  | 
-| DeliveryToElasticsearch\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
+| DeliveryToAmazonOpenSearchService\.Bytes |  The number of bytes indexed to OpenSearch Service over the specified time period\. Units: Bytes  | 
+| DeliveryToAmazonOpenSearchService\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to OpenSearch Service\. Units: Seconds  | 
+| DeliveryToAmazonOpenSearchService\.Records |  The number of records indexed to OpenSearch Service over the specified time period\. Units: Count  | 
+| DeliveryToAmazonOpenSearchService\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
 | DeliveryToRedshift\.Bytes |  The number of bytes copied to Amazon Redshift over the specified time period\. Units: Bytes  | 
 | DeliveryToRedshift\.Records |  The number of records copied to Amazon Redshift over the specified time period\. Units: Count  | 
 | DeliveryToRedshift\.Success |  The sum of successful Amazon Redshift COPY commands over the sum of all Amazon Redshift COPY commands\.  | 
@@ -272,7 +286,7 @@ aws cloudwatch get-metric-statistics --namespace "AWS/Firehose" \
 Add CloudWatch alarms for when the following metrics exceed the buffering limit \(a maximum of 15 minutes\): 
 + `DeliveryToS3.DataFreshness`
 + `DeliveryToSplunk.DataFreshness`
-+ `DeliveryToElasticsearch.DataFreshness`
++ `DeliveryToAmazonOpenSearchService.DataFreshness`
 
 Also, create alarms based on the following metric math expressions\.
 + `IncomingBytes (Sum per 5 Minutes) / 300` approaches a percentage of `BytesPerSecondLimit`\.

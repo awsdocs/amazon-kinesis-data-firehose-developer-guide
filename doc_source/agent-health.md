@@ -6,6 +6,8 @@ Metrics such as number of records and bytes sent are useful to understand the ra
 
 The agent metrics are reported in the region specified in the agent configuration setting `cloudwatch.endpoint`\. For more information, see [Agent Configuration Settings](writing-with-agents.md#agent-config-settings)\.
 
+Cloudwatch metrics published from multiple Kinesis Agents are aggregated or combined\.
+
 There is a nominal charge for metrics emitted from Kinesis Agent, which are enabled by default\. For more information, see [Amazon CloudWatch Pricing](https://aws.amazon.com/cloudwatch/pricing/)\.
 
 ## Monitoring with CloudWatch<a name="agent-metrics"></a>

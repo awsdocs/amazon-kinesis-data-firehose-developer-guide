@@ -1,8 +1,12 @@
 # Custom Prefixes for Amazon S3 Objects<a name="s3-prefixes"></a>
 
-If your destination is Amazon S3, Amazon Elasticsearch Service, or Splunk, you can configure the Amazon S3 object keys used for delivering data from Kinesis Data Firehose\. To do this, you specify expressions that Kinesis Data Firehose evaluates at delivery time\. The final object keys have the format `<evaluated prefix><suffix>`, where the suffix has the format `<delivery stream name>-<delivery stream version>-<year>-<month>-<day>-<hour>-<minute>-<second>-<uuid><file extension>`\. You can't change the suffix field\.
+If your destination is Amazon S3, Amazon OpenSearch Service, or Splunk, you can configure the Amazon S3 object keys used for delivering data from Kinesis Data Firehose\. To do this, you specify expressions that Kinesis Data Firehose evaluates at delivery time\. The final object keys have the format `<evaluated prefix><suffix>`, where the suffix has the format `<delivery stream name>-<delivery stream version>-<year>-<month>-<day>-<hour>-<minute>-<second>-<uuid><file extension>`\. You can't change the suffix field\.
 
-You can use expressions of the following forms in your custom prefix: `!{namespace:value}`, where `namespace` can be either `firehose` or `timestamp`, as explained in the following sections\.
+You can use expressions of the following forms in your custom prefix: `!{namespace:value}`, where `namespace` can be one of the following, as explained in the following sections\.
++  `firehose` 
++ `timestamp`
++ `partitionKeyFromQuery`
++ `partitionKeyFromLambda`
 
 If a prefix ends with a slash, it appears as a folder in the Amazon S3 bucket\. For more information, see [Amazon S3 Object Name Format](https://docs.aws.amazon.com/firehose/latest/dev/basic-deliver.html#s3-object-name) in the *Amazon Kinesis Data Firehose Developer Guide*\.
 
@@ -25,8 +29,12 @@ There are two values that you can use with this namespace: `error-output-type` a
 
 | Conversion | Description | Example input | Example output | Notes | 
 | --- | --- | --- | --- | --- | 
-| error\-output\-type | Evaluates to one of the following strings, depending on the configuration of your delivery stream, and the reason of failure: \{processing\-failed, elasticsearch\-failed, splunk\-failed, format\-conversion\-failed, http\-endpoint\-failed\}\.If you use it more than once in the same expression, every instance evaluates to the same error string\.\. | myPrefix/result=\!\{firehose:error\-output\-type\}/\!\{timestamp:yyyy/MM/dd\} | myPrefix/result=processing\-failed/2018/08/03 | The error\-output\-type value can only be used in the ErrorOutputPrefix field\. | 
+| error\-output\-type | Evaluates to one of the following strings, depending on the configuration of your delivery stream, and the reason of failure: \{processing\-failed, AmazonOpenSearchService\-failed, splunk\-failed, format\-conversion\-failed, http\-endpoint\-failed\}\.If you use it more than once in the same expression, every instance evaluates to the same error string\.\. | myPrefix/result=\!\{firehose:error\-output\-type\}/\!\{timestamp:yyyy/MM/dd\} | myPrefix/result=processing\-failed/2018/08/03 | The error\-output\-type value can only be used in the ErrorOutputPrefix field\. | 
 | random\-string |  Evaluates to a random string of 11 characters\. If you use it more than once in the same expression, every instance evaluates to a new random string\.  | myPrefix/\!\{firehose:random\-string\}/ | myPrefix/046b6c7f\-0b/ | You can use it with both prefix types\.You can place it at the beginning of the format string to get a randomized prefix, which is sometimes necessary for attaining extremely high throughput with Amazon S3\. | 
+
+## `partitionKeyFromLambda` and `partitionKeyFromQuery` namespaces<a name="dynamic-partitioning-namespaces"></a>
+
+For [dynamic partitioning](https://docs.aws.amazon.com/firehose/latest/dev/dynamic-partitioning.html), you must use the following expression format in your S3 bucket prefix: `!{namespace:value}`, where namespace can be either `partitionKeyFromQuery` or `partitionKeyFromLambda`, or both\. If you are using inline parsing to create the partitioning keys for your source data, you must specify an S3 bucket prefix value that consists of expressions specified in the following format: `"partitionKeyFromQuery:keyID"`\. If you are using an AWS Lambda function to create partitioning keys for your source data, you must specify an S3 bucket prefix value that consists of expressions specified in the following format: `"partitionKeyFromLambda:keyID"`\. For more information, see the "Choose Amazon S3 for Your Destination" in [Creating an Amazon Kinesis Data Firehose Delivery Stream](https://docs.aws.amazon.com/firehose/latest/dev/basic-create.html)\.
 
 ## Semantic rules<a name="prefix-rules"></a>
 
@@ -39,10 +47,11 @@ The following rules apply to `Prefix` and `ErrorOutputPrefix` expressions\.
 + `Prefix` can't contain `!{firehose:error-output-type}`\.
 + Neither `Prefix` nor `ErrorOutputPrefix` can be greater than 512 characters after they're evaluated\.
 + If the destination is Amazon Redshift, `Prefix` must not contain expressions and `ErrorOutputPrefix` must be null\.
-+ When the destination is Amazon Elasticsearch Service or Splunk, and no `ErrorOutputPrefix` is specified, Kinesis Data Firehose uses the `Prefix` field for failed records\. 
++ When the destination is Amazon OpenSearch Service or Splunk, and no `ErrorOutputPrefix` is specified, Kinesis Data Firehose uses the `Prefix` field for failed records\. 
 + When the destination is Amazon S3, the `Prefix` and `ErrorOutputPrefix` in the Amazon S3 destination configuration are used for successful records and failed records, respectively\. If you use the AWS CLI or the API, you can use `ExtendedS3DestinationConfiguration` to specify an Amazon S3 *backup* configuration with its own `Prefix` and `ErrorOutputPrefix`\.
 + When you use the AWS Management Console and set the destination to Amazon S3, Kinesis Data Firehose uses the `Prefix` and `ErrorOutputPrefix` in the destination configuration for successful records and failed records, respectively\. If you specify a prefix but no error prefix, Kinesis Data Firehose automatically sets the error prefix to `!{firehose:error-output-type}/`\.
 + When you use `ExtendedS3DestinationConfiguration` with the AWS CLI, the API, or AWS CloudFormation, if you specify a `S3BackupConfiguration`, Kinesis Data Firehose doesn't provide a default `ErrorOutputPrefix`\.
++ You cannot use `partitionKeyFromLambda` and `partitionKeyFromQuery` namespaces when creating ErrorOutputPrefix expressions\.
 
 ## Example prefixes<a name="s3-prefix-examples"></a>
 

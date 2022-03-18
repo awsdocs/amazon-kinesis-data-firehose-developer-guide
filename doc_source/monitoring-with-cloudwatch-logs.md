@@ -2,7 +2,7 @@
 
 Kinesis Data Firehose integrates with Amazon CloudWatch Logs so that you can view the specific error logs when the Lambda invocation for data transformation or data delivery fails\. You can enable Kinesis Data Firehose error logging when you create your delivery stream\.
 
-If you enable Kinesis Data Firehose error logging in the Kinesis Data Firehose console, a log group and corresponding log streams are created for the delivery stream on your behalf\. The format of the log group name is `/aws/kinesisfirehose/delivery-stream-name`, where `delivery-stream-name` is the name of the corresponding delivery stream\. The log stream name is **S3Delivery**, **RedshiftDelivery**, or **ElasticsearchDelivery**, depending on the delivery destination\. Lambda invocation errors for data transformation are also logged to the log stream used for data delivery errors\.
+If you enable Kinesis Data Firehose error logging in the Kinesis Data Firehose console, a log group and corresponding log streams are created for the delivery stream on your behalf\. The format of the log group name is `/aws/kinesisfirehose/delivery-stream-name`, where `delivery-stream-name` is the name of the corresponding delivery stream\. The log stream name is **S3Delivery**, **RedshiftDelivery**, or **AmazonOpenSearchServiceDelivery**, depending on the delivery destination\. Lambda invocation errors for data transformation are also logged to the log stream used for data delivery errors\.
 
 For example, if you create a delivery stream "MyStream" with Amazon Redshift as the destination and enable Kinesis Data Firehose error logging, the following are created on your behalf: a log group named `aws/kinesisfirehose/MyStream` and two log streams named **S3Delivery** and **RedshiftDelivery**\. In this example, the **S3Delivery** log stream is used for logging errors related to delivery failure to the intermediate S3 bucket\. The **RedshiftDelivery** log stream is used for logging errors related to Lambda invocation failure and delivery failure to your Amazon Redshift cluster\.
 
@@ -26,7 +26,7 @@ The following is a list of data delivery error codes and messages for each Kines
 + [Amazon Redshift Data Delivery Errors](#monitoring-rs-errors)
 + [Splunk Data Delivery Errors](#monitoring-splunk-errors)
 + [HTTPS Endpoint Data Delivery Errors](#monitoring-http-errors)
-+ [Amazon Elasticsearch Service Data Delivery Errors](#monitoring-es-errors)
++ [Amazon OpenSearch Service Data Delivery Errors](#monitoring-es-errors)
 
 ### Amazon S3 Data Delivery Errors<a name="monitoring-s3-errors"></a>
 
@@ -110,9 +110,9 @@ Kinesis Data Firehose can send the following HTTP Endpoint\-related errors to Cl
 | HttpEndpoint\.ConnectionReset | "Unable to maintain connection with the endpoint\. Contact the owner of the endpoint to resolve this issue\." | 
 | HttpEndpoint\.ConnectionReset | "Trouble maintaining connection with the endpoint\. Please reach out to the owner of the endpoint\." | 
 
-### Amazon Elasticsearch Service Data Delivery Errors<a name="monitoring-es-errors"></a>
+### Amazon OpenSearch Service Data Delivery Errors<a name="monitoring-es-errors"></a>
 
-For the Amazon ES destination, Kinesis Data Firehose sends errors to CloudWatch Logs as they are returned by Elasticsearch\.
+For the OpenSearch Service destination, Kinesis Data Firehose sends errors to CloudWatch Logs as they are returned by OpenSearch Service\.
 
 ## Lambda Invocation Errors<a name="lambda-invocation-errors"></a>
 

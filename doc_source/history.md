@@ -5,6 +5,7 @@ The following table describes the important changes to the Amazon Kinesis Data F
 
 | Change | Description | Date Changed | 
 | --- | --- | --- | 
+| Added support dynamic partitioning | Added support for continuous dynamic partitioning of the streaming data in Kinesis Data Firehose\. See [Dynamic Partitioning in Kinesis Data Firehose](dynamic-partitioning.md)\. | August 31, 2021 | 
 | Added a topic on custom prefixes\. | Added a topic about the expressions that you can use when building a custom prefix for data that is delivered to Amazon S3\. See [Custom Prefixes for Amazon S3 Objects](s3-prefixes.md)\. | December 20, 2018 | 
 | Added New Kinesis Data Firehose Tutorial | Added a tutorial that demonstrates how to send Amazon VPC flow logs to Splunk through Kinesis Data Firehose\. See [Tutorial: Sending VPC Flow Logs to Splunk Using Amazon Kinesis Data Firehose](vpc-splunk-tutorial.md)\. | October 30, 2018 | 
 | Added Four New Kinesis Data Firehose Regions | Added Paris, Mumbai, Sao Paulo, and London\. For more information, see [Amazon Kinesis Data Firehose Quota](limits.md)\. | June 27, 2018 | 

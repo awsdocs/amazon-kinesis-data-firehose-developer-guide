@@ -35,7 +35,6 @@ The logs that CloudWatch sends to the delivery stream are in a compressed format
    {
        "Version": "2012-10-17",
        "Statement": [
-         
            {
                "Effect": "Allow",
                "Action": [

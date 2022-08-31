@@ -32,7 +32,7 @@ If [dynamic partitioning](https://docs.aws.amazon.com/firehose/latest/dev/dynami
 | PartitionCount |  The number of partitions that are being processed, in other words, the active partition count\. This number varies between 1 and the partition count limit of 500 \(default\)\. Units: Count  | 
 | PartitionCountExceeded |  This metric indicates if you are exceeding the partition count limit\. It emits 1 or 0 based on whether limit is breached or not\.  | 
 | JQProcessing\.Duration |  Returns the amount of time it took to execute JQ expression in the JQ Lambda function\. Units: Milliseconds  | 
-| PerPartitionThroughput |  Indicates the throughtput that is being processed per partition\. This metric enables you to monitor the per partition throughput\. A max throughput of 25 MB per second is supported for each active partition\.  Units: StandardUnit\.BytesSecond  | 
+| PerPartitionThroughput |  Indicates the throughtput that is being processed per partition\. This metric enables you to monitor the per partition throughput\. Units: StandardUnit\.BytesSecond  | 
 | DeliveryToS3\.ObjectCount |  Indicates the number of objects that are being delivered to your S3 bucket\. Units: Count  | 
 
 ## Data Delivery CloudWatch Metrics<a name="fh-metrics-cw"></a>
@@ -156,7 +156,7 @@ The metrics in the following table are related to delivery to Amazon S3 when it 
 | DeliveryToSplunk\.Records |  The number of records delivered to Splunk over the specified time period\. Units: Count  | 
 | DeliveryToSplunk\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
 | IncomingBytes |  The number of bytes ingested successfully into the delivery stream over the specified time period after throttling\. Units: Bytes  | 
-| IncomingPutRequests | The number of successful PutRecord and PutRecordBatch requests over the specified period of time after throttling\. Units: Count | 
+| IncomingPutRequests | The number of successful PutRecord and PutRecordBatch requests over a specified period of time\. Units: Count | 
 | IncomingRecords |  The number of records ingested successfully into the delivery stream over the specified time period after throttling\. Units: Count  | 
 | KinesisMillisBehindLatest |  When the data source is a Kinesis data stream, this metric indicates the number of milliseconds that the last read record is behind the newest record in the Kinesis data stream\. Units: Millisecond  | 
 | RecordsPerSecondLimit | The current maximum number of records per second that a delivery stream can ingest before throttling\. Units: Count | 

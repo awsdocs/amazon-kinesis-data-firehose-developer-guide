@@ -9,6 +9,7 @@ This topic describes the destination settings for your delivery stream\.
 + [Choose HTTP Endpoint for Your Destination](#create-destination-http)
 + [Choose Datadog for Your Destination](#create-destination-datadog)
 + [Choose Honeycomb for Your Destination](#create-destination-honeycomb)
++ [Choose Coralogix for Your Destination](#create-destination-coralogix)
 + [Choose Dynatrace for Your Destination](#create-destination-dynatrace)
 + [Choose LogicMonitor for Your Destination](#create-destination-logicmonitor)
 + [Choose MongoDB Cloud for Your Destination](#create-destination-mongodb)
@@ -186,6 +187,37 @@ Even if the retry duration expires, Kinesis Data Firehose still waits for the ac
 If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
  **Parameters \- optional**   
 Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **S3 buffer hints**   
+Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
+
+## Choose Coralogix for Your Destination<a name="create-destination-coralogix"></a>
+
+This section describes options for using **Coralogix** for your destination\. For more information about Coralogix, see [https://coralogix\.com/integrations/aws\-firehose ](https://coralogix.com/integrations/aws-firehose)\.
+
+****
++ Provide values for the following fields:  
+ **HTTP endpoint URL**   
+Choose the HTTP endpoint URL from the following options in the drop down menu:  
+  + **Coralogix \- US**
+  + **Coralogix \- SINGAPORE**
+  + **Coralogix \- IRELAND**
+  + **Coralogix \- INDIA**
+  + **Coralogix \- STOCKHOLM**  
+ **Private key**   
+Contact Coralogix to obtain the private key required to enable data delivery to this endpoint from Kinesis Data Firehose\.  
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** to enable content encoding of your request\. This is the recommended option for the Coralogix destination\.  
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to the selected HTTP endpoint\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+  + applicationName: the environment where you are running Data Firehose
+  + subsystemName: the name of the Data Firehose integration
+  + computerName: the name of the delivery stream in use  
  **S3 buffer hints**   
 Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
 

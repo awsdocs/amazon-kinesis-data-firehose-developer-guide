@@ -43,7 +43,7 @@ To give your application access to your Kinesis Data Firehose delivery stream, u
 
 ## Allow Kinesis Data Firehose to Assume an IAM Role<a name="firehose-assume-role"></a>
 
-If you use the console to create a delivery stream, and choose the option to create a new role, AWS attaches the required trust policy to the role\. Or if you want Kinesis Data Firehose to use an existing IAM role or if you create a role on your own, attach the following trust policy to that role so that Kinesis Data Firehose can assume it\. 
+If you use the console to create a delivery stream and choose the option to create a new role, AWS attaches the required trust policy to the role\. If you want Kinesis Data Firehose to use an existing IAM role or if you create a role on your own, attach the following trust policy to that role so that Kinesis Data Firehose can assume it\. Edit the policy to replace *account\-id* with your AWS account ID\.
 
 ```
 {
@@ -55,11 +55,18 @@ If you use the console to create a delivery stream, and choose the option to cre
       "Principal": {
         "Service": "firehose.amazonaws.com"
       },
-      "Action": "sts:AssumeRole"
+     "Action": "sts:AssumeRole",
+	       "Condition": {
+	         "StringEquals": {
+	           "sts:ExternalId": "account-id"
+	         }
+	       }
     }
   ]
 }
 ```
+
+This policy uses the `sts:ExternalId` condition context key to ensure that only Kinesis Data Firehose activity originating from your AWS account can assume this IAM role\. For more information about preventing unauthorized use of IAM roles, see [The confused deputy problem](https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html) in the *IAM User Guide*\.
 
 For information about how to modify the trust relationship of a role, see [Modifying a Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage_modify.html)\.
 
@@ -78,6 +85,9 @@ If your delivery stream performs data\-format conversion, Kinesis Data Firehose 
   "Resource": "table-arn"
 }
 ```
+
+**Note**  
+Currently, AWS Glue is not supported in the Asia Pacific \(Jakarta\) region\. If you are working with Kinesis Data Firehose in the Asia Pacific \(Jakarta\) region, make sure to give your Kinesis Data Firehose access to AWS Glue in one of the regions where AWS Glue is currently supported\. Cross\-region interoperability between Data Firehose and AWS Glue is supported\. For more information on regions where AWS Glue is supported, see [https://docs\.aws\.amazon\.com/general/latest/gr/glue\.html](https://docs.aws.amazon.com/general/latest/gr/glue.html)
 
 ## Grant Kinesis Data Firehose Access to an Amazon S3 Destination<a name="using-iam-s3"></a>
 
@@ -275,6 +285,7 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `15.161.135.128/27` for Europe \(Milan\)
 + `13.244.121.224/27` for Africa \(Cape Town\)
 + `13.208.177.192/27` for Asia Pacific \(Osaka\)
++ `108.136.221.64/27` for Asia Pacific \(Jakarta\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started Guide* guide\. 
 
@@ -737,17 +748,22 @@ You can't use tag\-based access control with `ListDeliveryStreams`\.
 
 For all Kinesis Data Firehose operations other than `CreateDeliveryStream`, `TagDeliveryStream`, `UntagDeliveryStream`, and `ListDeliveryStreams`, use the `aws:RequestTag` condition key\. In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\.
 
+`ListDeliveryStreams`, use the `firehose:ResourceTag` condition key to control access based on the tags on that delivery stream\.
+
+In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\. The policy would only apply to Data Firehose delivery streams having a tag named `MyKey` with a value of `MyValue`\. For more information about controlling access based on resource tags, see [Controlling access to AWS resources using tags](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_tags.html#access_tags_control-resources) in the *IAM User Guide*\.
+
 ```
 {
     "Version": "2012-10-17",
     "Statement": [
-    {
+      {
             "Effect": "Deny",
             "Action": "firehose:DescribeDeliveryStream",
             "Resource": "*",
             "Condition": {
-                "Null": {
-                    "firehose:ResourceTag/MyKey": "MyValue"
+                "StringEquals": {
+	                     "firehose:ResourceTag/MyKey": "MyValue"
+	                 }
             }
         }
     ]

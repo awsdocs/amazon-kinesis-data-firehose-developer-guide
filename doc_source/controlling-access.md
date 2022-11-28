@@ -47,22 +47,22 @@ If you use the console to create a delivery stream and choose the option to crea
 
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "firehose.amazonaws.com"
-      },
-     "Action": "sts:AssumeRole",
-	       "Condition": {
-	         "StringEquals": {
-	           "sts:ExternalId": "account-id"
-	         }
-	       }
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "firehose.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "account-id"
+                }
+            }
+        }
+    ]
 }
 ```
 
@@ -76,13 +76,13 @@ If your delivery stream performs data\-format conversion, Kinesis Data Firehose 
 
 ```
 {
-  "Effect": "Allow",
-  "Action": [
-    "glue:GetTable",
-    "glue:GetTableVersion",
-    "glue:GetTableVersions"
-  ],
-  "Resource": "table-arn"
+    "Effect": "Allow",
+    "Action": [
+        "glue:GetTable",
+        "glue:GetTableVersion",
+        "glue:GetTableVersions"
+    ],
+    "Resource": "table-arn"
 }
 ```
 
@@ -97,11 +97,10 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 
 ```
 {
-    "Version": "2012-10-17",  
-    "Statement":
-    [    
-        {      
-            "Effect": "Allow",      
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
             "Action": [
                 "s3:AbortMultipartUpload",
                 "s3:GetBucketLocation",
@@ -109,12 +108,12 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
                 "s3:ListBucket",
                 "s3:ListBucketMultipartUploads",
                 "s3:PutObject"
-            ],      
-            "Resource": [        
+            ],
+            "Resource": [
                 "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"		    
-            ]    
-        },        
+                "arn:aws:s3:::bucket-name/*"
+            ]
+        },
         {
             "Effect": "Allow",
             "Action": [
@@ -126,41 +125,41 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
             "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "kms:Decrypt",
-               "kms:GenerateDataKey"
-           ],
-           "Resource": [
-               "arn:aws:kms:region:account-id:key/key-id"           
-           ],
-           "Condition": {
-               "StringEquals": {
-                   "kms:ViaService": "s3.region.amazonaws.com"
-               },
-               "StringLike": {
-                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
-               }
-           }
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:region:account-id:key/key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:ViaService": "s3.region.amazonaws.com"
+                },
+                "StringLike": {
+                    "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+                }
+            }
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "logs:PutLogEvents"
-           ],
-           "Resource": [
-               "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
+            ]
         },
         {
-           "Effect": "Allow", 
-           "Action": [
-               "lambda:InvokeFunction", 
-               "lambda:GetFunctionConfiguration" 
-           ],
-           "Resource": [
-               "arn:aws:lambda:region:account-id:function:function-name:function-version"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:region:account-id:function:function-name:function-version"
+            ]
         }
     ]
 }
@@ -186,10 +185,9 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 
 ```
 {
-"Version": "2012-10-17",  
-    "Statement":
-    [    
-        {      
+    "Version": "2012-10-17",
+    "Statement": [
+        {
             "Effect": "Allow",
             "Action": [
                 "s3:AbortMultipartUpload",
@@ -198,58 +196,58 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
                 "s3:ListBucket",
                 "s3:ListBucketMultipartUploads",
                 "s3:PutObject"
-            ],      
-            "Resource": [        
+            ],
+            "Resource": [
                 "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"		    
-            ]    
+                "arn:aws:s3:::bucket-name/*"
+            ]
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "kms:Decrypt",
-               "kms:GenerateDataKey"
-           ],
-           "Resource": [
-               "arn:aws:kms:region:account-id:key/key-id"           
-           ],
-           "Condition": {
-               "StringEquals": {
-                   "kms:ViaService": "s3.region.amazonaws.com"
-               },
-               "StringLike": {
-                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
-               }
-           }
-        },        
-        {
-           "Effect": "Allow",
-           "Action": [
-               "kinesis:DescribeStream",
-               "kinesis:GetShardIterator",
-               "kinesis:GetRecords",
-               "kinesis:ListShards"
-           ],
-           "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:region:account-id:key/key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:ViaService": "s3.region.amazonaws.com"
+                },
+                "StringLike": {
+                    "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+                }
+            }
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "logs:PutLogEvents"
-           ],
-           "Resource": [
-               "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStream",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:ListShards"
+            ],
+            "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
         },
         {
-           "Effect": "Allow", 
-           "Action": [
-               "lambda:InvokeFunction", 
-               "lambda:GetFunctionConfiguration" 
-           ],
-           "Resource": [
-               "arn:aws:lambda:region:account-id:function:function-name:function-version"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:region:account-id:function:function-name:function-version"
+            ]
         }
     ]
 }
@@ -297,10 +295,10 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 
 ```
 {
-    "Version": "2012-10-17",  
-    "Statement": [    
-        {      
-            "Effect": "Allow",      
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
             "Action": [
                 "s3:AbortMultipartUpload",
                 "s3:GetBucketLocation",
@@ -308,89 +306,89 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
                 "s3:ListBucket",
                 "s3:ListBucketMultipartUploads",
                 "s3:PutObject"
-            ],      
-            "Resource": [        
+            ],
+            "Resource": [
                 "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"		    
-            ]    
+                "arn:aws:s3:::bucket-name/*"
+            ]
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "kms:Decrypt",
-               "kms:GenerateDataKey"
-           ],
-           "Resource": [
-               "arn:aws:kms:region:account-id:key/key-id"           
-           ],
-           "Condition": {
-               "StringEquals": {
-                   "kms:ViaService": "s3.region.amazonaws.com"
-               },
-               "StringLike": {
-                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
-               }
-           }
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:region:account-id:key/key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:ViaService": "s3.region.amazonaws.com"
+                },
+                "StringLike": {
+                    "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+                }
+            }
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "es:DescribeDomain",
-               "es:DescribeDomains",
-               "es:DescribeDomainConfig",
-               "es:ESHttpPost",
-               "es:ESHttpPut"
-           ],
-          "Resource": [
-              "arn:aws:es:region:account-id:domain/domain-name",
-              "arn:aws:es:region:account-id:domain/domain-name/*"
-          ]
-       },
-       {
-          "Effect": "Allow",
-          "Action": [
-              "es:ESHttpGet"
-          ],
-          "Resource": [
-              "arn:aws:es:region:account-id:domain/domain-name/_all/_settings",
-              "arn:aws:es:region:account-id:domain/domain-name/_cluster/stats",
-              "arn:aws:es:region:account-id:domain/domain-name/index-name*/_mapping/type-name",
-              "arn:aws:es:region:account-id:domain/domain-name/_nodes",
-              "arn:aws:es:region:account-id:domain/domain-name/_nodes/stats",
-              "arn:aws:es:region:account-id:domain/domain-name/_nodes/*/stats",
-              "arn:aws:es:region:account-id:domain/domain-name/_stats",
-              "arn:aws:es:region:account-id:domain/domain-name/index-name*/_stats"
-          ]
-       },        
-       {
-          "Effect": "Allow",
-          "Action": [
-              "kinesis:DescribeStream",
-              "kinesis:GetShardIterator",
-              "kinesis:GetRecords",
-              "kinesis:ListShards"
-          ],
-          "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
-       },
-       {
-          "Effect": "Allow",
-          "Action": [
-              "logs:PutLogEvents"
-          ],
-          "Resource": [
-              "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
-          ]
-       },
-       {
-          "Effect": "Allow", 
-          "Action": [
-              "lambda:InvokeFunction", 
-              "lambda:GetFunctionConfiguration" 
-          ],
-          "Resource": [
-              "arn:aws:lambda:region:account-id:function:function-name:function-version"
-          ]
-       }
+            "Effect": "Allow",
+            "Action": [
+                "es:DescribeDomain",
+                "es:DescribeDomains",
+                "es:DescribeDomainConfig",
+                "es:ESHttpPost",
+                "es:ESHttpPut"
+            ],
+            "Resource": [
+                "arn:aws:es:region:account-id:domain/domain-name",
+                "arn:aws:es:region:account-id:domain/domain-name/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "es:ESHttpGet"
+            ],
+            "Resource": [
+                "arn:aws:es:region:account-id:domain/domain-name/_all/_settings",
+                "arn:aws:es:region:account-id:domain/domain-name/_cluster/stats",
+                "arn:aws:es:region:account-id:domain/domain-name/index-name*/_mapping/type-name",
+                "arn:aws:es:region:account-id:domain/domain-name/_nodes",
+                "arn:aws:es:region:account-id:domain/domain-name/_nodes/stats",
+                "arn:aws:es:region:account-id:domain/domain-name/_nodes/*/stats",
+                "arn:aws:es:region:account-id:domain/domain-name/_stats",
+                "arn:aws:es:region:account-id:domain/domain-name/index-name*/_stats"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStream",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:ListShards"
+            ],
+            "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:region:account-id:function:function-name:function-version"
+            ]
+        }
     ]
 }
 ```
@@ -425,11 +423,10 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
 
 ```
 {
-    "Version": "2012-10-17",  
-    "Statement":
-    [    
-        {      
-            "Effect": "Allow",      
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
             "Action": [
                 "s3:AbortMultipartUpload",
                 "s3:GetBucketLocation",
@@ -437,58 +434,58 @@ Use the following access policy to enable Kinesis Data Firehose to access your S
                 "s3:ListBucket",
                 "s3:ListBucketMultipartUploads",
                 "s3:PutObject"
-            ],      
-            "Resource": [        
+            ],
+            "Resource": [
                 "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"		    
-            ]     
+                "arn:aws:s3:::bucket-name/*"
+            ]
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "kms:Decrypt",
-               "kms:GenerateDataKey"
-           ],
-           "Resource": [
-               "arn:aws:kms:region:account-id:key/key-id"           
-           ],
-           "Condition": {
-               "StringEquals": {
-                   "kms:ViaService": "s3.region.amazonaws.com"
-               },
-               "StringLike": {
-                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
-               }
-           }
-        },     
-        {
-           "Effect": "Allow",
-           "Action": [
-               "kinesis:DescribeStream",
-               "kinesis:GetShardIterator",
-               "kinesis:GetRecords",
-               "kinesis:ListShards"
-           ],
-           "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:region:account-id:key/key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:ViaService": "s3.region.amazonaws.com"
+                },
+                "StringLike": {
+                    "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+                }
+            }
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "logs:PutLogEvents"
-           ],
-           "Resource": [
-               "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:*"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStream",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:ListShards"
+            ],
+            "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
         },
         {
-           "Effect": "Allow", 
-           "Action": [
-               "lambda:InvokeFunction", 
-               "lambda:GetFunctionConfiguration" 
-           ],
-           "Resource": [
-               "arn:aws:lambda:region:account-id:function:function-name:function-version"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:region:account-id:function:function-name:function-version"
+            ]
         }
     ]
 }
@@ -538,11 +535,10 @@ Kinesis Data Firehose doesn't use IAM to access HTTP endpoint destinations owned
 
 ```
 {
-    "Version": "2012-10-17",  
-    "Statement":
-    [    
-        {      
-            "Effect": "Allow",      
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
             "Action": [
                 "s3:AbortMultipartUpload",
                 "s3:GetBucketLocation",
@@ -550,58 +546,58 @@ Kinesis Data Firehose doesn't use IAM to access HTTP endpoint destinations owned
                 "s3:ListBucket",
                 "s3:ListBucketMultipartUploads",
                 "s3:PutObject"
-            ],      
-            "Resource": [        
+            ],
+            "Resource": [
                 "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"		    
-            ]     
+                "arn:aws:s3:::bucket-name/*"
+            ]
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "kms:Decrypt",
-               "kms:GenerateDataKey"
-           ],
-           "Resource": [
-               "arn:aws:kms:region:account-id:key/key-id"           
-           ],
-           "Condition": {
-               "StringEquals": {
-                   "kms:ViaService": "s3.region.amazonaws.com"
-               },
-               "StringLike": {
-                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
-               }
-           }
-        },     
-        {
-           "Effect": "Allow",
-           "Action": [
-               "kinesis:DescribeStream",
-               "kinesis:GetShardIterator",
-               "kinesis:GetRecords",
-               "kinesis:ListShards"
-           ],
-           "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
+            "Effect": "Allow",
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:region:account-id:key/key-id"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "kms:ViaService": "s3.region.amazonaws.com"
+                },
+                "StringLike": {
+                    "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+                }
+            }
         },
         {
-           "Effect": "Allow",
-           "Action": [
-               "logs:PutLogEvents"
-           ],
-           "Resource": [
-               "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:*"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStream",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:ListShards"
+            ],
+            "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
         },
         {
-           "Effect": "Allow", 
-           "Action": [
-               "lambda:InvokeFunction", 
-               "lambda:GetFunctionConfiguration" 
-           ],
-           "Resource": [
-               "arn:aws:lambda:region:account-id:function:function-name:function-version"
-           ]
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:region:account-id:function:function-name:function-version"
+            ]
         }
     ]
 }
@@ -624,7 +620,6 @@ The Amazon S3 bucket specified in the access policy is owned by account B in thi
 
    ```
    {
-   
        "Version": "2012-10-17",
        "Id": "PolicyID",
        "Statement": [
@@ -664,26 +659,26 @@ You can use the AWS CLI or the Kinesis Data Firehose APIs to create a delivery s
 
    ```
    {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Principal": {
-           "AWS": "arn:aws:iam::Account-A-ID:role/firehose_delivery_role "
-         },
-         "Action": "es:ESHttpGet",
-         "Resource": [
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_all/_settings",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_cluster/stats",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/roletest*/_mapping/roletest",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes/stats",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes/*/stats",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_stats",
-           "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/roletest*/_stats"
-         ]
-       }
-     ]
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Principal": {
+                   "AWS": "arn:aws:iam::Account-A-ID:role/firehose_delivery_role "
+               },
+               "Action": "es:ESHttpGet",
+               "Resource": [
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_all/_settings",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_cluster/stats",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/roletest*/_mapping/roletest",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes/stats",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_nodes/*/stats",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/_stats",
+                   "arn:aws:es:us-east-1:Account-B-ID:domain/cross-account-cluster/roletest*/_stats"
+               ]
+           }
+       ]
    }
    ```
 
@@ -733,7 +728,7 @@ For the `UntagDeliveryStream` operation, use the `aws:TagKeys` condition key\. I
             "Condition": {
                 "ForAnyValue:StringEquals": {
                     "aws:TagKeys": "MyKey"
-                 }
+                }
             }
         }
     ]
@@ -756,14 +751,14 @@ In the following example, `MyKey` and `MyValue` represent the key and correspond
 {
     "Version": "2012-10-17",
     "Statement": [
-      {
+        {
             "Effect": "Deny",
             "Action": "firehose:DescribeDeliveryStream",
             "Resource": "*",
             "Condition": {
                 "StringEquals": {
-	                     "firehose:ResourceTag/MyKey": "MyValue"
-	                 }
+                    "firehose:ResourceTag/MyKey": "MyValue"
+                }
             }
         }
     ]

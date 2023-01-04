@@ -23,6 +23,6 @@ When Kinesis Data Streams is configured as the data source, this quota doesn't a
 + The buffer interval hints range from 60 seconds to 900 seconds\.
 + For delivery from Kinesis Data Firehose to Amazon Redshift, only publicly accessible Amazon Redshift clusters are supported\.
 + The retry duration range is from 0 seconds to 7,200 seconds for Amazon Redshift and OpenSearch Service delivery\.
-+ Kinesis Data Firehose supports Elasticsearch versions 1\.5, 2\.3, 5\.1, 5\.3, 5\.5, 5\.6, as well as all 6\.\* and 7\.\* versions and Amazon OpenSearch Service 1\.x and later\.
++ Kinesis Data Firehose supports Elasticsearch versions 1\.5, 2\.3, 5\.1, 5\.3, 5\.5, 5\.6, as well as all 6\.\* and 7\.\* versions and Amazon OpenSearch Service 1\.x\.
 + When the destination is Amazon S3, Amazon Redshift, or OpenSearch Service, Kinesis Data Firehose allows up to 5 outstanding Lambda invocations per shard\. For Splunk, the quota is 10 outstanding Lambda invocations per shard\. 
 + You can use a CMK of type CUSTOMER\_MANAGED\_CMK to encrypt up to 500 delivery streams\.

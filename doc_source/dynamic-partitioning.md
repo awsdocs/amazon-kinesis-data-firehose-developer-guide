@@ -64,7 +64,7 @@ At runtime, Kinesis Data Firehose uses the right column above to evaluate the pa
 
 For compressed or encrypted data records, or data that is in any file format other than JSON, you can use the integrated AWS Lambda function with your own custom code to decompress, decrypt, or transform the records in order to extract and return the data fields needed for partitioning\. This is an expansion of the existing transform Lambda function that is available today with Kinesis Data Firehose\. You can transform, parse and return the data fields that you can then use for dynamic partitioning using the same Lambda function\.
 
-The following is an example Amazon Kinesis Firehose delivery stream processing Lambda function in Python that replays every read record from input to output and extracts partioninig keys from the records\.
+The following is an example Amazon Kinesis Firehose delivery stream processing Lambda function in Python that replays every read record from input to output and extracts partitionig keys from the records\.
 
 ```
 from __future__ import print_function

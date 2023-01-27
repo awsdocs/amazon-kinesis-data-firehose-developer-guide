@@ -20,7 +20,7 @@ For data delivery to Amazon Simple Storage Service \(Amazon S3\), Kinesis Data F
 
 For data delivery to Amazon Redshift, Kinesis Data Firehose first delivers incoming data to your S3 bucket in the format described earlier\. Kinesis Data Firehose then issues an Amazon Redshift COPY command to load the data from your S3 bucket to your Amazon Redshift cluster\. Ensure that after Kinesis Data Firehose concatenates multiple incoming records to an Amazon S3 object, the Amazon S3 object can be copied to your Amazon Redshift cluster\. For more information, see [Amazon Redshift COPY Command Data Format Parameters](https://docs.aws.amazon.com/redshift/latest/dg/copy-parameters-data-format.html)\.
 
-For data delivery to OpenSearch Service, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an OpenSearch Service bulk request to index multiple records to your OpenSearch Service cluster\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your OpenSearch Service cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [OpenSearch Service Configure Advanced Options](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon OpenSearch Service Developer Guide*\. 
+For data delivery to OpenSearch Service and OpenSearch Serverless, Kinesis Data Firehose buffers incoming records based on the buffering configuration of your delivery stream\. It then generates an OpenSearch Service or OpenSearch Serverless bulk request to index multiple records to your OpenSearch Service cluster or OpenSearch Serverless collection\. Make sure that your record is UTF\-8 encoded and flattened to a single\-line JSON object before you send it to Kinesis Data Firehose\. Also, the `rest.action.multi.allow_explicit_index` option for your OpenSearch Service cluster must be set to true \(default\) to take bulk requests with an explicit index that is set per record\. For more information, see [OpenSearch Service Configure Advanced Options](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-advanced-options) in the *Amazon OpenSearch Service Developer Guide*\. 
 
 For data delivery to Splunk, Kinesis Data Firehose concatenates the bytes that you send\. If you want delimiters in your data, such as a new line character, you must insert them yourself\. Make sure that Splunk is configured to parse any such delimiters\.
 
@@ -39,6 +39,9 @@ The frequency of data COPY operations from Amazon S3 to Amazon Redshift is deter
 **Amazon OpenSearch Service**  
 The frequency of data delivery to OpenSearch Service is determined by the OpenSearch Service **Buffer size** and **Buffer interval** values that you configured for your delivery stream\. Kinesis Data Firehose buffers incoming data before delivering it to OpenSearch Service\. You can configure the values for OpenSearch Service **Buffer size** \(1–100 MB\) or **Buffer interval** \(60–900 seconds\), and the condition satisfied first triggers data delivery to OpenSearch Service\. 
 
+**Amazon OpenSearch Serverless**  
+The frequency of data delivery to OpenSearch Serverless is determined by the OpenSearch Serverless **Buffer size** and **Buffer interval** values that you configured for your delivery stream\. Kinesis Data Firehose buffers incoming data before delivering it to OpenSearch Serverless\. You can configure the values for OpenSearch Serverless **Buffer size** \(1–100 MB\) or **Buffer interval** \(60–900 seconds\), and the condition satisfied first triggers data delivery to OpenSearch Serverless\. 
+
 **Splunk**  
 Kinesis Data Firehose buffers incoming data before delivering it to Splunk\. The buffer size is 5 MB, and the buffer interval is 60 seconds\. The condition satisfied first triggers data delivery to Splunk\. The buffer size and interval aren't configurable\. These numbers are optimal\.
 
@@ -56,9 +59,10 @@ Data delivery to your S3 bucket might fail for various reasons\. For example, th
 For an Amazon Redshift destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
 Data delivery to your Amazon Redshift cluster might fail for several reasons\. For example, you might have an incorrect cluster configuration of your delivery stream, a cluster under maintenance, or a network failure\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and skips that particular batch of Amazon S3 objects\. The skipped objects' information is delivered to your S3 bucket as a manifest file in the `errors/` folder, which you can use for manual backfill\. For information about how to COPY data manually with manifest files, see [Using a Manifest to Specify Data Files](https://docs.aws.amazon.com/redshift/latest/dg/loading-data-files-using-manifest.html)\. 
 
-**Amazon OpenSearch Service**  
-For the OpenSearch Service destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
-Data delivery to your OpenSearch Service cluster might fail for several reasons\. For example, you might have an incorrect OpenSearch Service cluster configuration of your delivery stream, an OpenSearch Service cluster under maintenance, a network failure, or similar events\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and then skips that particular index request\. The skipped documents are delivered to your S3 bucket in the `AmazonOpenSearchService_failed/` folder, which you can use for manual backfill\. Each document has the following JSON format:  
+**Amazon OpenSearch Service and OpenSearch Serverless**  
+For the OpenSearch Service and OpenSearch Serverless destination, you can specify a retry duration \(0–7200 seconds\) when creating a delivery stream\.  
+Data delivery to your OpenSearch Service cluster or OpenSearch Serverless collection might fail for several reasons\. For example, you might have an incorrect OpenSearch Service cluster or OpenSearch Serverless collection configuration of your delivery stream, an OpenSearch Service cluster or OpenSearch Serverless collection under maintenance, a network failure, or similar events\. Under these conditions, Kinesis Data Firehose retries for the specified time duration and then skips that particular index request\. The skipped documents are delivered to your S3 bucket in the `AmazonOpenSearchService_failed/` folder, which you can use for manual backfill\.   
+For OpenSearch Service, each document has the following JSON format:  
 
 ```
 {
@@ -70,6 +74,20 @@ Data delivery to your OpenSearch Service cluster might fail for several reasons\
     "esDocumentId": "(intended OpenSearch Service document ID)",
     "esIndexName": "(intended OpenSearch Service index name)",
     "esTypeName": "(intended OpenSearch Service type name)",
+    "rawData": "(base64-encoded document data)"
+}
+```
+For OpenSearch Serverless, each document has the following JSON format:  
+
+```
+{
+    "attemptsMade": "(number of index requests attempted)",
+    "arrivalTimestamp": "(the time when the document was received by Firehose)",
+    "errorCode": "(http error code returned by OpenSearch Serverless)",
+    "errorMessage": "(error message returned by OpenSearch Serverless)",
+    "attemptEndingTimestamp": "(the time when Firehose stopped attempting index request)",
+    "osDocumentId": "(intended OpenSearch Serverless document ID)",
+    "osIndexName": "(intended OpenSearch Serverless index name)",
     "rawData": "(base64-encoded document data)"
 }
 ```

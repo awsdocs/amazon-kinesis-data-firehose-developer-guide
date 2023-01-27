@@ -16,7 +16,9 @@ The logs that CloudWatch sends to the delivery stream are in a compressed format
 
 1. For **Lambda function\***, choose **Create new**\.
 
-1. In the **Choose Lambda blueprint** pane, scroll down and choose **Kinesis Firehose Cloudwatch Logs Processor**\. This opens the AWS Lambda console\.  
+1. In the **Choose Lambda blueprint** pane, scroll down and choose **Kinesis Firehose Cloudwatch Logs Processor**\. This opens the AWS Lambda console\.
+**Note**  
+It is recommended that you choose the low Lambda buffering hint value of 256 KB\.  
 ![\[Screenshot of the Lambda blueprint window showing the Kinesis Firehose Cloudwatch Logs Processor blueprint.\]](http://docs.aws.amazon.com/firehose/latest/dev/images/firehose-lambdablueprint-console.png)
 
 1. On the AWS Lambda console, for the function name, enter **VPCtoSplunkLambda**\.

@@ -6,12 +6,14 @@ This topic describes the destination settings for your delivery stream\.
 + [Choose Amazon S3 for Your Destination](#create-destination-s3)
 + [Choose Amazon Redshift for Your Destination](#create-destination-redshift)
 + [Choose OpenSearch Service for Your Destination](#create-destination-elasticsearch)
++ [Choose OpenSearch Serverless for Your Destination](#create-destination-opensearch-serverless)
 + [Choose HTTP Endpoint for Your Destination](#create-destination-http)
 + [Choose Datadog for Your Destination](#create-destination-datadog)
 + [Choose Honeycomb for Your Destination](#create-destination-honeycomb)
 + [Choose Coralogix for Your Destination](#create-destination-coralogix)
 + [Choose Dynatrace for Your Destination](#create-destination-dynatrace)
 + [Choose LogicMonitor for Your Destination](#create-destination-logicmonitor)
++ [Choose Logz\.io for Your Destination](#create-destination-logz)
 + [Choose MongoDB Cloud for Your Destination](#create-destination-mongodb)
 + [Choose New Relic for Your Destination](#create-destination-new-relic)
 + [Choose Splunk for Your Destination](#create-destination-splunk)
@@ -92,6 +94,9 @@ Kinesis Data Firehose supports Amazon S3 server\-side encryption with AWS Key Ma
 
 This section describes options for using OpenSearch Service for your destination\.
 
+**Note**  
+Amazon OpenSearch Service 2\.x clusters are not currently supported as a destination for Amazon Kinesis Data Firehose\.
+
 ****
 + Enter values for the following fields:  
 ** **OpenSearch Service domain** **  
@@ -107,6 +112,23 @@ For Elasticsearch 7\.x, leave this field empty\.
 Time duration \(0–7200 seconds\) for Kinesis Data Firehose to retry if an index request to your OpenSearch Service cluster fails\. Kinesis Data Firehose retries every 5 minutes until the retry duration ends\. If you set the retry duration to 0 \(zero\) seconds, Kinesis Data Firehose does not retry upon an index request failure\.  
 ** **Destination VPC connectivity** **  
 If your OpenSearch Service domain is in a private VPC, use this section to specify that VPC\. Also specify the subnets and subgroups that you want Kinesis Data Firehose to use when it sends data to your OpenSearch Service domain\. You can use the same security group that the doma OpenSearch Servicein uses or different ones\. If you specify different security groups, ensure that they allow outbound HTTPS traffic to the OpenSearch Service domain's security group\. Also ensure that the OpenSearch Service domain's security group allows HTTPS traffic from the security groups that you specified when you configured your delivery stream\. If you use the same security group for both your delivery stream and the OpenSearch Service domain, make sure the security group's inbound rule allows HTTPS traffic\. For more information about security group rules, see [Security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#SecurityGroupRules) in the Amazon VPC documentation\.  
+**Buffer hints**  
+Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
+
+## Choose OpenSearch Serverless for Your Destination<a name="create-destination-opensearch-serverless"></a>
+
+This section describes options for using OpenSearch Serverless for your destination\.
+
+****
++ Enter values for the following fields:  
+** **OpenSearch Serverless collection** **  
+The endpoint for a group of OpenSearch Serverless indexes to which your data is delivered\.  
+** **Index** **  
+The OpenSearch Serverless index name to be used when indexing data to your OpenSearch Serverless collection\.  
+** **Destination VPC connectivity** **  
+If your OpenSearch Serverless collection is in a private VPC, use this section to specify that VPC\. Also specify the subnets and subgroups that you want Kinesis Data Firehose to use when it sends data to your OpenSearch Serverless collection\.  
+** **Retry duration** **  
+Time duration \(0–7200 seconds\) for Kinesis Data Firehose to retry if an index request to your OpenSearch Serverless collection fails\. Kinesis Data Firehose retries every 5 minutes until the retry duration ends\. If you set the retry duration to 0 \(zero\) seconds, Kinesis Data Firehose does not retry upon an index request failure\.  
 **Buffer hints**  
 Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
 
@@ -261,6 +283,30 @@ Contact LogicMonitor to obtain the API key required to enable data delivery to t
 Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
  **Retry duration**   
 Specify how long Kinesis Data Firehose retries sending data to the selected HTTP endpoint\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **S3 buffer hints**   
+Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
+
+## Choose Logz\.io for Your Destination<a name="create-destination-logz"></a>
+
+This section describes options for using **Logz\.io** for your destination\. For more information, see [https://logz\.io/](https://logz.io/)\.
+
+**Note**  
+In the Europe \(Milan\) region, Logz\.io is not supported as an Amazon Kinesis Data Firehose destination\.
+
+****
++ Provide values for the following fields:  
+ **HTTP endpoint URL**   
+Specify the URL for the HTTP endpoint in the following format: `https://listener-aws-metrics-stream-<region>.logz.io/`\. For example, `https://listener-aws-metrics-stream-us.logz.io/`\. The URL must be an HTTPS URL\.   
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** or **Disabled** to enable/disable content encoding of your request\.   
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to Logz\.io\.   
 After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
 Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
 Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  

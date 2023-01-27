@@ -172,3 +172,7 @@ Interface VPC endpoints are currently supported within the following Regions:
 + South America \(São Paulo\)
 + AWS GovCloud \(US\-East\)
 + AWS GovCloud \(US\-West\)
++ Europe \(Spain\)
++ Middle East \(UAE\)
++ Asia Pacific \(Jakarta\)
++ Asia Pacific \(Osaka\)

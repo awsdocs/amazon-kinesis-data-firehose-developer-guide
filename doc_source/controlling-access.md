@@ -10,6 +10,8 @@ The following sections cover how to control access to and from your Kinesis Data
 + [Grant Kinesis Data Firehose Access to an Amazon Redshift Destination](#using-iam-rs)
 + [Grant Kinesis Data Firehose Access to a Public OpenSearch Service Destination](#using-iam-es)
 + [Grant Kinesis Data Firehose Access to an OpenSearch Service Destination in a VPC](#using-iam-es-vpc)
++ [Grant Kinesis Data Firehose Access to a Public OpenSearch Serverless Destination](#using-iam-serverless)
++ [Grant Kinesis Data Firehose Access to an OpenSearch Serverless Destination in a VPC](#using-iam-serverless-vpc)
 + [Grant Kinesis Data Firehose Access to a Splunk Destination](#using-iam-splunk)
 + [Access to Splunk in VPC](#using-iam-splunk-vpc)
 + [Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination](#using-iam-http)
@@ -87,7 +89,7 @@ If your delivery stream performs data\-format conversion, Kinesis Data Firehose 
 ```
 
 **Note**  
-Currently, AWS Glue is not supported in the Asia Pacific \(Jakarta\) region\. If you are working with Kinesis Data Firehose in the Asia Pacific \(Jakarta\) region, make sure to give your Kinesis Data Firehose access to AWS Glue in one of the regions where AWS Glue is currently supported\. Cross\-region interoperability between Data Firehose and AWS Glue is supported\. For more information on regions where AWS Glue is supported, see [https://docs\.aws\.amazon\.com/general/latest/gr/glue\.html](https://docs.aws.amazon.com/general/latest/gr/glue.html)
+Currently, AWS Glue is not supported in the Asia Pacific \(Jakarta\) or Middle East \(UAE\) regions\. If you are working with Kinesis Data Firehose in the Asia Pacific \(Jakarta\) region or Middle East \(UAE\) region, make sure to give your Kinesis Data Firehose access to AWS Glue in one of the regions where AWS Glue is currently supported\. Cross\-region interoperability between Data Firehose and AWS Glue is supported\. For more information on regions where AWS Glue is supported, see [https://docs\.aws\.amazon\.com/general/latest/gr/glue\.html](https://docs.aws.amazon.com/general/latest/gr/glue.html)
 
 ## Grant Kinesis Data Firehose Access to an Amazon S3 Destination<a name="using-iam-s3"></a>
 
@@ -286,6 +288,7 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `13.244.121.224/27` for Africa \(Cape Town\)
 + `13.208.177.192/27` for Asia Pacific \(Osaka\)
 + `108.136.221.64/27` for Asia Pacific \(Jakarta\)
++ `3.28.159.32/27` for Middle East \(UAE\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started Guide* guide\. 
 
@@ -415,6 +418,124 @@ If you revoke these permissions after you create the delivery stream, Kinesis Da
 
 When you create or update your delivery stream, you specify a security group for Kinesis Data Firehose to use when it sends data to your OpenSearch Service domain\. You can use the same security group that the OpenSearch Service domain uses or a different one\. If you specify a different security group, ensure that it allows outbound HTTPS traffic to the OpenSearch Service domain's security group\. Also ensure that the OpenSearch Service domain's security group allows HTTPS traffic from the security group you specified when you configured your delivery stream\. If you use the same security group for both your delivery stream and the OpenSearch Service domain, make sure the security group inbound rule allows HTTPS traffic\. For more information about security group rules, see [Security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#SecurityGroupRules) in the Amazon VPC documentation\.
 
+## Grant Kinesis Data Firehose Access to a Public OpenSearch Serverless Destination<a name="using-iam-serverless"></a>
+
+When you're using an OpenSearch Serverless destination, Kinesis Data Firehose delivers data to your OpenSearch Serverless collection, and concurrently backs up failed or all documents to your S3 bucket\. If error logging is enabled, Kinesis Data Firehose also sends data delivery errors to your CloudWatch log group and streams\. Kinesis Data Firehose uses an IAM role to access the specified OpenSearch Serverless collection, S3 bucket, AWS KMS key, and CloudWatch log group and streams\. You are required to have an IAM role when creating a delivery stream\.
+
+Use the following access policy to enable Kinesis Data Firehose to access your S3 bucket, OpenSearch Serverless domain, and AWS KMS key\. If you do not own the S3 bucket, add `s3:PutObjectAcl` to the list of Amazon S3 actions, which grants the bucket owner full access to the objects delivered by Kinesis Data Firehose\. This policy also has a statement that allows access to Amazon Kinesis Data Streams\. If you don't use Kinesis Data Streams as your data source, you can remove that statement\.
+
+```
+{
+    "Version": "2012-10-17",  
+    "Statement": [    
+        {      
+            "Effect": "Allow",      
+            "Action": [
+                "s3:AbortMultipartUpload",
+                "s3:GetBucketLocation",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListBucketMultipartUploads",
+                "s3:PutObject"
+            ],      
+            "Resource": [        
+                "arn:aws:s3:::bucket-name",
+                "arn:aws:s3:::bucket-name/*"		    
+            ]    
+        },
+        {
+           "Effect": "Allow",
+           "Action": [
+               "kms:Decrypt",
+               "kms:GenerateDataKey"
+           ],
+           "Resource": [
+               "arn:aws:kms:region:account-id:key/key-id"           
+           ],
+           "Condition": {
+               "StringEquals": {
+                   "kms:ViaService": "s3.region.amazonaws.com"
+               },
+               "StringLike": {
+                   "kms:EncryptionContext:aws:s3:arn": "arn:aws:s3:::bucket-name/prefix*"
+               }
+           }
+        },    
+       {
+          "Effect": "Allow",
+          "Action": [
+              "kinesis:DescribeStream",
+              "kinesis:GetShardIterator",
+              "kinesis:GetRecords",
+              "kinesis:ListShards"
+          ],
+          "Resource": "arn:aws:kinesis:region:account-id:stream/stream-name"
+       },
+       {
+          "Effect": "Allow",
+          "Action": [
+              "logs:PutLogEvents"
+          ],
+          "Resource": [
+              "arn:aws:logs:region:account-id:log-group:log-group-name:log-stream:log-stream-name"
+          ]
+       },
+       {
+          "Effect": "Allow", 
+          "Action": [
+              "lambda:InvokeFunction", 
+              "lambda:GetFunctionConfiguration" 
+          ],
+          "Resource": [
+              "arn:aws:lambda:region:account-id:function:function-name:function-version"
+          ]
+       }
+    ]
+}
+```
+
+In addition to the policy above, you must also configure Kinesis Data Firehose to have the following minimum permissions assigned in a data access policy:
+
+```
+[
+   {
+      "Rules":[
+         {
+            "ResourceType":"index",
+            "Resource":[
+               "index/target-collection/target-index"
+            ],
+            "Permission":[
+               "aoss:WriteDocument",
+               "aoss:CreateIndex"
+            ]
+         }
+      ],
+      "Principal":[
+         "arn:aws:sts::account-id:assumed-role/firehose-delivery-role-name/*"
+      ]
+   }
+]
+```
+
+For more information about allowing other AWS services to access your AWS resources, see [Creating a Role to Delegate Permissions to an AWS Service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-service.html) in the *IAM User Guide*\.
+
+## Grant Kinesis Data Firehose Access to an OpenSearch Serverless Destination in a VPC<a name="using-iam-serverless-vpc"></a>
+
+If your OpenSearch Serverless collection is in a VPC, make sure you give Kinesis Data Firehose the permissions that are described in the previous section\. In addition, you need to give Kinesis Data Firehose the following permissions to enable it to access your OpenSearch Serverless collection's VPC\.
++ `ec2:DescribeVpcs`
++ `ec2:DescribeVpcAttribute`
++ `ec2:DescribeSubnets`
++ `ec2:DescribeSecurityGroups`
++ `ec2:DescribeNetworkInterfaces`
++ `ec2:CreateNetworkInterface`
++ `ec2:CreateNetworkInterfacePermission`
++ `ec2:DeleteNetworkInterface`
+
+If you revoke these permissions after you create the delivery stream, Kinesis Data Firehose can't scale out by creating more ENIs when necessary\. You might therefore see a degradation in performance\.
+
+When you create or update your delivery stream, you specify a security group for Kinesis Data Firehose to use when it sends data to your OpenSearch Serverless collection\. You can use the same security group that the OpenSearch Serverless collection uses or a different one\. If you specify a different security group, ensure that it allows outbound HTTPS traffic to the OpenSearch Serverless collection's security group\. Also ensure that the OpenSearch Serverless collection's security group allows HTTPS traffic from the security group you specified when you configured your delivery stream\. If you use the same security group for both your delivery stream and the OpenSearch Serverless collection, make sure the security group inbound rule allows HTTPS traffic\. For more information about security group rules, see [Security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html#SecurityGroupRules) in the Amazon VPC documentation\.
+
 ## Grant Kinesis Data Firehose Access to a Splunk Destination<a name="using-iam-splunk"></a>
 
 When you're using a Splunk destination, Kinesis Data Firehose delivers data to your Splunk HTTP Event Collector \(HEC\) endpoint\. It also backs up that data to the Amazon S3 bucket that you specify, and you can optionally use an AWS KMS key that you own for Amazon S3 server\-side encryption\. If error logging is enabled, Kinesis Data Firehose sends data delivery errors to your CloudWatch log streams\. You can also use AWS Lambda for data transformation\. If you use an AWS load balancer, make sure that it is a Classic Load Balancer\. Kinesis Data Firehose supports neither Application Load Balancers nor Network Load Balancers\. Also, enable duration\-based sticky sessions with cookie expiration disabled\. For information about how to do this, see [Duration\-Based Session Stickiness](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-sticky-sessions.html#enable-sticky-sessions-duration)\.
@@ -524,6 +645,8 @@ If your Splunk platform is in a VPC, it must be publicly accessible with a publi
 + `13.208.217.0/26` for Asia Pacific \(Osaka\)
 + `52.81.151.64/26` for China \(Beijing\)
 + `161.189.23.128/26` for China \(Ningxia\)
++ `108.136.221.128/26` for Asia Pacific \(Jakarta\)
++ `3.28.159.64/26` for Middle East \(UAE\)
 
 ## Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination<a name="using-iam-http"></a>
 
@@ -696,9 +819,9 @@ To create a delivery stream in one AWS account with an OpenSearch Service destin
 
 You can use the optional `Condition` element \(or `Condition` *block*\) in an IAM policy to fine\-tune access to Kinesis Data Firehose operations based on tag keys and values\. The following subsections describe how to do this for the different Kinesis Data Firehose operations\. For more on the use of the `Condition` element and the operators that you can use within it, see [IAM JSON Policy Elements: Condition](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html)\.
 
-### CreateDeliveryStream and TagDeliveryStream<a name="aws-requesttag"></a>
+### CreateDeliveryStream<a name="aws-requesttag"></a>
 
-For the `CreateDeliveryStream` and `TagDeliveryStream` operations, use the `aws:RequestTag` condition key\. In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\.
+For the `CreateDeliveryStream` operation, use the `aws:RequestTag` condition key\. In the following example, `MyKey` and `MyValue` represent the key and corresponding value for a tag\.
 
 ```
 {
@@ -718,7 +841,29 @@ For the `CreateDeliveryStream` and `TagDeliveryStream` operations, use the `aws:
 }
 ```
 
-### UntagDeliveryStream<a name="aws-tagkeys"></a>
+### TagDeliveryStream<a name="aws-tagkeys"></a>
+
+For the `TagDeliveryStream` operation, use the `aws:TagKeys` condition key\. In the following example, `MyKey` is an example tag key\.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "firehose:TagDeliveryStream",
+            "Resource": "*",
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:TagKeys": "MyKey"
+                 }
+            }
+        }
+    ]
+}
+```
+
+### UntagDeliveryStream<a name="aws-untagkeys"></a>
 
 For the `UntagDeliveryStream` operation, use the `aws:TagKeys` condition key\. In the following example, `MyKey` is an example tag key\.
 

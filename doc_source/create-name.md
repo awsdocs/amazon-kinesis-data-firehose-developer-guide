@@ -36,6 +36,9 @@
 ****Delivery stream destination****  
 The destination of your Kinesis Data Firehose delivery stream\. Kinesis Data Firehose can send data records to various destinations, including Amazon Simple Storage Service \(Amazon S3\), Amazon Redshift, Amazon OpenSearch Service, and any HTTP endpoint that is owned by you or any of your third\-party service providers\. The following are the supported destinations:  
    + Amazon OpenSearch Service
+**Note**  
+Amazon OpenSearch Service 2\.x clusters are not currently supported as a destination for Amazon Kinesis Data Firehose\.
+   + Amazon OpenSearch Serverless
    + Amazon Redshift
    + Amazon S3
    + Coralogix
@@ -44,6 +47,9 @@ The destination of your Kinesis Data Firehose delivery stream\. Kinesis Data Fir
    + HTTP Endpoint
    + Honeycomb
    + Logic Monitor
+   + Logz\.io
+**Note**  
+In the Europe \(Milan\) region, Logz\.io is not supported as an Amazon Kinesis Data Firehose destination\.
    + MongoDB Cloud
    + New Relic
    + Splunk

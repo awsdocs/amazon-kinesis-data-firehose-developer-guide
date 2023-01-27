@@ -53,6 +53,20 @@ The `AWS/Firehose` namespace includes the following service\-level metrics\. If 
 | DeliveryToS3\.Records |  The number of records delivered to Amazon S3 over the specified time period\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Count  | 
 | DeliveryToS3\.Success |  The sum of successful Amazon S3 put commands over the sum of all Amazon S3 put commands\. Kinesis Data Firehose always emits this metric regardless of whether backup is enabled for failed documents only or for all documents\.  | 
 
+### Delivery to OpenSearch Serverless<a name="fh-serverless-metrics"></a>
+
+
+| Metric | Description | 
+| --- | --- | 
+| DeliveryToAmazonOpenSearchServerless\.Bytes |  The number of bytes indexed to OpenSearch Serverless over the specified time period\. Units: Bytes  | 
+| DeliveryToAmazonOpenSearchServerless\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to OpenSearch Serverless\. Units: Seconds  | 
+| DeliveryToAmazonOpenSearchServerless\.Records |  The number of records indexed to OpenSearch Serverless over the specified time period\. Units: Count  | 
+| DeliveryToAmazonOpenSearchServerless\.Success |  The sum of the successfully indexed records over the sum of records that were attempted\.  | 
+| DeliveryToS3\.Bytes |  The number of bytes delivered to Amazon S3 over the specified time period\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Count  | 
+| DeliveryToS3\.DataFreshness |  The age \(from getting into Kinesis Data Firehose to now\) of the oldest record in Kinesis Data Firehose\. Any record older than this age has been delivered to the S3 bucket\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Seconds  | 
+| DeliveryToS3\.Records |  The number of records delivered to Amazon S3 over the specified time period\. Kinesis Data Firehose emits this metric only when you enable backup for all documents\. Units: Count  | 
+| DeliveryToS3\.Success |  The sum of successful Amazon S3 put commands over the sum of all Amazon S3 put commands\. Kinesis Data Firehose always emits this metric regardless of whether backup is enabled for failed documents only or for all documents\.  | 
+
 ### Delivery to Amazon Redshift<a name="fh-redshift-metrics"></a>
 
 

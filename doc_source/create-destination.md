@@ -18,6 +18,7 @@ This topic describes the destination settings for your delivery stream\.
 + [Choose New Relic for Your Destination](#create-destination-new-relic)
 + [Choose Splunk for Your Destination](#create-destination-splunk)
 + [Choose Sumo Logic for Your Destination](#create-destination-sumo-logic)
++ [Choose Elastic for Your Destination](#create-destination-elastic)
 
 ## Choose Amazon S3 for Your Destination<a name="create-destination-s3"></a>
 
@@ -94,9 +95,6 @@ Kinesis Data Firehose supports Amazon S3 server\-side encryption with AWS Key Ma
 
 This section describes options for using OpenSearch Service for your destination\.
 
-**Note**  
-Amazon OpenSearch Service 2\.x clusters are not currently supported as a destination for Amazon Kinesis Data Firehose\.
-
 ****
 + Enter values for the following fields:  
 ** **OpenSearch Service domain** **  
@@ -169,7 +167,8 @@ This section describes options for using **Datadog** for your destination\. For 
 + Provide values for the following fields:  
  **HTTP endpoint URL**   
 Choose the HTTP endpoint URL from the following options in the drop down menu:  
-  + **Datadog logs \- US**
+  + **Datadog logs \- US1**
+  + **Datadog logs \- US5**
   + **Datadog logs \- EU**
   + **Datadog logs \- GOV**
   + **Datadog metrics \- US**
@@ -405,4 +404,27 @@ If you don't want Kinesis Data Firehose to retry sending data, set this value to
  **Parameters \- optional**   
 Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
  **S3 buffer hints**   
-Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the destination varies from service provider to service provider\.
+Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the Elastic destination varies from service provider to service provider\.
+
+## Choose Elastic for Your Destination<a name="create-destination-elastic"></a>
+
+This section describes options for using **Elastic** for your destination\. 
+
+****
++ Provide values for the following fields:  
+ **Elastic endpoint URL**   
+Specify the URL for the HTTP endpoint in the following format: `https://<cluster-id>.es.<region>.aws.elastic-cloud.com`\. The URL must be an HTTPS URL\.   
+ **API key**   
+Contact Elastic service to obtain the API key required to enable data delivery to their service from Kinesis Data Firehose\.  
+ **Content encoding**   
+Kinesis Data Firehose uses content encoding to compress the body of a request before sending it to the destination\. Choose **GZIP** \(which is what selected by default\) or **Disabled** to enable/disable content encoding of your request\.   
+ **Retry duration**   
+Specify how long Kinesis Data Firehose retries sending data to Elastic\.   
+After sending data, Kinesis Data Firehose first waits for an acknowledgment from the HTTP endpoint\. If an error occurs or the acknowledgment doesn’t arrive within the acknowledgment timeout period, Kinesis Data Firehose starts the retry duration counter\. It keeps retrying until the retry duration expires\. After that, Kinesis Data Firehose considers it a data delivery failure and backs up the data to your Amazon S3 bucket\.   
+Every time that Kinesis Data Firehose sends data to the HTTP endpoint \(either the initial attempt or a retry\), it restarts the acknowledgement timeout counter and waits for an acknowledgement from the HTTP endpoint\.   
+Even if the retry duration expires, Kinesis Data Firehose still waits for the acknowledgment until it receives it or the acknowledgement timeout period is reached\. If the acknowledgment times out, Kinesis Data Firehose determines whether there's time left in the retry counter\. If there is time left, it retries again and repeats the logic until it receives an acknowledgment or determines that the retry time has expired\.  
+If you don't want Kinesis Data Firehose to retry sending data, set this value to 0\.  
+ **Parameters \- optional**   
+Kinesis Data Firehose includes these key\-value pairs in each HTTP call\. These parameters can help you identify and organize your destinations\.   
+ **S3 buffer hints**   
+Kinesis Data Firehose buffers incoming data before delivering it to the specified destination\. The recommended buffer size for the Elastic destination is 1 MiB\.

@@ -89,7 +89,7 @@ If your delivery stream performs data\-format conversion, Kinesis Data Firehose 
 ```
 
 **Note**  
-Currently, AWS Glue is not supported in the Asia Pacific \(Jakarta\) or Middle East \(UAE\) regions\. If you are working with Kinesis Data Firehose in the Asia Pacific \(Jakarta\) region or Middle East \(UAE\) region, make sure to give your Kinesis Data Firehose access to AWS Glue in one of the regions where AWS Glue is currently supported\. Cross\-region interoperability between Data Firehose and AWS Glue is supported\. For more information on regions where AWS Glue is supported, see [https://docs\.aws\.amazon\.com/general/latest/gr/glue\.html](https://docs.aws.amazon.com/general/latest/gr/glue.html)
+Currently, AWS Glue is not supported in the Asia Pacific \(Jakarta\), Middle East \(UAE\), Europe \(Spain\), Europe \(Zurich\), and Asia Pacific \(Hyderabad\) regions\. If you are working with Kinesis Data Firehose in the Asia Pacific \(Jakarta\), Middle East \(UAE\), Europe \(Spain\), Europe \(Zurich\), and/or Asia Pacific \(Hyderabad\) regions, make sure to give your Kinesis Data Firehose access to AWS Glue in one of the regions where AWS Glue is currently supported\. Cross\-region interoperability between Data Firehose and AWS Glue is supported\. For more information on regions where AWS Glue is supported, see [https://docs\.aws\.amazon\.com/general/latest/gr/glue\.html](https://docs.aws.amazon.com/general/latest/gr/glue.html)
 
 ## Grant Kinesis Data Firehose Access to an Amazon S3 Destination<a name="using-iam-s3"></a>
 
@@ -289,6 +289,9 @@ If your Amazon Redshift cluster is in a virtual private cloud \(VPC\), it must b
 + `13.208.177.192/27` for Asia Pacific \(Osaka\)
 + `108.136.221.64/27` for Asia Pacific \(Jakarta\)
 + `3.28.159.32/27` for Middle East \(UAE\)
++ `18.100.71.96/27` for Europe \(Spain\)
++ `16.62.183.32/27` for Europe \(Zurich\)
++ `18.60.192.128/27` for Asia Pacific \(Hyderabad\)
 
 For more information about how to unblock IP addresses, see the step [Authorize Access to the Cluster](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-authorize-cluster-access.html) in the *Amazon Redshift Getting Started Guide* guide\. 
 
@@ -647,6 +650,9 @@ If your Splunk platform is in a VPC, it must be publicly accessible with a publi
 + `161.189.23.128/26` for China \(Ningxia\)
 + `108.136.221.128/26` for Asia Pacific \(Jakarta\)
 + `3.28.159.64/26` for Middle East \(UAE\)
++ `18.100.194.0/26` for Europe \(Spain\)
++ `16.62.183.64/26` for Europe \(Zurich\)
++ `18.60.192.192/26` for Asia Pacific \(Hyderabad\)
 
 ## Grant Kinesis Data Firehose Access to an HTTP Endpoint Destination<a name="using-iam-http"></a>
 
